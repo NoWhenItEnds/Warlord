@@ -1,5 +1,5 @@
 using Godot;
-using Warlord.Types.Singletons;
+using Warlord.Utilities.Singletons;
 
 namespace Warlord.Managers
 {
