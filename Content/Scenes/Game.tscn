@@ -1,8 +1,31 @@
-[gd_scene load_steps=2 format=3 uid="uid://cieiquimpnvi"]
+[gd_scene load_steps=5 format=3 uid="uid://cieiquimpnvi"]
 
 [ext_resource type="Script" uid="uid://ct8qbhj8gwq61" path="res://Systems/Managers/GameManager.cs" id="1_8wdfg"]
+[ext_resource type="Script" uid="uid://b3xny3hk5mdnw" path="res://Systems/City/Generation/CityGenerator.cs" id="2_5p3x2"]
+[ext_resource type="Script" uid="uid://bmw1xdtn25kal" path="res://Systems/Nodes/LineDrawer3D.cs" id="3_sa7mi"]
+[ext_resource type="Script" uid="uid://cd8o8n1o66p7" path="res://Systems/Nodes/PointDrawer3D.cs" id="4_fdsh7"]
 
 [node name="Game" type="Node"]
 script = ExtResource("1_8wdfg")
 
 [node name="World" type="Node3D" parent="."]
+
+[node name="City Generator" type="Node3D" parent="World" node_paths=PackedStringArray("_lines", "_points", "_tensorPoints")]
+script = ExtResource("2_5p3x2")
+_lines = NodePath("Lines")
+_points = NodePath("Points")
+_tensorPoints = NodePath("Tensor Points")
+
+[node name="Lines" type="MeshInstance3D" parent="World/City Generator"]
+script = ExtResource("3_sa7mi")
+metadata/_custom_type_script = "uid://bmw1xdtn25kal"
+
+[node name="Points" type="MeshInstance3D" parent="World/City Generator"]
+script = ExtResource("4_fdsh7")
+metadata/_custom_type_script = "uid://cd8o8n1o66p7"
+
+[node name="Tensor Points" type="MeshInstance3D" parent="World/City Generator"]
+script = ExtResource("4_fdsh7")
+metadata/_custom_type_script = "uid://cd8o8n1o66p7"
+
+[node name="Camera3D" type="Camera3D" parent="World"]
