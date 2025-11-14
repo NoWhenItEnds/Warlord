@@ -1,0 +1,12 @@
+[
+    {
+        "name": "angel_wings",
+        "description": "A pair of ethereal wings that are only visible to those with True Faith.",
+        "effect": "flight"
+    },
+    {
+        "name": "scrap_claws",
+        "description": "Wicked-looking claws formed of jagged scrap metal.",
+        "effect": "attack"
+    }
+]

@@ -1,8 +1,11 @@
 <Project Sdk="Godot.NET.Sdk/4.5.0">
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net9.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Numerics.Tensors" Version="10.0.0" />
+  </ItemGroup>
 </Project>
