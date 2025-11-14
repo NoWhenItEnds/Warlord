@@ -1,13 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cieiquimpnvi"]
+[gd_scene load_steps=2 format=3 uid="uid://cieiquimpnvi"]
 
 [ext_resource type="Script" uid="uid://ct8qbhj8gwq61" path="res://Systems/Managers/GameManager.cs" id="1_8wdfg"]
-[ext_resource type="Script" uid="uid://bmw1xdtn25kal" path="res://Systems/Nodes/LineDrawer3D.cs" id="2_cyyik"]
 
 [node name="Game" type="Node"]
 script = ExtResource("1_8wdfg")
 
 [node name="World" type="Node3D" parent="."]
-
-[node name="LineDrawer3D" type="MeshInstance3D" parent="World"]
-script = ExtResource("2_cyyik")
-metadata/_custom_type_script = "uid://bmw1xdtn25kal"

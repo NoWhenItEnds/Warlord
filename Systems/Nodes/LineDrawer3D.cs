@@ -4,14 +4,22 @@ using System.Collections.Generic;
 
 namespace Warlord.Nodes
 {
+    /// <summary> A mesh node that renders lines. </summary>
     [GlobalClass]
     public partial class LineDrawer3D : MeshInstance3D
     {
+        /// <summary> An array that holds the points we will use to create the lines. </summary>
+        /// <remarks> Each consecutive pair will create a line. </remarks>
         private readonly List<(Vector3 Position, Color Colour)> _points = new List<(Vector3 Position, Color Colour)>();
 
+        /// <summary> The mesh we will use to render the lines. </summary>
         private ImmediateMesh _mesh = new ImmediateMesh();
 
 
+        /// <summary> Add a line to draw. </summary>
+        /// <param name="p1"> The first position of the line. </param>
+        /// <param name="p2"> The second position of the line. </param>
+        /// <param name="colour"> The colour to colour the line. </param>
         public void AddLine(Vector3 p1, Vector3 p2, Color colour)
         {
             _points.Add(new (p1, colour));
@@ -19,12 +27,18 @@ namespace Warlord.Nodes
         }
 
 
+        /// <summary> Add a line to draw. </summary>
+        /// <param name="p1"> The first position of the line. </param>
+        /// <param name="p2"> The second position of the line. </param>
         public void AddLine(Vector3 p1, Vector3 p2)
         {
             AddLine(p1, p2, Colors.Red);
         }
 
 
+        /// <summary> Add a line to draw. </summary>
+        /// <param name="line"> An array of points, representing lines, to add. </param>
+        /// <param name="colour"> The colour to colour the line. </param>
         public void AddLines(Vector2[] line, Color colour)
         {
             ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(line.Length, 1);
@@ -36,12 +50,15 @@ namespace Warlord.Nodes
         }
 
 
+        /// <summary> Add a line to draw. </summary>
+        /// <param name="line"> An array of points, representing lines, to add. </param>
         public void AddLines(Vector2[] line)
         {
             AddLines(line, Colors.Red);
         }
 
 
+        /// <summary> Clear the drawer. </summary>
         public void Clear()
         {
             _mesh.ClearSurfaces();
