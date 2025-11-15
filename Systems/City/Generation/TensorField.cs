@@ -14,14 +14,15 @@ namespace Warlord.City.Generation
         public readonly List<Vector2> Points = new List<Vector2>();
 
 
+        /// <summary> How big each of the generated grid squares should be. </summary>
         private readonly Single DIAMETER;
 
 
         /// <summary> A data structure representing a tensor field. </summary>
         /// <param name="citySize"> The size of the city, and therefore the field, to generate. </param>
         /// <param name="origin"> The origin the field should be generated at. </param>
-        /// <param name="diameter"></param>
-        public TensorField(Vector2 citySize, Vector2 origin, Single diameter = 0.1f)
+        /// <param name="diameter"> How big each of the generated grid squares should be. </param>
+        public TensorField(Vector2 citySize, Vector2 origin, Single diameter = 1f)
         {
             DIAMETER = diameter;
 
@@ -33,47 +34,45 @@ namespace Warlord.City.Generation
             {
                 for (Int32 y = 1; y < n.Y - 1; y++)
                 {
-                    Points.Add(new Vector2(origin.X + x * DIAMETER * 2, origin.Y + y * DIAMETER * 2));
+                    Points.Add(new Vector2(origin.X + x * DIAMETER, origin.Y + y * DIAMETER));
                 }
             }
         }
 
 
+        /// <summary> Get the tensor at the given position. </summary>
+        /// <param name="position"> The position on the grid. </param>
+        /// <returns> The </returns>
         public Tensor GetPoint(Vector2 position)
         {
-            if (Fields.Count == 0) return new Tensor(1, new Single[] { 0, 0 });
+            Tensor tensor = new Tensor(1, new Single[] { 0, 0 });
 
-            var tensorAcc = Tensor.Zero;
+            if (Fields.Count > 0)
+            {
+                tensor = Tensor.Zero;
+                foreach (Field field in Fields)
+                {
+                    tensor.Add(field.GetWeightedTensor(position));
+                }
+            }
 
-            foreach (var f in Fields) tensorAcc.Add(f.GetWeightedTensor(position));
-
-            return tensorAcc;
+            return tensor;
         }
 
 
         public Vector2[] GetTensorLine(Vector2 point, Vector2 tensor)
         {
-            var diff = tensor * DIAMETER;
-            var start = point - diff;
-            var end = point + diff;
+            Vector2 diff = tensor * DIAMETER;
+            Vector2 start = point - diff;
+            Vector2 end = point + diff;
 
             return [ start, end ];
         }
 
 
-        public void AddRadial(Vector2 center, float size, float decay)
-        {
-            AddField(new Radial(center, size, decay));
-        }
+        public void AddRadial(Vector2 center, float size, float decay) => Fields.Add(new Radial(center, size, decay));
 
-        public void AddGrid(Vector2 center, float size, float decay, float theta)
-        {
-            AddField(new Grid(center, size, decay, theta));
-        }
 
-        private void AddField(Field field)
-        {
-            Fields.Add(field);
-        }
+        public void AddGrid(Vector2 center, float size, float decay, float theta) => Fields.Add(new Grid(center, size, decay, theta));
     }
 }

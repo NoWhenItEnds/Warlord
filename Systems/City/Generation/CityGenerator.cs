@@ -1,42 +1,49 @@
 using Godot;
 using System;
-using Warlord.City.Generation.Fields;
 using Warlord.Nodes;
 
 namespace Warlord.City.Generation
 {
-    /// <summary> Generates cities for use within the game world. </summary>
+    /// <summary> Generates cities for use within the game world using tensors. </summary>
     public partial class CityGenerator : Node3D
     {
+        /// <summary> The line renderer to draw the grid lines. </summary>
         [ExportGroup("Nodes")]
         [Export] private LineDrawer3D _lines;
 
+        /// <summary> The point renderer to draw the grid points. </summary>
         [Export] private PointDrawer3D _points;
 
+        /// <summary> The point renderer to draw the tensor points. </summary>
         [Export] private PointDrawer3D _tensorPoints;
 
 
-        /// <summary> The size of the city grid in godot units. </summary>
+        /// <summary> The size of the city grid in Godot meters. </summary>
         [ExportGroup("Settings")]
         [Export] private Vector2 _cityDimension = new Vector2(100f, 100f);
 
-        /// <summary> The position of the bottom-left corner of the tensor grid. </summary>
+        /// <summary> The world position of the center of the grid. </summary>
         [Export] private Vector2 _cityOrigin = Vector2.Zero;
 
+        /// <summary> The size of each grid cell in Godot meters. </summary>
+        [Export] private Single _gridDiameter = 1f;
 
+
+        /// <summary> An internal reference to the tensor field the generator is currently using. </summary>
         private TensorField _tensorField;
 
 
         /// <inheritdoc/>
         public override void _Ready()
         {
-            _tensorField = new TensorField(_cityDimension * 0.5f, _cityOrigin);
+            _tensorField = new TensorField(_cityDimension, _cityOrigin - (_cityDimension * 0.5f), _gridDiameter);
 
-            Redraw();
+            Render();
         }
 
 
-        private void Redraw()
+        /// <summary> Draw the various tensors used for city generation. </summary>
+        private void Render()
         {
             _lines.Clear();
             _points.Clear();

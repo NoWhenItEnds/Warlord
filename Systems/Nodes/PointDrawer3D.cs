@@ -67,13 +67,13 @@ namespace Warlord.Nodes
                 foreach ((Vector3 Position, Color Colour) point in _points)
                 {
                     _mesh.SurfaceSetColor(point.Colour);
-                    _mesh.SurfaceAddVertex(point.Position + new Vector3(-1 * _pointWidth, 1 * _pointWidth, 0));
-                    _mesh.SurfaceAddVertex(point.Position + new Vector3(1 * _pointWidth, -1 * _pointWidth, 0));
-                    _mesh.SurfaceAddVertex(point.Position + new Vector3(-1 * _pointWidth, -1 * _pointWidth, 0));
+                    _mesh.SurfaceAddVertex(point.Position + new Vector3(-1 * _pointWidth, 0f, 1 * _pointWidth));
+                    _mesh.SurfaceAddVertex(point.Position + new Vector3(1 * _pointWidth, 0f, -1 * _pointWidth));
+                    _mesh.SurfaceAddVertex(point.Position + new Vector3(-1 * _pointWidth, 0f, -1 * _pointWidth));
 
-                    _mesh.SurfaceAddVertex(point.Position + new Vector3(-1 * _pointWidth, 1 * _pointWidth, 0));
-                    _mesh.SurfaceAddVertex(point.Position + new Vector3(1 * _pointWidth, 1 * _pointWidth, 0));
-                    _mesh.SurfaceAddVertex(point.Position + new Vector3(1 * _pointWidth, -1 * _pointWidth, 0));
+                    _mesh.SurfaceAddVertex(point.Position + new Vector3(-1 * _pointWidth, 0f, 1 * _pointWidth));
+                    _mesh.SurfaceAddVertex(point.Position + new Vector3(1 * _pointWidth, 0f, 1 * _pointWidth));
+                    _mesh.SurfaceAddVertex(point.Position + new Vector3(1 * _pointWidth, 0f, -1 * _pointWidth));
                 }
 
                 _mesh.SurfaceEnd();

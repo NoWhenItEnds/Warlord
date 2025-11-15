@@ -45,7 +45,7 @@ namespace Warlord.Nodes
 
             foreach (Vector2 point in line)
             {
-                _points.Add(new (new Vector3(point.X, point.Y, 0), colour));
+                _points.Add(new (new Vector3(point.X, 0f, point.Y), colour));
             }
         }
 
