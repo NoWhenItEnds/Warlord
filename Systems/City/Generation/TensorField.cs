@@ -5,8 +5,7 @@ using Warlord.City.Generation.Fields;
 
 namespace Warlord.City.Generation
 {
-    /// <summary> A data structure representing a tensor field. </summary>
-    /// <remarks> Used to for city generation. </remarks>
+    /// <summary> A data structure representing a field or grid of tensors. </summary>
     public class TensorField
     {
         public readonly List<Field> Fields = new List<Field>();

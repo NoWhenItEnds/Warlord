@@ -18,9 +18,9 @@ namespace Warlord.City.Generation.Fields
 
         public Tensor GetWeightedTensor(Vector2 point)
         {
-            var tensor = GetTensor(point);
-            tensor.r *= GetTensorWeight(point);
-            tensor.oldth = true;
+            Tensor tensor = GetTensor(point);
+            tensor.Radius *= GetTensorWeight(point);
+            tensor.IsThetaDirty = true;
 
             return tensor;
         }
@@ -49,24 +49,23 @@ namespace Warlord.City.Generation.Fields
 
         protected override Tensor GetTensor(Vector2 point)
         {
-            return new Tensor(1, new[] { Mathf.Cos(2 * theta), Mathf.Sin(2 * theta) });
+            return new Tensor(1, [ Mathf.Cos(2 * theta), Mathf.Sin(2 * theta) ]);
         }
     }
 
 
     public class Radial : Field
     {
-        public Radial(Vector2 center, float size, float decay) : base(center, size, decay)
-        {
-        }
+        public Radial(Vector2 center, float size, float decay) : base(center, size, decay) {}
+
 
         protected override Tensor GetTensor(Vector2 point)
         {
-            var t = point - center;
-            var t1 = Mathf.Pow(t.Y, 2) - Mathf.Pow(t.X, 2);
-            var t2 = -2 * t.X * t.Y;
+            Vector2 t = point - center;
+            Single t1 = Mathf.Pow(t.Y, 2) - Mathf.Pow(t.X, 2);
+            Single t2 = -2 * t.X * t.Y;
 
-            return new Tensor(1, new[] { t1, t2 });
+            return new Tensor(1, [ t1, t2 ]);
         }
     }
 }
