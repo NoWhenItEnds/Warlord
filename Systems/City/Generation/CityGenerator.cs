@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using Warlord.City.Generation.Fields;
 using Warlord.Nodes;
 
 namespace Warlord.City.Generation
@@ -28,6 +29,9 @@ namespace Warlord.City.Generation
         /// <summary> The size of each grid cell in Godot meters. </summary>
         [Export] private Single _gridDiameter = 1f;
 
+        /// <summary> The gradient to use for rendering the tensor grid at various rotations. </summary>
+        [Export] private Gradient _gridGradient;
+
 
         /// <summary> An internal reference to the tensor field the generator is currently using. </summary>
         private TensorField _tensorField;
@@ -37,6 +41,8 @@ namespace Warlord.City.Generation
         public override void _Ready()
         {
             _tensorField = new TensorField(_cityDimension, _cityOrigin - (_cityDimension * 0.5f), _gridDiameter);
+
+
 
             Render();
         }
@@ -52,16 +58,28 @@ namespace Warlord.City.Generation
             foreach (Vector2 point in _tensorField.Points)
             {
                 Tensor tensor = _tensorField.GetPoint(point);
-                _lines.AddLines(_tensorField.GetTensorLine(point, tensor.Major));
-                _lines.AddLines(_tensorField.GetTensorLine(point, tensor.Minor));
+                Color colour = _gridGradient.Sample((tensor.Major.Angle() + Mathf.Pi) / (2 * Mathf.Pi));    // Make angle a percentage of radium (2 * Pi).
+                _lines.AddLines(_tensorField.GetTensorLine(point, tensor.Major), colour);
+                _lines.AddLines(_tensorField.GetTensorLine(point, tensor.Minor), colour);
             }
 
-/*
             foreach (Field field in _tensorField.Fields)
-                if (selectedField != null && selectedField.Equals(field))
-                    _tensorPoints.AddPoint(new Vector3(field.center.X, field.center.Y, 0), Colors.GreenYellow);
-                else
-                    _tensorPoints.AddPoint(new Vector3(field.center.X, field.center.Y, 0), Colors.Yellow);*/
+            {
+                _tensorPoints.AddPoint(new Vector3(field.Center.X, 0, field.Center.Y), Colors.GreenYellow);
+            }
+        }
+
+
+        public void AddPoint(Vector2 position)
+        {
+            _tensorField.AddGrid(position, 20, 45, 2);
+            Render();
+        }
+
+        public void RemovePoint(Vector2 position)
+        {
+            _tensorField.RemoveField(position);
+            Render();
         }
     }
 }

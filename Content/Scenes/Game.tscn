@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cieiquimpnvi"]
 
 [ext_resource type="Script" uid="uid://ct8qbhj8gwq61" path="res://Systems/Managers/GameManager.cs" id="1_8wdfg"]
-[ext_resource type="PackedScene" uid="uid://ca77u7k68bd1p" path="res://Content/Scenes/CityGenerator.tscn" id="2_cyyik"]
+[ext_resource type="PackedScene" uid="uid://ca77u7k68bd1p" path="res://Systems/City/Generation/CityGenerator.tscn" id="2_cyyik"]
 
 [node name="Game" type="Node"]
 script = ExtResource("1_8wdfg")
@@ -11,4 +11,4 @@ script = ExtResource("1_8wdfg")
 [node name="City Generator" parent="." instance=ExtResource("2_cyyik")]
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 100, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 20, 0)

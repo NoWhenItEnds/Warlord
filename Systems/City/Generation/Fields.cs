@@ -3,17 +3,23 @@ using System;
 
 namespace Warlord.City.Generation.Fields
 {
+    /// <summary> A generic tensor field type. </summary>
     public abstract class Field
     {
-        public Vector2 center;
-        public Single decay;
-        public Single size;
+        /// <summary> The position at the center of the field on the grid. </summary>
+        public Vector2 Center { get; private set; }
+
+        // TODO - ???
+        public Single Decay { get; private set; }
+
+        /// <summary> The radius of the tensor field. </summary>
+        public Single Size { get; private set; }
 
         protected Field(Vector2 center, Single size, Single decay)
         {
-            this.center = center;
-            this.size = size;
-            this.decay = decay;
+            Center = center;
+            Size = size;
+            Decay = decay;
         }
 
         public Tensor GetWeightedTensor(Vector2 point)
@@ -27,11 +33,11 @@ namespace Warlord.City.Generation.Fields
 
         private Single GetTensorWeight(Vector2 point)
         {
-            var normDistanceToCenter = (point - center).Length() / size;
+            Single normDistanceToCenter = (point - Center).Length() / Size;
 
-            if (decay == 0 && normDistanceToCenter >= 1) return 0;
+            if (Decay == 0 && normDistanceToCenter >= 1) return 0;
 
-            return Mathf.Pow(Mathf.Max(0, 1 - normDistanceToCenter), decay);
+            return Mathf.Pow(Mathf.Max(0, 1 - normDistanceToCenter), Decay);
         }
 
         protected abstract Tensor GetTensor(Vector2 point);
@@ -40,28 +46,25 @@ namespace Warlord.City.Generation.Fields
 
     public class Grid : Field
     {
-        public float theta;
+        public Single Theta { get; private set; }
 
-        public Grid(Vector2 center, float size, float decay, float theta) : base(center, size, decay)
+        public Grid(Vector2 center, Single size, Single decay, Single theta) : base(center, size, decay)
         {
-            this.theta = theta;
+            Theta = theta;
         }
 
-        protected override Tensor GetTensor(Vector2 point)
-        {
-            return new Tensor(1, [ Mathf.Cos(2 * theta), Mathf.Sin(2 * theta) ]);
-        }
+        protected override Tensor GetTensor(Vector2 point) => new Tensor(1, [Mathf.Cos(2 * Theta), Mathf.Sin(2 * Theta)]);
     }
 
 
     public class Radial : Field
     {
-        public Radial(Vector2 center, float size, float decay) : base(center, size, decay) {}
+        public Radial(Vector2 center, Single size, Single decay) : base(center, size, decay) {}
 
 
         protected override Tensor GetTensor(Vector2 point)
         {
-            Vector2 t = point - center;
+            Vector2 t = point - Center;
             Single t1 = Mathf.Pow(t.Y, 2) - Mathf.Pow(t.X, 2);
             Single t2 = -2 * t.X * t.Y;
 

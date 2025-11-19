@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Warlord.City.Generation.Fields;
 
 namespace Warlord.City.Generation
@@ -73,5 +74,15 @@ namespace Warlord.City.Generation
 
 
         public void AddGrid(Vector2 center, float size, float decay, float theta) => Fields.Add(new Grid(center, size, decay, theta));
+
+
+        public void RemoveField(Vector2 position, Single accuracy = 1f)
+        {
+            Field? field = Fields.FirstOrDefault(x => position.DistanceTo(x.Center) <= accuracy);
+            if(field != null)
+            {
+                Fields.Remove(field);
+            }
+        }
     }
 }

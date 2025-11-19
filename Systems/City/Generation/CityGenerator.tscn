@@ -1,0 +1,69 @@
+[gd_scene load_steps=6 format=3 uid="uid://ca77u7k68bd1p"]
+
+[ext_resource type="Script" uid="uid://b3xny3hk5mdnw" path="res://Systems/City/Generation/CityGenerator.cs" id="1_qolff"]
+[ext_resource type="Script" uid="uid://bmw1xdtn25kal" path="res://Systems/Nodes/LineDrawer3D.cs" id="2_onnww"]
+[ext_resource type="Script" uid="uid://cd8o8n1o66p7" path="res://Systems/Nodes/PointDrawer3D.cs" id="3_4v8g6"]
+[ext_resource type="Script" uid="uid://cnnnj10o0j4fw" path="res://Systems/City/Generation/UI/CityGeneratorUI.cs" id="4_sy5ej"]
+
+[sub_resource type="Gradient" id="Gradient_qolff"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1)
+
+[node name="City Generator" type="Node" node_paths=PackedStringArray("_lines", "_points", "_tensorPoints")]
+script = ExtResource("1_qolff")
+_lines = NodePath("City/Lines")
+_points = NodePath("City/Points")
+_tensorPoints = NodePath("City/Tensor Points")
+_gridGradient = SubResource("Gradient_qolff")
+
+[node name="City" type="Node3D" parent="."]
+
+[node name="Lines" type="MeshInstance3D" parent="City"]
+skeleton = NodePath("../..")
+script = ExtResource("2_onnww")
+metadata/_custom_type_script = "uid://bmw1xdtn25kal"
+
+[node name="Points" type="MeshInstance3D" parent="City"]
+skeleton = NodePath("../..")
+script = ExtResource("3_4v8g6")
+metadata/_custom_type_script = "uid://cd8o8n1o66p7"
+
+[node name="Tensor Points" type="MeshInstance3D" parent="City"]
+skeleton = NodePath("../..")
+script = ExtResource("3_4v8g6")
+_pointWidth = 0.5
+metadata/_custom_type_script = "uid://cd8o8n1o66p7"
+
+[node name="UI" type="Control" parent="." node_paths=PackedStringArray("_generator")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("4_sy5ej")
+_generator = NodePath("..")
+
+[node name="Sidebar" type="PanelContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = -1
+anchor_bottom = 1.0
+offset_right = 256.0
+grow_vertical = 2
+
+[node name="TabContainer" type="TabContainer" parent="UI/Sidebar"]
+layout_mode = 2
+current_tab = 0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="UI/Sidebar/TabContainer"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Sidebar/TabContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="UI/Sidebar/TabContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "Highways"
