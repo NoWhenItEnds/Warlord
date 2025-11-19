@@ -1,12 +1,12 @@
 [
     {
-        "id": "attack",
+        "name": "damage",
         "kind": "offensive",
         "range": "close",
         "duration": "instant"
     },
     {
-        "id": "flight",
+        "name": "flight",
         "kind": "movement",
         "range": "personal",
         "duration": "sustained"

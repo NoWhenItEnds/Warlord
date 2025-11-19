@@ -5,7 +5,7 @@ using Warlord.Nodes;
 namespace Warlord.City.Generation
 {
     /// <summary> Generates cities for use within the game world using tensors. </summary>
-    public partial class CityGenerator : Node3D
+    public partial class CityGenerator : Node
     {
         /// <summary> The line renderer to draw the grid lines. </summary>
         [ExportGroup("Nodes")]

@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://ca77u7k68bd1p"]
+
+[ext_resource type="Script" uid="uid://b3xny3hk5mdnw" path="res://Systems/City/Generation/CityGenerator.cs" id="1_qolff"]
+[ext_resource type="Script" uid="uid://bmw1xdtn25kal" path="res://Systems/Nodes/LineDrawer3D.cs" id="2_onnww"]
+[ext_resource type="Script" uid="uid://cd8o8n1o66p7" path="res://Systems/Nodes/PointDrawer3D.cs" id="3_4v8g6"]
+
+[node name="City Generator" type="Node" node_paths=PackedStringArray("_lines", "_points", "_tensorPoints")]
+script = ExtResource("1_qolff")
+_lines = NodePath("Lines")
+_points = NodePath("Points")
+_tensorPoints = NodePath("Tensor Points")
+
+[node name="Lines" type="MeshInstance3D" parent="."]
+script = ExtResource("2_onnww")
+metadata/_custom_type_script = "uid://bmw1xdtn25kal"
+
+[node name="Points" type="MeshInstance3D" parent="."]
+script = ExtResource("3_4v8g6")
+metadata/_custom_type_script = "uid://cd8o8n1o66p7"
+
+[node name="Tensor Points" type="MeshInstance3D" parent="."]
+script = ExtResource("3_4v8g6")
+metadata/_custom_type_script = "uid://cd8o8n1o66p7"

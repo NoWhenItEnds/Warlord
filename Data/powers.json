@@ -2,7 +2,8 @@
     {
         "name": "angel_wings",
         "description": "A pair of ethereal wings that are only visible to those with True Faith.",
-        "effect": "flight"
+        "effect": "flight",
+        "descriptors": ["wings"]
     },
     {
         "name": "scrap_claws",
