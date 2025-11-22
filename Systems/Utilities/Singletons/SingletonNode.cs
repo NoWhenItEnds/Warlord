@@ -1,21 +1,21 @@
 #nullable disable warnings
 using Godot;
 
-namespace Warlord.Types.Singletons
+namespace Warlord.Utilities.Singletons
 {
-    /// <summary> Implementation of a singleton as a Control. </summary>
-    /// <typeparam name="T"> Type of control. </typeparam>
-    public partial class SingletonControl<T> : Control where T : Control
+    /// <summary> Implementation of a singleton as a Node. </summary>
+    /// <typeparam name="T"> Type of node </typeparam>
+    public partial class SingletonNode<T> : Node where T : Node
     {
-        /// <summary> The singleton control's instance. </summary>
+        /// <summary> The singleton node's instance. </summary>
         private static T? _instance = null;
 
-        /// <summary> The singleton control's instance. </summary>
+        /// <summary> The singleton node's instance. </summary>
         public static T Instance => _instance;
 
 
-        /// <summary> Singleton control's constructor. </summary>
-        protected SingletonControl()
+        /// <summary> Singleton node's constructor. </summary>
+        protected SingletonNode()
         {
             if (!Engine.IsEditorHint())
             {
@@ -32,7 +32,7 @@ namespace Warlord.Types.Singletons
 
 
         /// <summary> De-constructor for singleton. Removes reference and allows GC to collect. </summary>
-        ~SingletonControl()
+        ~SingletonNode()
         {
             if (_instance == this)
             {
