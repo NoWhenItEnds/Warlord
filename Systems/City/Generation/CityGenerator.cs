@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using Warlord.City.Generation.Fields;
 using Warlord.Nodes;
 
@@ -36,13 +37,30 @@ namespace Warlord.City.Generation
         /// <summary> An internal reference to the tensor field the generator is currently using. </summary>
         private TensorField _tensorField;
 
+        private Roads _highways;
+
+        private Roads _mainRoads;
+
+        private Roads _minorRoads;
+
 
         /// <inheritdoc/>
         public override void _Ready()
         {
-            _tensorField = new TensorField(_cityDimension, _cityOrigin - (_cityDimension * 0.5f), _gridDiameter);
+            Vector2 actualOrigin = _cityOrigin - (_cityDimension * 0.5f);
+            _tensorField = new TensorField(_cityDimension, actualOrigin, _gridDiameter);
 
+            var integrator = new Integrator(_tensorField, 1f);
+            _highways = new Roads(StreamLinesParams.Default, integrator, _cityDimension, actualOrigin);
+            _mainRoads = new Roads(StreamLinesParams.Default.SetSeparation(5f).SetLookahead(500f), integrator,
+            _cityDimension,
+            actualOrigin);
+            _minorRoads = new Roads(StreamLinesParams.Default.SetSeparation(2.5f).SetLookahead(500f), integrator,
+                _cityDimension,
+                actualOrigin);
 
+            _minorRoads.SetExistingStreamlines(new List<Roads> { _highways, _mainRoads });
+            _mainRoads.SetExistingStreamlines(new List<Roads> { _highways });
 
             Render();
         }
@@ -67,6 +85,10 @@ namespace Warlord.City.Generation
             {
                 _tensorPoints.AddPoint(new Vector3(field.Center.X, 0, field.Center.Y), Colors.GreenYellow);
             }
+
+            _highways.DrawLineRoads(_lines, Colors.Blue);
+            _mainRoads.DrawLineRoads(_lines, Colors.Green);
+            _minorRoads.DrawLineRoads(_lines, Colors.Red);
         }
 
 
@@ -79,6 +101,25 @@ namespace Warlord.City.Generation
         public void RemovePoint(Vector2 position)
         {
             _tensorField.RemoveField(position);
+            Render();
+        }
+
+
+        public void GenerateHighways()
+        {
+            _highways.GenerateRoads();
+            Render();
+        }
+
+        public void GenerateMainRoads()
+        {
+            _mainRoads.GenerateRoads();
+            Render();
+        }
+
+        public void GenerateMinorRoads()
+        {
+            _minorRoads.GenerateRoads();
             Render();
         }
     }

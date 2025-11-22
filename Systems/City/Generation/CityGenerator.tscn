@@ -6,8 +6,7 @@
 [ext_resource type="Script" uid="uid://cnnnj10o0j4fw" path="res://Systems/City/Generation/UI/CityGeneratorUI.cs" id="4_sy5ej"]
 
 [sub_resource type="Gradient" id="Gradient_qolff"]
-offsets = PackedFloat32Array(0, 0.5, 1)
-colors = PackedColorArray(0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1)
+colors = PackedColorArray(0.39215687, 0.39215687, 0.39215687, 1, 1, 1, 1, 1)
 
 [node name="City Generator" type="Node" node_paths=PackedStringArray("_lines", "_points", "_tensorPoints")]
 script = ExtResource("1_qolff")
@@ -34,7 +33,7 @@ script = ExtResource("3_4v8g6")
 _pointWidth = 0.5
 metadata/_custom_type_script = "uid://cd8o8n1o66p7"
 
-[node name="UI" type="Control" parent="." node_paths=PackedStringArray("_generator")]
+[node name="UI" type="Control" parent="." node_paths=PackedStringArray("_generator", "_regenerateGrid", "_generateHighways", "_generateMainRoads", "_generateMinorRoads")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -44,6 +43,10 @@ grow_vertical = 2
 mouse_filter = 1
 script = ExtResource("4_sy5ej")
 _generator = NodePath("..")
+_regenerateGrid = NodePath("Sidebar/TabContainer/ScrollContainer/VBoxContainer/Button - Regenerate")
+_generateHighways = NodePath("Sidebar/TabContainer/ScrollContainer/VBoxContainer/Button - Highways")
+_generateMainRoads = NodePath("Sidebar/TabContainer/ScrollContainer/VBoxContainer/Button - Main Roads")
+_generateMinorRoads = NodePath("Sidebar/TabContainer/ScrollContainer/VBoxContainer/Button - Minor Roads")
 
 [node name="Sidebar" type="PanelContainer" parent="UI"]
 layout_mode = 1
@@ -64,6 +67,18 @@ metadata/_tab_index = 0
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Button" type="Button" parent="UI/Sidebar/TabContainer/ScrollContainer/VBoxContainer"]
+[node name="Button - Regenerate" type="Button" parent="UI/Sidebar/TabContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "Regenerate Grid"
+
+[node name="Button - Highways" type="Button" parent="UI/Sidebar/TabContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 text = "Highways"
+
+[node name="Button - Main Roads" type="Button" parent="UI/Sidebar/TabContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "Main Roads"
+
+[node name="Button - Minor Roads" type="Button" parent="UI/Sidebar/TabContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "Minor Roads"

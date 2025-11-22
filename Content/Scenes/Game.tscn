@@ -11,4 +11,4 @@ script = ExtResource("1_8wdfg")
 [node name="City Generator" parent="." instance=ExtResource("2_cyyik")]
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 20, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 40, 0)

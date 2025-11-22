@@ -10,6 +10,22 @@ namespace Warlord.City.Generation.UI
         [ExportGroup("Nodes")]
         [Export] private CityGenerator _generator;
 
+        [Export] private Button _regenerateGrid;
+
+        [Export] private Button _generateHighways;
+
+        [Export] private Button _generateMainRoads;
+
+        [Export] private Button _generateMinorRoads;
+
+        public override void _Ready()
+        {
+            _generateHighways.ButtonDown += _generator.GenerateHighways;
+            _generateMainRoads.ButtonDown += _generator.GenerateMainRoads;
+            _generateMinorRoads.ButtonDown += _generator.GenerateMinorRoads;
+        }
+
+
         public override void _UnhandledInput(InputEvent @event)
         {
             if (@event is InputEventMouseButton button && button.IsPressed())
@@ -27,5 +43,14 @@ namespace Warlord.City.Generation.UI
                 }
             }
         }
+
+
+        public override void _ExitTree()
+        {
+            _generateHighways.ButtonDown -= _generator.GenerateHighways;
+            _generateMainRoads.ButtonDown -= _generator.GenerateMainRoads;
+            _generateMinorRoads.ButtonDown -= _generator.GenerateMinorRoads;
+        }
+
     }
 }
