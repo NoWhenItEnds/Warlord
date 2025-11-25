@@ -22,18 +22,24 @@ namespace Warlord.Managers
         /// <remarks> A null value indicates that the data is present, but there isn't a node in the game world for it. </remarks>
         private Dictionary<ActorData, ActorNode?> _actorMap = new Dictionary<ActorData, ActorNode?>();
 
+        private ActorData _playerData = new ActorData();
+
 
         /// <inheritdoc/>
         public override void _Ready()
         {
             _objectPool = new ObjectPool<ActorNode>(this, _actorPrefab);
+
+            ActorNode node = SpawnNode(_playerData, Vector3.Zero);
+            node.SetDestination(new Vector3(10, 0, 10));
         }
 
 
         /// <summary> Spawn a new actor node to represent an actor entity. </summary>
         /// <param name="data"> The data object the node will represent. </param>
         /// <param name="globalPosition"> The global position to spawn the node at. </param>
-        public void SpawnNode(ActorData data, Vector3 globalPosition)
+        /// <returns> A reference to the spawned node. </returns>
+        public ActorNode SpawnNode(ActorData data, Vector3 globalPosition)
         {
             if(!_actorMap.TryGetValue(data, out ActorNode? actor))
             {
@@ -41,6 +47,7 @@ namespace Warlord.Managers
                 _actorMap.Add(data, actor);
             }
             actor?.GlobalPosition = globalPosition;
+            return actor;
         }
 
 

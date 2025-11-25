@@ -4,5 +4,4 @@ namespace Warlord.Entities.Data
     public class ActorData : EntityData
     {
     }
-
 }

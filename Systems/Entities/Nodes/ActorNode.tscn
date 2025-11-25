@@ -3,8 +3,9 @@
 [ext_resource type="Script" uid="uid://cvtpqyekcfwk0" path="res://Systems/Entities/Nodes/ActorNode.cs" id="1_an0v0"]
 [ext_resource type="Texture2D" uid="uid://dpeh38bjdy323" path="res://icon.svg" id="2_fly04"]
 
-[node name="ActorNode" type="Node3D"]
+[node name="ActorNode" type="Node3D" node_paths=PackedStringArray("_navigationAgent")]
 script = ExtResource("1_an0v0")
+_navigationAgent = NodePath("NavigationAgent3D")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
 
