@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://bx8die6vgkjwi"]
+
+[ext_resource type="Shader" uid="uid://ctxqnnlwtmqum" path="res://Content/Shaders/Shader_ValveGrid.gdshader" id="1_qh4wo"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_qh4wo")

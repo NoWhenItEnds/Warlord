@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://bfv0hx503f0yk"]
+
+[ext_resource type="Script" uid="uid://cvtpqyekcfwk0" path="res://Systems/Entities/Nodes/ActorNode.cs" id="1_an0v0"]
+[ext_resource type="Texture2D" uid="uid://dpeh38bjdy323" path="res://icon.svg" id="2_fly04"]
+
+[node name="ActorNode" type="Node3D"]
+script = ExtResource("1_an0v0")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+billboard = 1
+texture = ExtResource("2_fly04")

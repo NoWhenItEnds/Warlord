@@ -1,6 +1,32 @@
-[gd_scene load_steps=2 format=3 uid="uid://cieiquimpnvi"]
+[gd_scene load_steps=7 format=3 uid="uid://cieiquimpnvi"]
 
 [ext_resource type="Script" uid="uid://ct8qbhj8gwq61" path="res://Systems/Managers/GameManager.cs" id="1_8wdfg"]
+[ext_resource type="PackedScene" uid="uid://drnf40gxfixju" path="res://Systems/City/CityChunk.tscn" id="3_5p3x2"]
+[ext_resource type="Script" uid="uid://t383rt58i6um" path="res://Systems/Nodes/MainCamera3D.cs" id="3_j7grf"]
+[ext_resource type="Script" uid="uid://bltji3s65ra6b" path="res://Systems/Managers/ActorManager.cs" id="4_5p3x2"]
+[ext_resource type="PackedScene" uid="uid://bfv0hx503f0yk" path="res://Systems/Entities/Nodes/ActorNode.tscn" id="5_sa7mi"]
+
+[sub_resource type="Environment" id="Environment_j7grf"]
 
 [node name="Game" type="Node"]
 script = ExtResource("1_8wdfg")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_j7grf")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(1, 0, 0, 0, -0.7431448, 0.6691306, 0, -0.6691306, -0.7431448, 0, 0, 0)
+
+[node name="MainCamera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.7071068, 0.7071068, 0, -0.7071068, 0.7071068, 0, 3, 5.5)
+script = ExtResource("3_j7grf")
+metadata/_custom_type_script = "uid://t383rt58i6um"
+
+[node name="City Chunk A" parent="." instance=ExtResource("3_5p3x2")]
+
+[node name="City Chunk B" parent="." instance=ExtResource("3_5p3x2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+
+[node name="Actors" type="Node3D" parent="."]
+script = ExtResource("4_5p3x2")
+_actorPrefab = ExtResource("5_sa7mi")

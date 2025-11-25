@@ -1,0 +1,70 @@
+[gd_scene load_steps=8 format=3 uid="uid://drnf40gxfixju"]
+
+[ext_resource type="Script" uid="uid://dp62mmw5gxikr" path="res://Systems/City/CityChunk.cs" id="1_fqf2n"]
+[ext_resource type="Material" uid="uid://bx8die6vgkjwi" path="res://Content/Materials/Debug/Material_Placeholder.tres" id="2_th58t"]
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_cyyik"]
+vertices = PackedVector3Array(4.5, 0.5, -4.5, 4, 0.5, -4.5, 4.25, 0.5, 0.25, 4.5, 0.5, 4.5, -4.5, 0.5, -4.5, -4.5, 0.5, 4.5, 2.25, 0.5, 0.75, 2.25, 0.5, -4.5, 3.75, 0.5, 0.75)
+polygons = [PackedInt32Array(1, 0, 2), PackedInt32Array(2, 0, 3), PackedInt32Array(7, 6, 4), PackedInt32Array(4, 6, 5), PackedInt32Array(8, 2, 3), PackedInt32Array(8, 3, 6), PackedInt32Array(6, 3, 5)]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_8wdfg"]
+size = Vector2(10, 10)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_8wdfg"]
+data = PackedVector3Array(5, 0, 5, -5, 0, 5, 5, 0, -5, -5, 0, 5, -5, 0, -5, 5, 0, -5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cyyik"]
+size = Vector3(1, 3, 1)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_cyyik"]
+data = PackedVector3Array(-0.5, 1.5, 0.5, 0.5, 1.5, 0.5, -0.5, -1.5, 0.5, 0.5, 1.5, 0.5, 0.5, -1.5, 0.5, -0.5, -1.5, 0.5, 0.5, 1.5, -0.5, -0.5, 1.5, -0.5, 0.5, -1.5, -0.5, -0.5, 1.5, -0.5, -0.5, -1.5, -0.5, 0.5, -1.5, -0.5, 0.5, 1.5, 0.5, 0.5, 1.5, -0.5, 0.5, -1.5, 0.5, 0.5, 1.5, -0.5, 0.5, -1.5, -0.5, 0.5, -1.5, 0.5, -0.5, 1.5, -0.5, -0.5, 1.5, 0.5, -0.5, -1.5, -0.5, -0.5, 1.5, 0.5, -0.5, -1.5, 0.5, -0.5, -1.5, -0.5, 0.5, 1.5, 0.5, -0.5, 1.5, 0.5, 0.5, 1.5, -0.5, -0.5, 1.5, 0.5, -0.5, 1.5, -0.5, 0.5, 1.5, -0.5, -0.5, -1.5, 0.5, 0.5, -1.5, 0.5, -0.5, -1.5, -0.5, 0.5, -1.5, 0.5, 0.5, -1.5, -0.5, -0.5, -1.5, -0.5)
+
+[node name="City Chunk" type="Node3D" node_paths=PackedStringArray("_navigationRegion")]
+script = ExtResource("1_fqf2n")
+_navigationRegion = NodePath("NavigationRegion3D")
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+navigation_mesh = SubResource("NavigationMesh_cyyik")
+
+[node name="Floor" type="MeshInstance3D" parent="NavigationRegion3D"]
+mesh = SubResource("PlaneMesh_8wdfg")
+skeleton = NodePath("")
+surface_material_override/0 = ExtResource("2_th58t")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D/Floor"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Floor/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_8wdfg")
+
+[node name="Building 000" type="MeshInstance3D" parent="NavigationRegion3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1.5, -3.5)
+mesh = SubResource("BoxMesh_cyyik")
+skeleton = NodePath("")
+surface_material_override/0 = ExtResource("2_th58t")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D/Building 000"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Building 000/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_cyyik")
+
+[node name="Building 001" type="MeshInstance3D" parent="NavigationRegion3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1.5, -2)
+mesh = SubResource("BoxMesh_cyyik")
+skeleton = NodePath("")
+surface_material_override/0 = ExtResource("2_th58t")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D/Building 001"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Building 001/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_cyyik")
+
+[node name="Building 002" type="MeshInstance3D" parent="NavigationRegion3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1.5, -0.5)
+mesh = SubResource("BoxMesh_cyyik")
+skeleton = NodePath("")
+surface_material_override/0 = ExtResource("2_th58t")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D/Building 002"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Building 002/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_cyyik")
