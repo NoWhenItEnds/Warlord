@@ -11,49 +11,53 @@ namespace Warlord.Entities
         public String Name { get; init; }
 
         /// <summary> The statistic's minimum value. The actual value will be clamped to this. </summary>
+        private Int32 _minValue;
         public Int32 MinValue
         {
             get
             {
-                return MinValue;
+                return _minValue;
             }
             set
             {
-                MinValue = value;
-                if (BaseValue < MinValue)
+
+                _minValue = value;
+                if (BaseValue < _minValue)
                 {
-                    BaseValue = MinValue;
+                    BaseValue = _minValue;
                 }
             }
         }
 
         /// <summary> The statistic's maximum value. The actual value will be clamped to this. </summary>
+        private Int32 _maxValue;
         public Int32 MaxValue
         {
             get
             {
-                return MaxValue;
+                return _maxValue;
             }
             set
             {
-                MaxValue = value;
-                if (BaseValue > MaxValue)
+                _maxValue = value;
+                if (BaseValue > _maxValue)
                 {
-                    BaseValue = MaxValue;
+                    BaseValue = _maxValue;
                 }
             }
         }
 
         /// <summary> The statistic's base value before modifiers are applied. </summary>
+        private Int32 _baseValue;
         public Int32 BaseValue
         {
             get
             {
-                return BaseValue;
+                return _baseValue;
             }
             set
             {
-                BaseValue = Math.Clamp(value, MinValue, MaxValue);
+                _baseValue = Math.Clamp(value, MinValue, MaxValue);
                 CalculateValue();
             }
         }
