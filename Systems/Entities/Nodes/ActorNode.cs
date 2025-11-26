@@ -26,7 +26,7 @@ namespace Warlord.Entities.Nodes
         {
             if(!_navigationAgent.IsNavigationFinished())
             {
-                Single movementDelta = (Single)delta * 10f;
+                Single movementDelta = (Single)delta;
                 Vector3 nextPathPosition = _navigationAgent.GetNextPathPosition();
                 Vector3 newVelocity = GlobalPosition.DirectionTo(nextPathPosition) * movementDelta;
                 GlobalPosition = GlobalPosition.MoveToward(GlobalPosition + newVelocity, movementDelta);
