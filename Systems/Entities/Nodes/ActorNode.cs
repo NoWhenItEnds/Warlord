@@ -4,7 +4,7 @@ using System;
 namespace Warlord.Entities.Nodes
 {
     /// <summary> A node that represents a 'person' within the game world. </summary>
-    public partial class ActorNode : Node3D
+    public partial class ActorNode : CharacterBody3D
     {
         /// <summary> The navigation node used for pathfinding. </summary>
         [ExportGroup("Nodes")]

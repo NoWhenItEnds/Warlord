@@ -2,12 +2,12 @@
 
 [ext_resource type="Script" uid="uid://ct8qbhj8gwq61" path="res://Systems/Managers/GameManager.cs" id="1_8wdfg"]
 [ext_resource type="Script" uid="uid://j8oow3wrl8uq" path="res://Systems/Managers/InputManager.cs" id="2_fdsh7"]
-[ext_resource type="PackedScene" uid="uid://drnf40gxfixju" path="res://Systems/City/CityChunk.tscn" id="3_5p3x2"]
 [ext_resource type="Script" uid="uid://t383rt58i6um" path="res://Systems/Nodes/MainCamera3D.cs" id="3_j7grf"]
 [ext_resource type="Script" uid="uid://bltji3s65ra6b" path="res://Systems/Managers/ActorManager.cs" id="4_5p3x2"]
 [ext_resource type="PackedScene" uid="uid://bfv0hx503f0yk" path="res://Systems/Entities/Nodes/ActorNode.tscn" id="5_sa7mi"]
 [ext_resource type="PackedScene" uid="uid://lpcdniq6lnhn" path="res://Systems/UI/Components/ActorCard.tscn" id="7_8fov1"]
 [ext_resource type="Script" uid="uid://k1qk4ig48umn" path="res://Systems/UI/Windows/ActorCardBar.cs" id="7_md4fn"]
+[ext_resource type="MeshLibrary" uid="uid://0oq6n51t8461" path="res://Content/Resources/MeshLibraries/MeshLibrary_Suburb.tres" id="9_gh1u3"]
 
 [sub_resource type="Environment" id="Environment_j7grf"]
 
@@ -25,14 +25,9 @@ script = ExtResource("2_fdsh7")
 _camera = NodePath("../MainCamera3D")
 
 [node name="MainCamera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.7071068, 0.7071068, 0, -0.7071068, 0.7071068, 0, 3, 5.5)
+transform = Transform3D(1, 0, 0, 0, 0.7071068, 0.7071068, 0, -0.7071068, 0.7071068, 0, 5, 5.5)
 script = ExtResource("3_j7grf")
 metadata/_custom_type_script = "uid://t383rt58i6um"
-
-[node name="City Chunk A" parent="." instance=ExtResource("3_5p3x2")]
-
-[node name="City Chunk B" parent="." instance=ExtResource("3_5p3x2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
 
 [node name="Actors" type="Node3D" parent="."]
 script = ExtResource("4_5p3x2")
@@ -45,6 +40,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="ActorCard Bar" type="PanelContainer" parent="UI" node_paths=PackedStringArray("_cardContainer")]
 layout_mode = 1
@@ -64,6 +60,7 @@ layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="ScrollContainer" type="ScrollContainer" parent="UI/ActorCard Bar/MarginContainer"]
 layout_mode = 2
@@ -75,3 +72,10 @@ size_flags_vertical = 3
 
 [node name="ActorCard" parent="UI/ActorCard Bar/MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource("7_8fov1")]
 layout_mode = 2
+
+[node name="GridMap - Test" type="GridMap" parent="."]
+mesh_library = ExtResource("9_gh1u3")
+bake_navigation = true
+data = {
+"cells": PackedInt32Array(65535, 0, 0, 49, 0, 0, 65485, 0, 0)
+}

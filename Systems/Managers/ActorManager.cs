@@ -30,8 +30,8 @@ namespace Warlord.Managers
         {
             _objectPool = new ObjectPool<ActorNode>(this, _actorPrefab);
 
-            ActorNode node = SpawnNode(_playerData, Vector3.Zero);
-            node.SetDestination(new Vector3(10, 0, 10));
+            ActorNode node = SpawnNode(_playerData, new Vector3(0, 3, 0));
+            node.SetDestination(new Vector3(10, 3, 10));
         }
 
 
