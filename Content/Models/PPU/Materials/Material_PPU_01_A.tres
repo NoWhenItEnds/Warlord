@@ -1,0 +1,20 @@
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://bd8bppsm7wyt6"]
+
+[ext_resource type="Texture2D" uid="uid://cbp8l12h4fntr" path="res://Content/Models/PPU/Materials/Textures/T_SimpligonUniverse_01_A.png" id="1_xvwcw"]
+[ext_resource type="Texture2D" uid="uid://bojll6bhe7l6m" path="res://Content/Models/PPU/Materials/Textures/T_SimpligonUniverse_01_Emissive.png" id="2_qmxkb"]
+[ext_resource type="Texture2D" uid="uid://bsw671fscrfkb" path="res://Content/Models/PPU/Materials/Textures/T_SimpligonUniverse_01_Matelic.png" id="3_3mx6q"]
+[ext_resource type="Texture2D" uid="uid://excicav7286" path="res://Content/Models/PPU/Materials/Textures/T_SimpligonUniverse_01_NormalMap.png" id="4_aoq8f"]
+
+[resource]
+cull_mode = 2
+albedo_texture = ExtResource("1_xvwcw")
+metallic = 1.0
+metallic_texture = ExtResource("3_3mx6q")
+metallic_texture_channel = 2
+roughness = 0.5
+roughness_texture = ExtResource("3_3mx6q")
+roughness_texture_channel = 1
+emission_enabled = true
+emission_texture = ExtResource("2_qmxkb")
+normal_enabled = true
+normal_texture = ExtResource("4_aoq8f")

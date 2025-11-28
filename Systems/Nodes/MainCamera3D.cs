@@ -17,7 +17,8 @@ namespace Warlord.Nodes
 
         public void Move(Vector3 position)
         {
-            GlobalPosition += position * new Vector3(_moveSpeed, _moveSpeed * 3f, _moveSpeed);
+            Vector3 newPosition = position * new Vector3(_moveSpeed, _moveSpeed * 3f, _moveSpeed);
+            GlobalPosition += Transform.Basis * (position * new Vector3(_moveSpeed, _moveSpeed * 3f, _moveSpeed));
         }
 
 
@@ -40,6 +41,16 @@ namespace Warlord.Nodes
                 query.CollideWithAreas = true;
                 Dictionary result = GetWorld3D().DirectSpaceState.IntersectRay(query);
                 GD.Print(result);
+
+                if(result.TryGetValue("collider", out Variant collider) && collider.Obj is GridMap map)
+                {
+                    if(result.TryGetValue("position", out Variant position) && position.Obj is Vector3 hitPosition)
+                    {
+                        GD.Print($"{hitPosition} || {map.ToLocal(hitPosition)} || {map.LocalToMap(map.ToLocal(hitPosition))}");
+                        Int32 cellId = map.GetCellItem(map.LocalToMap(hitPosition));
+                        GD.Print(cellId);
+                    }
+                }
 
                 _queuedRaycast = null;
             }
