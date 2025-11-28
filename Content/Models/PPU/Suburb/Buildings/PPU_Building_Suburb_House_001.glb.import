@@ -13,7 +13,7 @@ dest_files=["res://.godot/imported/PPU_Building_Suburb_House_001.glb-f8b7fac7ac8
 
 [params]
 
-nodes/root_type="Node3D"
+nodes/root_type="StaticBody3D"
 nodes/root_name=""
 nodes/root_script=null
 nodes/apply_root_scale=true

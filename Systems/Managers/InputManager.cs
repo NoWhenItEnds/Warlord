@@ -1,6 +1,5 @@
 using System;
 using Godot;
-using Warlord.Nodes;
 using Warlord.Utilities.Singletons;
 
 namespace Warlord.Managers
@@ -9,8 +8,14 @@ namespace Warlord.Managers
     public partial class InputManager : SingletonNode<InputManager>
     {
         /// <summary> A reference to the game world's main camera. </summary>
-        [ExportGroup("Nodes")]
-        [Export] private MainCamera3D _camera;
+        private CameraManager _camera;
+
+
+        /// <inheritdoc/>
+        public override void _Ready()
+        {
+            _camera = CameraManager.Instance;
+        }
 
 
         /// <inheritdoc/>
@@ -34,6 +39,7 @@ namespace Warlord.Managers
         }
 
 
+        /// <inheritdoc/>
         public override void _UnhandledInput(InputEvent @event)
         {
             if(@event.IsActionPressed("action_select"))

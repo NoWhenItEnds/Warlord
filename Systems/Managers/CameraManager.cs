@@ -1,27 +1,40 @@
 using System;
 using Godot;
 using Godot.Collections;
+using Warlord.Utilities.Singletons;
 
-namespace Warlord.Nodes
+namespace Warlord.Managers
 {
-    /// <summary> The scene's camera that is used by the player. </summary>
-    [GlobalClass]
-    public partial class MainCamera3D : Camera3D
+    /// <summary> The game world's camera that is used by the player. </summary>
+    public partial class CameraManager : SingletonNode3D<CameraManager>
     {
+        /// <summary> The main camera. </summary>
+        [ExportGroup("Nodes")]
+        [Export] private Camera3D _camera;
+
+        /// <summary> A modifier to the camera's movement speed. </summary>
         [ExportGroup("Settings")]
         [Export] private Single _moveSpeed = 10f;
 
-        [Export] private Single _rotateSpeed = 10f;
+        /// <summary> A modifier to the camera's rotation speed. </summary>
+        [Export] private Single _rotateSpeed = 30f;
+
 
         private Vector2? _queuedRaycast = null; // TODO - Make a list of tuple for callback [Func<Dictionary>, Vector2], so that multiple can queue on the same frame.
 
+
+        /// <summary> Move the camera within the game world. </summary>
+        /// <param name="position"> The relative position to modify the camera's position. </param>
         public void Move(Vector3 position)
         {
-            Vector3 newPosition = position * new Vector3(_moveSpeed, _moveSpeed * 3f, _moveSpeed);
-            GlobalPosition += Transform.Basis * (position * new Vector3(_moveSpeed, _moveSpeed * 3f, _moveSpeed));
+            Vector3 translation = GlobalTransform.Basis * new Vector3(position.X, 0f, position.Z) * _moveSpeed;
+            Vector3 zoom = _camera.GlobalTransform.Basis.Z * position.Y * (_moveSpeed * 5f);
+            GlobalPosition += translation + zoom;
         }
 
 
+        /// <summary> Rotate the camera around the Y-axis. </summary>
+        /// <param name="amount"> The relative amount, in degrees, to rotate the camera. </param>
         public void Rotate(Single amount)
         {
             GlobalRotationDegrees += new Vector3(0f, amount, 0f) * _rotateSpeed;
@@ -35,8 +48,8 @@ namespace Warlord.Nodes
         {
             if(_queuedRaycast != null)
             {
-                Vector3 origin = ProjectRayOrigin(_queuedRaycast.Value);
-                Vector3 end = origin + ProjectRayNormal(_queuedRaycast.Value) * 5000f;
+                Vector3 origin = _camera.ProjectRayOrigin(_queuedRaycast.Value);
+                Vector3 end = origin + _camera.ProjectRayNormal(_queuedRaycast.Value) * 5000f;
                 PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(origin, end);
                 query.CollideWithAreas = true;
                 Dictionary result = GetWorld3D().DirectSpaceState.IntersectRay(query);
