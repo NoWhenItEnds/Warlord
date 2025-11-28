@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using Godot.Collections;
 using Warlord.Utilities.Singletons;
 
 namespace Warlord.Managers
@@ -46,8 +47,13 @@ namespace Warlord.Managers
             {
                 Viewport viewPort = GetViewport();
                 Vector2 position = @event is InputEventMouseButton mouse ? mouse.Position : viewPort.GetVisibleRect().Size * 0.5f;
-                _camera.QueueRaycast(position);
+                _camera.QueueRaycast(SelectCallback, position);
             }
+        }
+
+        private void SelectCallback(Dictionary result)
+        {
+            GD.Print(result);
         }
     }
 }

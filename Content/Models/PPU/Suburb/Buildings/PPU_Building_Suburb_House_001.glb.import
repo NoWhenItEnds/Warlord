@@ -13,9 +13,9 @@ dest_files=["res://.godot/imported/PPU_Building_Suburb_House_001.glb-f8b7fac7ac8
 
 [params]
 
-nodes/root_type="StaticBody3D"
+nodes/root_type="Node3D"
 nodes/root_name=""
-nodes/root_script=null
+nodes/root_script=Resource("uid://cntkjrmtg1dx4", "res://Systems/Entities/Nodes/Buildings/HouseNode.cs")
 nodes/apply_root_scale=true
 nodes/root_scale=1.0
 nodes/import_as_skeleton_bones=false
@@ -48,6 +48,11 @@ _subresources={
 "use_external/enabled": true,
 "use_external/fallback_path": "res://Content/Models/PPU/Materials/Material_PPU_Glass_01.tres",
 "use_external/path": "uid://oov7amwl77dg"
+}
+},
+"nodes": {
+"PATH:SM_Bldg_Suburb_House_01": {
+"generate/physics": true
 }
 }
 }
