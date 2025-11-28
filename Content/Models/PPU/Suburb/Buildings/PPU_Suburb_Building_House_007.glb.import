@@ -4,16 +4,16 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://dwj5jpyv0wt28"
-path="res://.godot/imported/PPU_Building_Suburb_House_007.glb-dca31d3925ac9fd922bbde411f5191cd.scn"
+path="res://.godot/imported/PPU_Suburb_Building_House_007.glb-9ccc746044a93b8001a923e93cd10de3.scn"
 
 [deps]
 
-source_file="res://Content/Models/PPU/Suburb/Buildings/PPU_Building_Suburb_House_007.glb"
-dest_files=["res://.godot/imported/PPU_Building_Suburb_House_007.glb-dca31d3925ac9fd922bbde411f5191cd.scn"]
+source_file="res://Content/Models/PPU/Suburb/Buildings/PPU_Suburb_Building_House_007.glb"
+dest_files=["res://.godot/imported/PPU_Suburb_Building_House_007.glb-9ccc746044a93b8001a923e93cd10de3.scn"]
 
 [params]
 
-nodes/root_type="Node3D"
+nodes/root_type="StaticBody3D"
 nodes/root_name=""
 nodes/root_script=Resource("uid://cntkjrmtg1dx4", "res://Systems/Entities/Nodes/Buildings/HouseNode.cs")
 nodes/apply_root_scale=true
@@ -43,11 +43,6 @@ _subresources={
 "use_external/enabled": true,
 "use_external/fallback_path": "res://Content/Models/PPU/Materials/Material_PPU_01_D.tres",
 "use_external/path": "uid://6e0lja0d1x1l"
-}
-},
-"nodes": {
-"PATH:SM_Bldg_Suburb_House_07": {
-"generate/physics": true
 }
 }
 }

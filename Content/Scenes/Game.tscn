@@ -7,8 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://bfv0hx503f0yk" path="res://Systems/Entities/Nodes/ActorNode.tscn" id="5_sa7mi"]
 [ext_resource type="PackedScene" uid="uid://lpcdniq6lnhn" path="res://Systems/UI/Components/ActorCard.tscn" id="7_8fov1"]
 [ext_resource type="Script" uid="uid://k1qk4ig48umn" path="res://Systems/UI/Windows/ActorCardBar.cs" id="7_md4fn"]
-[ext_resource type="PackedScene" uid="uid://4wc345q3w71p" path="res://Content/Models/PPU/Suburb/Buildings/PPU_Building_Suburb_House_001.glb" id="8_gh1u3"]
-[ext_resource type="PackedScene" uid="uid://dwj5jpyv0wt28" path="res://Content/Models/PPU/Suburb/Buildings/PPU_Building_Suburb_House_007.glb" id="9_vstfe"]
+[ext_resource type="PackedScene" uid="uid://cwsm07todcj3i" path="res://Content/Prefabs/Suburb/Buildings/PPU_Suburb_Building_House_001.tscn" id="8_md4fn"]
+[ext_resource type="PackedScene" uid="uid://dqbstrhw17hcy" path="res://Content/Prefabs/Suburb/Buildings/PPU_Suburb_Building_House_007.tscn" id="9_gh1u3"]
 
 [sub_resource type="Environment" id="Environment_j7grf"]
 
@@ -88,14 +88,14 @@ layout_mode = 2
 [node name="Suburb" type="NavigationRegion3D" parent="World"]
 navigation_mesh = SubResource("NavigationMesh_vstfe")
 
-[node name="PPU_Building_Suburb_House_001" parent="World/Suburb" instance=ExtResource("8_gh1u3")]
-transform = Transform3D(-0.99999994, 0, -8.742277e-08, 0, 1, 0, 8.742277e-08, 0, -0.99999994, 0, 0, 15)
-BuildingName = "Small House"
-
-[node name="PPU_Building_Suburb_House_007" parent="World/Suburb" instance=ExtResource("9_vstfe")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -15)
-BuildingName = "Big House"
-
 [node name="MeshInstance3D" type="MeshInstance3D" parent="World/Suburb"]
 mesh = SubResource("PlaneMesh_s3n2u")
 skeleton = NodePath("")
+
+[node name="PPU_Suburb_Building_House_001" parent="World/Suburb" instance=ExtResource("8_md4fn")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 15)
+BuildingName = "Small House"
+
+[node name="PPU_Suburb_Building_House_007" parent="World/Suburb" instance=ExtResource("9_gh1u3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -15)
+BuildingName = "Big House"

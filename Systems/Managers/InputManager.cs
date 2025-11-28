@@ -1,6 +1,8 @@
 using System;
 using Godot;
 using Godot.Collections;
+using Warlord.Entities.Nodes;
+using Warlord.Entities.Nodes.Building;
 using Warlord.Utilities.Singletons;
 
 namespace Warlord.Managers
@@ -51,9 +53,22 @@ namespace Warlord.Managers
             }
         }
 
+
+        /// <summary> Handle the callback from a screen raycast query. </summary>
+        /// <param name="result"> The raw raycast result. </param>
         private void SelectCallback(Dictionary result)
         {
-            GD.Print(result);
+            if(result.TryGetValue("collider", out Variant collider))
+            {
+                if (collider.Obj is ActorNode actor)
+                {
+                    GD.Print(actor.Name);
+                }
+                else if (collider.Obj is BuildingNode building)
+                {
+                    GD.Print(building.BuildingName);
+                }
+            }
         }
     }
 }

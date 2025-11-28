@@ -78,7 +78,6 @@ namespace Warlord.Managers
                     Vector3 origin = _camera.ProjectRayOrigin(queue.position);
                     Vector3 end = origin + _camera.ProjectRayNormal(queue.position) * 1000f;
                     PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(origin, end);
-                    query.CollideWithAreas = true;
                     Dictionary result = spaceState.IntersectRay(query);
                     queue.callback(result);
                 }
