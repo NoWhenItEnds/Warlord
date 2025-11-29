@@ -1,4 +1,5 @@
 using Godot;
+using Warlord.Entities.Data;
 using Warlord.Entities.Nodes.Locations;
 using Warlord.UI.Windows;
 using Warlord.Utilities.Singletons;
@@ -17,6 +18,11 @@ namespace Warlord.Managers
 
         /// <summary> The window for displaying the state of the game world. </summary>
         [Export] private StatusWindow _statusWindow;
+
+
+        /// <summary> Set the currently selected actor. </summary>
+        /// <param name="actor"> The selected actor. A null indicates that there isn't one. </param>
+        public void ToggleActorSelection(ActorData? actor) => _statusWindow.ToggleActorSelection(actor);
 
 
         /// <summary> Toggle the UI's location selector's target. </summary>

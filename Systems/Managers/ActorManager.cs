@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using Warlord.Entities.Data;
 using Warlord.Entities.Nodes;
@@ -54,5 +55,21 @@ namespace Warlord.Managers
         /// <summary> Free an actor from the game world. </summary>
         /// <param name="actor"> The actor node to remove. </param>
         public void FreeNode(ActorNode actor) => _objectPool.FreeObject(actor);
+
+
+        /// <summary> Attempt to get the node associated with a piece of data. </summary>
+        /// <param name="data"> The data to search with. </param>
+        /// <returns> The associated node, or a null if there isn't any associated with the data. </returns>
+        public ActorNode? GetNodeFromData(ActorData data)
+        {
+            _actorMap.TryGetValue(data, out ActorNode? node);
+            return node;
+        }
+
+
+        /// <summary> Attempt to get the data associated with a node. </summary>
+        /// <param name="node"> The node to search with. </param>
+        /// <returns> The associated data, or a null if there isn't any associated with the node. </returns>
+        public ActorData? GetDataFromNode(ActorNode node) => _actorMap.FirstOrDefault(x => x.Value == node).Key ?? null;
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using Godot;
 using Godot.Collections;
+using Warlord.Entities.Data;
 using Warlord.Entities.Nodes;
 using Warlord.Entities.Nodes.Locations;
 using Warlord.Utilities.Singletons;
@@ -11,17 +12,21 @@ namespace Warlord.Managers
     public partial class InputManager : SingletonNode<InputManager>
     {
         /// <summary> A reference to the game world's main camera. </summary>
-        private CameraManager _camera;
+        private CameraManager _cameraManager;
 
         /// <summary> A reference to the game world's UI manager. </summary>
         private UIManager _uiManager;
+
+        /// <summary> A reference to the game world's actor manager. </summary>
+        private ActorManager _actorManager;
 
 
         /// <inheritdoc/>
         public override void _Ready()
         {
-            _camera = CameraManager.Instance;
+            _cameraManager = CameraManager.Instance;
             _uiManager = UIManager.Instance;
+            _actorManager = ActorManager.Instance;
         }
 
 
@@ -35,13 +40,13 @@ namespace Warlord.Managers
                 Input.GetAxis("camera_move_up", "camera_move_down"));
             if(cameraMovement != Vector3.Zero)
             {
-                _camera.Move(cameraMovement.Normalized() * (Single)delta);
+                _cameraManager.Move(cameraMovement.Normalized() * (Single)delta);
             }
 
             Single cameraRotate = Input.GetAxis("camera_rotate_right", "camera_rotate_left");
             if(cameraRotate != 0f)
             {
-                _camera.Rotate(cameraRotate * (Single)delta);
+                _cameraManager.Rotate(cameraRotate * (Single)delta);
             }
         }
 
@@ -53,7 +58,7 @@ namespace Warlord.Managers
             {
                 Viewport viewPort = GetViewport();
                 Vector2 position = @event is InputEventMouseButton mouse ? mouse.Position : viewPort.GetVisibleRect().Size * 0.5f;
-                _camera.QueueRaycast(SelectCallback, position);
+                _cameraManager.QueueRaycast(SelectCallback, position);
             }
         }
 
@@ -66,11 +71,11 @@ namespace Warlord.Managers
             {
                 if (collider.Obj is ActorNode actor)
                 {
-                    GD.Print(actor.Name);
+                    ActorData? data = _actorManager.GetDataFromNode(actor);
+                    _uiManager.ToggleActorSelection(data);
                 }
                 else if (collider.Obj is LocationNode building)
                 {
-                    GD.Print(building.LocationCommonName);
                     _uiManager.ToggleLocationSelection(building);
                 }
             }

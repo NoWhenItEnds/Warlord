@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://cieiquimpnvi"]
+[gd_scene load_steps=19 format=3 uid="uid://cieiquimpnvi"]
 
 [ext_resource type="Script" uid="uid://ct8qbhj8gwq61" path="res://Systems/Managers/GameManager.cs" id="1_8wdfg"]
 [ext_resource type="Script" uid="uid://j8oow3wrl8uq" path="res://Systems/Managers/InputManager.cs" id="2_fdsh7"]
@@ -13,6 +13,7 @@
 [ext_resource type="Script" uid="uid://hp5xrtud1gdc" path="res://Systems/UI/Windows/LocationSelection.cs" id="9_k5j0c"]
 [ext_resource type="Script" uid="uid://b0nsnlfeoi7rr" path="res://Systems/UI/Windows/StatusWindow.cs" id="12_k5j0c"]
 [ext_resource type="Script" uid="uid://ceebstuxgjslh" path="res://Systems/UI/Components/WorldComponent.cs" id="13_wrnex"]
+[ext_resource type="Script" uid="uid://kbnqitrocmlf" path="res://Systems/UI/Components/ActorComponent.cs" id="14_akf4r"]
 
 [sub_resource type="Gradient" id="Gradient_wrnex"]
 offsets = PackedFloat32Array(0, 0.3, 0.45, 0.5, 0.6, 1)
@@ -140,10 +141,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ActorCard" parent="UI/ActorCard Window/MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource("7_8fov1")]
-layout_mode = 2
-
-[node name="Status Window" type="PanelContainer" parent="UI" node_paths=PackedStringArray("_worldComponent")]
+[node name="Status Window" type="PanelContainer" parent="UI" node_paths=PackedStringArray("_worldComponent", "_actorComponent")]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 1.0
@@ -154,6 +152,7 @@ grow_horizontal = 0
 grow_vertical = 2
 script = ExtResource("12_k5j0c")
 _worldComponent = NodePath("MarginContainer/VBoxContainer/World Component")
+_actorComponent = NodePath("MarginContainer/VBoxContainer/Actor Component")
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/Status Window"]
 layout_mode = 2
@@ -192,6 +191,22 @@ fit_content = true
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Actor Component" type="Control" parent="UI/Status Window/MarginContainer/VBoxContainer"]
+[node name="Actor Component" type="Control" parent="UI/Status Window/MarginContainer/VBoxContainer" node_paths=PackedStringArray("_codenameLabel")]
 layout_mode = 2
 size_flags_vertical = 3
+script = ExtResource("14_akf4r")
+_codenameLabel = NodePath("VBoxContainer/Codename")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Status Window/MarginContainer/VBoxContainer/Actor Component"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Codename" type="RichTextLabel" parent="UI/Status Window/MarginContainer/VBoxContainer/Actor Component/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "SKITTER"
+fit_content = true
