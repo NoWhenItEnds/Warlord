@@ -1,11 +1,10 @@
 using Godot;
-using System;
 using Warlord.UI.Components;
 using Warlord.Utilities;
 
 namespace Warlord.UI.Windows
 {
-    public partial class ActorCardBar : Control
+    public partial class ActorCardWindow : Control
     {
         /// <summary> The parent container for actor cards. </summary>
         [ExportGroup("Nodes")]

@@ -6,12 +6,12 @@ using Warlord.Utilities.Singletons;
 
 namespace Warlord.Managers
 {
-    /// <summary> The game world's camera that is used by the player. </summary>
+    /// <summary> Manages the various cameras used in the game world. </summary>
     public partial class CameraManager : SingletonNode3D<CameraManager>
     {
-        /// <summary> The main camera. </summary>
+        /// <summary> The game world's main camera that the player controls.. </summary>
         [ExportGroup("Nodes")]
-        [Export] private Camera3D _camera;
+        [Export] public Camera3D MainCamera { get; private set; }
 
 
         /// <summary> A modifier to the camera's movement speed. </summary>
@@ -45,7 +45,7 @@ namespace Warlord.Managers
             }
 
 
-            Vector3 zoom = _camera.GlobalTransform.Basis.Z * position.Y * (_moveSpeed * 5f);
+            Vector3 zoom = MainCamera.GlobalTransform.Basis.Z * position.Y * (_moveSpeed * 5f);
             if(GlobalPosition.Y + zoom.Y >= _heightLimits.X && GlobalPosition.Y + zoom.Y <= _heightLimits.Y)
             {
                 GlobalPosition += zoom;
@@ -75,8 +75,8 @@ namespace Warlord.Managers
                 PhysicsDirectSpaceState3D spaceState = GetWorld3D().DirectSpaceState;
                 foreach ((Action<Dictionary> callback, Vector2 position) queue in _queuedRaycasts)
                 {
-                    Vector3 origin = _camera.ProjectRayOrigin(queue.position);
-                    Vector3 end = origin + _camera.ProjectRayNormal(queue.position) * 1000f;
+                    Vector3 origin = MainCamera.ProjectRayOrigin(queue.position);
+                    Vector3 end = origin + MainCamera.ProjectRayNormal(queue.position) * 1000f;
                     PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(origin, end);
                     Dictionary result = spaceState.IntersectRay(query);
                     queue.callback(result);

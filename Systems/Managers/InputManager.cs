@@ -2,7 +2,7 @@ using System;
 using Godot;
 using Godot.Collections;
 using Warlord.Entities.Nodes;
-using Warlord.Entities.Nodes.Building;
+using Warlord.Entities.Nodes.Locations;
 using Warlord.Utilities.Singletons;
 
 namespace Warlord.Managers
@@ -13,11 +13,15 @@ namespace Warlord.Managers
         /// <summary> A reference to the game world's main camera. </summary>
         private CameraManager _camera;
 
+        /// <summary> A reference to the game world's UI manager. </summary>
+        private UIManager _uiManager;
+
 
         /// <inheritdoc/>
         public override void _Ready()
         {
             _camera = CameraManager.Instance;
+            _uiManager = UIManager.Instance;
         }
 
 
@@ -64,10 +68,15 @@ namespace Warlord.Managers
                 {
                     GD.Print(actor.Name);
                 }
-                else if (collider.Obj is BuildingNode building)
+                else if (collider.Obj is LocationNode building)
                 {
                     GD.Print(building.BuildingName);
+                    _uiManager.ToggleLocationSelection(building);
                 }
+            }
+            else
+            {
+                _uiManager.ToggleLocationSelection(null);
             }
         }
     }

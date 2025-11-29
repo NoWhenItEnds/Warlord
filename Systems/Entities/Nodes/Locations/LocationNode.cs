@@ -1,10 +1,10 @@
 using Godot;
 using System;
 
-namespace Warlord.Entities.Nodes.Building
+namespace Warlord.Entities.Nodes.Locations
 {
-    /// <summary> A building node within the game world that can be interacted with. </summary>
-    public abstract partial class BuildingNode : Node3D
+    /// <summary> A location node within the game world that can be interacted with. </summary>
+    public abstract partial class LocationNode : Node3D
     {
         /// <summary> The area an entity needs to be within to be interacted with. </summary>
         [ExportGroup("Nodes")]

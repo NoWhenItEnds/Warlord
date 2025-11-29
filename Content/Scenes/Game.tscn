@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cieiquimpnvi"]
+[gd_scene load_steps=15 format=3 uid="uid://cieiquimpnvi"]
 
 [ext_resource type="Script" uid="uid://ct8qbhj8gwq61" path="res://Systems/Managers/GameManager.cs" id="1_8wdfg"]
 [ext_resource type="Script" uid="uid://j8oow3wrl8uq" path="res://Systems/Managers/InputManager.cs" id="2_fdsh7"]
@@ -6,9 +6,11 @@
 [ext_resource type="Script" uid="uid://bltji3s65ra6b" path="res://Systems/Managers/ActorManager.cs" id="4_5p3x2"]
 [ext_resource type="PackedScene" uid="uid://bfv0hx503f0yk" path="res://Systems/Entities/Nodes/ActorNode.tscn" id="5_sa7mi"]
 [ext_resource type="PackedScene" uid="uid://lpcdniq6lnhn" path="res://Systems/UI/Components/ActorCard.tscn" id="7_8fov1"]
-[ext_resource type="Script" uid="uid://k1qk4ig48umn" path="res://Systems/UI/Windows/ActorCardBar.cs" id="7_md4fn"]
+[ext_resource type="Script" uid="uid://k1qk4ig48umn" path="res://Systems/UI/Windows/ActorCardWindow.cs" id="7_md4fn"]
 [ext_resource type="PackedScene" uid="uid://cwsm07todcj3i" path="res://Content/Prefabs/Suburb/Buildings/PPU_Suburb_Building_House_001.tscn" id="8_md4fn"]
+[ext_resource type="Script" uid="uid://d37i7jir0mey" path="res://Systems/Managers/UIManager.cs" id="8_s3n2u"]
 [ext_resource type="PackedScene" uid="uid://dqbstrhw17hcy" path="res://Content/Prefabs/Suburb/Buildings/PPU_Suburb_Building_House_007.tscn" id="9_gh1u3"]
+[ext_resource type="Script" uid="uid://hp5xrtud1gdc" path="res://Systems/UI/Windows/LocationSelection.cs" id="9_k5j0c"]
 
 [sub_resource type="Environment" id="Environment_j7grf"]
 
@@ -27,61 +29,22 @@ environment = SubResource("Environment_j7grf")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
 transform = Transform3D(1, 0, 0, 0, -0.7431448, 0.6691306, 0, -0.6691306, -0.7431448, 0, 0, 0)
+shadow_enabled = true
 
 [node name="Input Manager" type="Node" parent="."]
 script = ExtResource("2_fdsh7")
 
-[node name="Camera Manager" type="Node3D" parent="." node_paths=PackedStringArray("_camera")]
+[node name="Camera Manager" type="Node3D" parent="." node_paths=PackedStringArray("MainCamera")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
 script = ExtResource("3_j7grf")
-_camera = NodePath("Camera3D")
+MainCamera = NodePath("Main Camera")
 
-[node name="Camera3D" type="Camera3D" parent="Camera Manager"]
+[node name="Main Camera" type="Camera3D" parent="Camera Manager"]
 transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 0, 0)
 
 [node name="Actors" type="Node3D" parent="."]
 script = ExtResource("4_5p3x2")
 _actorPrefab = ExtResource("5_sa7mi")
-
-[node name="UI" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="ActorCard Bar" type="PanelContainer" parent="UI" node_paths=PackedStringArray("_cardContainer")]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -128.0
-grow_horizontal = 2
-grow_vertical = 0
-script = ExtResource("7_md4fn")
-_cardContainer = NodePath("MarginContainer/ScrollContainer/HBoxContainer")
-_actorCardPrefab = ExtResource("7_8fov1")
-
-[node name="MarginContainer" type="MarginContainer" parent="UI/ActorCard Bar"]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="ScrollContainer" type="ScrollContainer" parent="UI/ActorCard Bar/MarginContainer"]
-layout_mode = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/ActorCard Bar/MarginContainer/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="ActorCard" parent="UI/ActorCard Bar/MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource("7_8fov1")]
-layout_mode = 2
 
 [node name="World" type="Node3D" parent="."]
 
@@ -99,3 +62,71 @@ BuildingName = "Small House"
 [node name="PPU_Suburb_Building_House_007" parent="World/Suburb" instance=ExtResource("9_gh1u3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -15)
 BuildingName = "Big House"
+
+[node name="UI" type="Control" parent="." node_paths=PackedStringArray("_locationSelection", "_actorCardWindow")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("8_s3n2u")
+_locationSelection = NodePath("Location Selection")
+_actorCardWindow = NodePath("ActorCard Window")
+
+[node name="Location Selection" type="PanelContainer" parent="UI"]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("9_k5j0c")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/Location Selection"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Location Selection/MarginContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="UI/Location Selection/MarginContainer/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "NAME"
+fit_content = true
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="UI/Location Selection/MarginContainer/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "NAME"
+fit_content = true
+
+[node name="ActorCard Window" type="PanelContainer" parent="UI" node_paths=PackedStringArray("_cardContainer")]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -128.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("7_md4fn")
+_cardContainer = NodePath("MarginContainer/ScrollContainer/HBoxContainer")
+_actorCardPrefab = ExtResource("7_8fov1")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/ActorCard Window"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="ScrollContainer" type="ScrollContainer" parent="UI/ActorCard Window/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/ActorCard Window/MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ActorCard" parent="UI/ActorCard Window/MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource("7_8fov1")]
+layout_mode = 2
