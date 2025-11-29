@@ -8,6 +8,10 @@ namespace Warlord.UI.Windows
     /// <summary> A popup with information about a selected location. </summary>
     public partial class LocationSelection : Control
     {
+        /// <summary> The label to show the name of the location. </summary>
+        [ExportGroup("Nodes")]
+        [Export] private RichTextLabel _nameLabel;
+
         /// <summary> The current location the selection is tracking. </summary>
         private LocationNode? _trackedNode = null;
 
@@ -39,7 +43,8 @@ namespace Warlord.UI.Windows
         /// <inheritdoc/>
         public override void _Process(Double delta)
         {
-            if(_trackedNode != null)
+            UpdateUI();
+            if (_trackedNode != null)
             {
                 Vector2 nodePosition = _cameraManager.MainCamera.UnprojectPosition(_trackedNode.GlobalTransform.Origin);
                 Vector2 offset = CalculateOffset(nodePosition);
@@ -66,6 +71,16 @@ namespace Warlord.UI.Windows
             if (position.Y < y0) { offset.Y = Math.Abs(position.Y); }
 
             return offset;
+        }
+
+
+        /// <summary> Update all the UI elements. </summary>
+        private void UpdateUI()
+        {
+            if(_trackedNode != null)
+            {
+                _nameLabel.Text = _trackedNode.LocationCommonName;
+            }
         }
     }
 }

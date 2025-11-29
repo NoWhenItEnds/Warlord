@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://cieiquimpnvi"]
+[gd_scene load_steps=18 format=3 uid="uid://cieiquimpnvi"]
 
 [ext_resource type="Script" uid="uid://ct8qbhj8gwq61" path="res://Systems/Managers/GameManager.cs" id="1_8wdfg"]
 [ext_resource type="Script" uid="uid://j8oow3wrl8uq" path="res://Systems/Managers/InputManager.cs" id="2_fdsh7"]
@@ -11,6 +11,12 @@
 [ext_resource type="Script" uid="uid://d37i7jir0mey" path="res://Systems/Managers/UIManager.cs" id="8_s3n2u"]
 [ext_resource type="PackedScene" uid="uid://dqbstrhw17hcy" path="res://Content/Prefabs/Suburb/Buildings/PPU_Suburb_Building_House_007.tscn" id="9_gh1u3"]
 [ext_resource type="Script" uid="uid://hp5xrtud1gdc" path="res://Systems/UI/Windows/LocationSelection.cs" id="9_k5j0c"]
+[ext_resource type="Script" uid="uid://b0nsnlfeoi7rr" path="res://Systems/UI/Windows/StatusWindow.cs" id="12_k5j0c"]
+[ext_resource type="Script" uid="uid://ceebstuxgjslh" path="res://Systems/UI/Components/WorldComponent.cs" id="13_wrnex"]
+
+[sub_resource type="Gradient" id="Gradient_wrnex"]
+offsets = PackedFloat32Array(0, 0.3, 0.45, 0.5, 0.6, 1)
+colors = PackedColorArray(0.101960786, 0.13725491, 0.21960784, 1, 1, 0.41960785, 0.41960785, 1, 1, 0.54901963, 0.4117647, 1, 1, 0.8156863, 0.627451, 1, 1, 0.972549, 0.9411765, 1, 1, 1, 1, 1)
 
 [sub_resource type="Environment" id="Environment_j7grf"]
 
@@ -21,13 +27,16 @@ polygons = [PackedInt32Array(1, 0, 2), PackedInt32Array(2, 0, 3), PackedInt32Arr
 [sub_resource type="PlaneMesh" id="PlaneMesh_s3n2u"]
 size = Vector2(50, 50)
 
-[node name="Game" type="Node"]
+[node name="Game" type="Node" node_paths=PackedStringArray("_environment", "_sunlight")]
 script = ExtResource("1_8wdfg")
+_environment = NodePath("WorldEnvironment")
+_sunlight = NodePath("WorldEnvironment/Sunlight")
+_sunlightColour = SubResource("Gradient_wrnex")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_j7grf")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
+[node name="Sunlight" type="DirectionalLight3D" parent="WorldEnvironment"]
 transform = Transform3D(1, 0, 0, 0, -0.7431448, 0.6691306, 0, -0.6691306, -0.7431448, 0, 0, 0)
 shadow_enabled = true
 
@@ -57,13 +66,13 @@ skeleton = NodePath("")
 
 [node name="PPU_Suburb_Building_House_001" parent="World/Suburb" instance=ExtResource("8_md4fn")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 15)
-BuildingName = "Small House"
+LocationCommonName = "Small House"
 
 [node name="PPU_Suburb_Building_House_007" parent="World/Suburb" instance=ExtResource("9_gh1u3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -15)
-BuildingName = "Big House"
+LocationCommonName = "Big House"
 
-[node name="UI" type="Control" parent="." node_paths=PackedStringArray("_locationSelection", "_actorCardWindow")]
+[node name="UI" type="Control" parent="." node_paths=PackedStringArray("_locationSelection", "_actorCardWindow", "_statusWindow")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -74,13 +83,15 @@ mouse_filter = 2
 script = ExtResource("8_s3n2u")
 _locationSelection = NodePath("Location Selection")
 _actorCardWindow = NodePath("ActorCard Window")
+_statusWindow = NodePath("Status Window")
 
-[node name="Location Selection" type="PanelContainer" parent="UI"]
+[node name="Location Selection" type="PanelContainer" parent="UI" node_paths=PackedStringArray("_nameLabel")]
 custom_minimum_size = Vector2(256, 0)
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("9_k5j0c")
+_nameLabel = NodePath("MarginContainer/VBoxContainer/Location Name")
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/Location Selection"]
 layout_mode = 2
@@ -88,7 +99,7 @@ layout_mode = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/Location Selection/MarginContainer"]
 layout_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="UI/Location Selection/MarginContainer/VBoxContainer"]
+[node name="Location Name" type="RichTextLabel" parent="UI/Location Selection/MarginContainer/VBoxContainer"]
 layout_mode = 2
 bbcode_enabled = true
 text = "NAME"
@@ -107,6 +118,7 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = -128.0
+offset_right = -256.0
 grow_horizontal = 2
 grow_vertical = 0
 script = ExtResource("7_md4fn")
@@ -130,3 +142,56 @@ size_flags_vertical = 3
 
 [node name="ActorCard" parent="UI/ActorCard Window/MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource("7_8fov1")]
 layout_mode = 2
+
+[node name="Status Window" type="PanelContainer" parent="UI" node_paths=PackedStringArray("_worldComponent")]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -256.0
+grow_horizontal = 0
+grow_vertical = 2
+script = ExtResource("12_k5j0c")
+_worldComponent = NodePath("MarginContainer/VBoxContainer/World Component")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/Status Window"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Status Window/MarginContainer"]
+layout_mode = 2
+
+[node name="World Component" type="Control" parent="UI/Status Window/MarginContainer/VBoxContainer" node_paths=PackedStringArray("_timeLabel", "_dateLabel")]
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("13_wrnex")
+_timeLabel = NodePath("VBoxContainer/Current Time")
+_dateLabel = NodePath("VBoxContainer/Current Date")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Status Window/MarginContainer/VBoxContainer/World Component"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Current Time" type="RichTextLabel" parent="UI/Status Window/MarginContainer/VBoxContainer/World Component/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "00:00"
+fit_content = true
+
+[node name="Current Date" type="RichTextLabel" parent="UI/Status Window/MarginContainer/VBoxContainer/World Component/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "Saturday, 01 January"
+fit_content = true
+
+[node name="Organisation Component" type="Control" parent="UI/Status Window/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Actor Component" type="Control" parent="UI/Status Window/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3

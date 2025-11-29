@@ -15,6 +15,9 @@ namespace Warlord.Managers
         /// <summary> The window used for displaying actor cards. </summary>
         [Export] private ActorCardWindow _actorCardWindow;
 
+        /// <summary> The window for displaying the state of the game world. </summary>
+        [Export] private StatusWindow _statusWindow;
+
 
         /// <summary> Toggle the UI's location selector's target. </summary>
         /// <param name="location"> The location to follow. A null indicates to turn the selector off. </param>
@@ -27,10 +30,16 @@ namespace Warlord.Managers
         {
             Rect2 totalRect = GetViewportRect();
 
-            // Remove Actor card window.
+            // Remove actor card window.
             if(_actorCardWindow.Visible)
             {
                 totalRect.Size -= new Vector2(0, _actorCardWindow.Size.Y);
+            }
+
+            // Remove status window.
+            if (_statusWindow.Visible)
+            {
+                totalRect.Size -= new Vector2(_statusWindow.Size.X, 0);
             }
             return totalRect;
         }

@@ -70,7 +70,7 @@ namespace Warlord.Managers
                 }
                 else if (collider.Obj is LocationNode building)
                 {
-                    GD.Print(building.BuildingName);
+                    GD.Print(building.LocationCommonName);
                     _uiManager.ToggleLocationSelection(building);
                 }
             }

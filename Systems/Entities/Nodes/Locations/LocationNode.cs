@@ -13,6 +13,6 @@ namespace Warlord.Entities.Nodes.Locations
 
         /// <summary> The common, human-readable, name of the building. </summary>
         [ExportGroup("Settings")]
-        [Export] public String BuildingName { get; private set; } = String.Empty;
+        [Export] public String LocationCommonName { get; private set; } = String.Empty;
     }
 }
