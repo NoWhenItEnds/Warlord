@@ -1,6 +1,6 @@
 using Godot;
-using Warlord.Entities.Data;
 using Warlord.Entities.Nodes.Locations;
+using Warlord.Entities.Resources;
 using Warlord.UI.Windows;
 using Warlord.Utilities.Singletons;
 

@@ -79,7 +79,7 @@ namespace Warlord.UI.Windows
         {
             if(_trackedNode != null)
             {
-                _nameLabel.Text = _trackedNode.LocationCommonName;
+                _nameLabel.Text = _trackedNode.Data.Name;
             }
         }
     }

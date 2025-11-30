@@ -1,6 +1,6 @@
 using System;
 using Godot;
-using Warlord.Entities.Data;
+using Warlord.Entities.Resources;
 using Warlord.Managers;
 
 namespace Warlord.UI.Components

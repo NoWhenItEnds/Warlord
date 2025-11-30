@@ -1,9 +1,9 @@
 using System;
 using Godot;
 using Godot.Collections;
-using Warlord.Entities.Data;
 using Warlord.Entities.Nodes;
 using Warlord.Entities.Nodes.Locations;
+using Warlord.Entities.Resources;
 using Warlord.Utilities.Singletons;
 
 namespace Warlord.Managers
@@ -20,6 +20,9 @@ namespace Warlord.Managers
         /// <summary> A reference to the game world's actor manager. </summary>
         private ActorManager _actorManager;
 
+        /// <summary> A reference to the game world's location manager. </summary>
+        private LocationManager _locationManager;
+
 
         /// <inheritdoc/>
         public override void _Ready()
@@ -27,6 +30,7 @@ namespace Warlord.Managers
             _cameraManager = CameraManager.Instance;
             _uiManager = UIManager.Instance;
             _actorManager = ActorManager.Instance;
+            _locationManager = LocationManager.Instance;
         }
 
 
@@ -74,9 +78,9 @@ namespace Warlord.Managers
                     ActorData? data = _actorManager.GetDataFromNode(actor);
                     _uiManager.ToggleActorSelection(data);
                 }
-                else if (collider.Obj is LocationNode building)
+                else if (collider.Obj is LocationNode location)
                 {
-                    _uiManager.ToggleLocationSelection(building);
+                    _uiManager.ToggleLocationSelection(location);
                 }
             }
             else

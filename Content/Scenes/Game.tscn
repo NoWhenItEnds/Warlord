@@ -1,16 +1,19 @@
-[gd_scene load_steps=19 format=3 uid="uid://cieiquimpnvi"]
+[gd_scene load_steps=22 format=3 uid="uid://cieiquimpnvi"]
 
 [ext_resource type="Script" uid="uid://ct8qbhj8gwq61" path="res://Systems/Managers/GameManager.cs" id="1_8wdfg"]
 [ext_resource type="Script" uid="uid://j8oow3wrl8uq" path="res://Systems/Managers/InputManager.cs" id="2_fdsh7"]
 [ext_resource type="Script" uid="uid://t383rt58i6um" path="res://Systems/Managers/CameraManager.cs" id="3_j7grf"]
 [ext_resource type="Script" uid="uid://bltji3s65ra6b" path="res://Systems/Managers/ActorManager.cs" id="4_5p3x2"]
 [ext_resource type="PackedScene" uid="uid://bfv0hx503f0yk" path="res://Systems/Entities/Nodes/ActorNode.tscn" id="5_sa7mi"]
+[ext_resource type="Script" uid="uid://db76oggddenps" path="res://Systems/Managers/LocationManager.cs" id="6_a7rpa"]
 [ext_resource type="PackedScene" uid="uid://lpcdniq6lnhn" path="res://Systems/UI/Components/ActorCard.tscn" id="7_8fov1"]
 [ext_resource type="Script" uid="uid://k1qk4ig48umn" path="res://Systems/UI/Windows/ActorCardWindow.cs" id="7_md4fn"]
+[ext_resource type="Resource" uid="uid://0ngpir5t5hys" path="res://Data/Locations/Suburb/Buildings/Location_Suburb_Building_SmallHouse.tres" id="8_kqbmc"]
 [ext_resource type="PackedScene" uid="uid://cwsm07todcj3i" path="res://Content/Prefabs/Suburb/Buildings/PPU_Suburb_Building_House_001.tscn" id="8_md4fn"]
 [ext_resource type="Script" uid="uid://d37i7jir0mey" path="res://Systems/Managers/UIManager.cs" id="8_s3n2u"]
 [ext_resource type="PackedScene" uid="uid://dqbstrhw17hcy" path="res://Content/Prefabs/Suburb/Buildings/PPU_Suburb_Building_House_007.tscn" id="9_gh1u3"]
 [ext_resource type="Script" uid="uid://hp5xrtud1gdc" path="res://Systems/UI/Windows/LocationSelection.cs" id="9_k5j0c"]
+[ext_resource type="Resource" uid="uid://ddj3nnvl3pgbp" path="res://Data/Locations/Suburb/Buildings/Location_Suburb_Building_BigHouse.tres" id="10_kupp0"]
 [ext_resource type="Script" uid="uid://b0nsnlfeoi7rr" path="res://Systems/UI/Windows/StatusWindow.cs" id="12_k5j0c"]
 [ext_resource type="Script" uid="uid://ceebstuxgjslh" path="res://Systems/UI/Components/WorldComponent.cs" id="13_wrnex"]
 [ext_resource type="Script" uid="uid://kbnqitrocmlf" path="res://Systems/UI/Components/ActorComponent.cs" id="14_akf4r"]
@@ -56,22 +59,23 @@ transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70
 script = ExtResource("4_5p3x2")
 _actorPrefab = ExtResource("5_sa7mi")
 
-[node name="World" type="Node3D" parent="."]
+[node name="Locations" type="Node3D" parent="."]
+script = ExtResource("6_a7rpa")
 
-[node name="Suburb" type="NavigationRegion3D" parent="World"]
+[node name="Suburb" type="NavigationRegion3D" parent="Locations"]
 navigation_mesh = SubResource("NavigationMesh_vstfe")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Suburb"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Locations/Suburb"]
 mesh = SubResource("PlaneMesh_s3n2u")
 skeleton = NodePath("")
 
-[node name="PPU_Suburb_Building_House_001" parent="World/Suburb" instance=ExtResource("8_md4fn")]
+[node name="PPU_Suburb_Building_House_001" parent="Locations/Suburb" instance=ExtResource("8_md4fn")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 15)
-LocationCommonName = "Small House"
+Data = ExtResource("8_kqbmc")
 
-[node name="PPU_Suburb_Building_House_007" parent="World/Suburb" instance=ExtResource("9_gh1u3")]
+[node name="PPU_Suburb_Building_House_007" parent="Locations/Suburb" instance=ExtResource("9_gh1u3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -15)
-LocationCommonName = "Big House"
+Data = ExtResource("10_kupp0")
 
 [node name="UI" type="Control" parent="." node_paths=PackedStringArray("_locationSelection", "_actorCardWindow", "_statusWindow")]
 layout_mode = 3

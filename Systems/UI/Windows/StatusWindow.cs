@@ -1,5 +1,5 @@
 using Godot;
-using Warlord.Entities.Data;
+using Warlord.Entities.Resources;
 using Warlord.UI.Components;
 
 namespace Warlord.UI.Windows

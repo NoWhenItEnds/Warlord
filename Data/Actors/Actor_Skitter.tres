@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="ActorData" load_steps=8 format=3 uid="uid://y8pou806pr21"]
+
+[ext_resource type="Script" uid="uid://d2q5fn13wijn5" path="res://Systems/Entities/Resources/Stat.cs" id="1_ytm8f"]
+[ext_resource type="Script" uid="uid://b74ihexp013yr" path="res://Systems/Entities/Resources/ActorData.cs" id="2_g0ycf"]
+
+[sub_resource type="Resource" id="Resource_ytm8f"]
+script = ExtResource("1_ytm8f")
+Name = "attribute_dexterity"
+MaxValue = 10
+BaseValue = 1
+
+[sub_resource type="Resource" id="Resource_g0ycf"]
+script = ExtResource("1_ytm8f")
+Name = "attribute_intellect"
+MaxValue = 10
+BaseValue = 1
+
+[sub_resource type="Resource" id="Resource_lwaky"]
+script = ExtResource("1_ytm8f")
+Name = "attribute_presence"
+MaxValue = 10
+BaseValue = 1
+
+[sub_resource type="Resource" id="Resource_nndgf"]
+script = ExtResource("1_ytm8f")
+Name = "attribute_strength"
+MaxValue = 10
+BaseValue = 1
+
+[sub_resource type="Resource" id="Resource_0gckx"]
+script = ExtResource("1_ytm8f")
+Name = "attribute_vigor"
+MaxValue = 10
+BaseValue = 1
+
+[resource]
+script = ExtResource("2_g0ycf")
+Name = "Skitter"
+metadata/_custom_type_script = "uid://b74ihexp013yr"

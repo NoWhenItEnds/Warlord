@@ -1,5 +1,5 @@
 using Godot;
-using System;
+using Warlord.Entities.Resources;
 
 namespace Warlord.Entities.Nodes.Locations
 {
@@ -11,8 +11,8 @@ namespace Warlord.Entities.Nodes.Locations
         [Export] private Area3D _interactionArea;
 
 
-        /// <summary> The common, human-readable, name of the building. </summary>
-        [ExportGroup("Settings")]
-        [Export] public String LocationCommonName { get; private set; } = String.Empty;
+        /// <summary> The entity data attached to the node. </summary>
+        [ExportGroup("Resource")]
+        [Export] public LocationData Data { get; private set; }
     }
 }

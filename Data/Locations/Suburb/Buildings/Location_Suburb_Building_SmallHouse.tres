@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="LocationData" load_steps=2 format=3 uid="uid://0ngpir5t5hys"]
+
+[ext_resource type="Script" uid="uid://dd1wekrcb7vnx" path="res://Systems/Entities/Resources/LocationData.cs" id="1_1ox5h"]
+
+[resource]
+script = ExtResource("1_1ox5h")
+Name = "Small House"
+metadata/_custom_type_script = "uid://dd1wekrcb7vnx"

@@ -1,18 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Godot;
 
-namespace Warlord.Entities
+namespace Warlord.Entities.Resources
 {
     /// <summary> A class representing a generic statistic. </summary>
-    public class Stat : IEquatable<Stat>
+    [GlobalClass]
+    public partial class Stat : Resource, IEquatable<Stat>
     {
         /// <summary> The unique name or identifier for the statistic. </summary>
-        public String Name { get; init; }
+        [Export] public String Name { get; private set; }
 
         /// <summary> The statistic's minimum value. The actual value will be clamped to this. </summary>
         private Int32 _minValue;
-        public Int32 MinValue
+
+        /// <summary> The statistic's minimum value. The actual value will be clamped to this. </summary>
+        [Export] public Int32 MinValue
         {
             get
             {
@@ -31,7 +35,9 @@ namespace Warlord.Entities
 
         /// <summary> The statistic's maximum value. The actual value will be clamped to this. </summary>
         private Int32 _maxValue;
-        public Int32 MaxValue
+
+        /// <summary> The statistic's maximum value. The actual value will be clamped to this. </summary>
+        [Export] public Int32 MaxValue
         {
             get
             {
@@ -49,7 +55,9 @@ namespace Warlord.Entities
 
         /// <summary> The statistic's base value before modifiers are applied. </summary>
         private Int32 _baseValue;
-        public Int32 BaseValue
+
+        /// <summary> The statistic's base value before modifiers are applied. </summary>
+        [Export] public Int32 BaseValue
         {
             get
             {
@@ -77,6 +85,10 @@ namespace Warlord.Entities
 
         /// <summary> The modifiers currently being applied to the stat. </summary>
         private HashSet<StatModifier> _modifiers = new HashSet<StatModifier>();
+
+
+        /// <summary> A class representing a generic statistic. </summary>
+        public Stat() { }
 
 
         /// <summary> A class representing a generic statistic. </summary>
