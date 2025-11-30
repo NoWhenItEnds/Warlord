@@ -1,6 +1,226 @@
-[gd_scene load_steps=2 format=3 uid="uid://cieiquimpnvi"]
+[gd_scene load_steps=24 format=3 uid="uid://cieiquimpnvi"]
 
 [ext_resource type="Script" uid="uid://ct8qbhj8gwq61" path="res://Systems/Managers/GameManager.cs" id="1_8wdfg"]
+[ext_resource type="Script" uid="uid://j8oow3wrl8uq" path="res://Systems/Managers/InputManager.cs" id="2_fdsh7"]
+[ext_resource type="Script" uid="uid://rlbfm3gdmia5" path="res://Systems/Managers/OrganisationManager.cs" id="2_kupp0"]
+[ext_resource type="Script" uid="uid://t383rt58i6um" path="res://Systems/Managers/CameraManager.cs" id="3_j7grf"]
+[ext_resource type="Script" uid="uid://b6gtkuav1l43g" path="res://Systems/Nodes/OrganisationController.cs" id="3_uxds2"]
+[ext_resource type="Script" uid="uid://bltji3s65ra6b" path="res://Systems/Managers/ActorManager.cs" id="4_5p3x2"]
+[ext_resource type="PackedScene" uid="uid://bfv0hx503f0yk" path="res://Systems/Entities/Nodes/ActorNode.tscn" id="5_sa7mi"]
+[ext_resource type="Script" uid="uid://db76oggddenps" path="res://Systems/Managers/LocationManager.cs" id="6_a7rpa"]
+[ext_resource type="PackedScene" uid="uid://lpcdniq6lnhn" path="res://Systems/UI/Components/ActorCard.tscn" id="7_8fov1"]
+[ext_resource type="Script" uid="uid://k1qk4ig48umn" path="res://Systems/UI/Windows/ActorCardWindow.cs" id="7_md4fn"]
+[ext_resource type="Resource" uid="uid://0ngpir5t5hys" path="res://Data/Locations/Suburb/Buildings/Location_Suburb_Building_SmallHouse.tres" id="8_kqbmc"]
+[ext_resource type="PackedScene" uid="uid://cwsm07todcj3i" path="res://Content/Prefabs/Suburb/Buildings/PPU_Suburb_Building_House_001.tscn" id="8_md4fn"]
+[ext_resource type="Script" uid="uid://d37i7jir0mey" path="res://Systems/Managers/UIManager.cs" id="8_s3n2u"]
+[ext_resource type="PackedScene" uid="uid://dqbstrhw17hcy" path="res://Content/Prefabs/Suburb/Buildings/PPU_Suburb_Building_House_007.tscn" id="9_gh1u3"]
+[ext_resource type="Script" uid="uid://hp5xrtud1gdc" path="res://Systems/UI/Windows/LocationSelection.cs" id="9_k5j0c"]
+[ext_resource type="Resource" uid="uid://ddj3nnvl3pgbp" path="res://Data/Locations/Suburb/Buildings/Location_Suburb_Building_BigHouse.tres" id="10_kupp0"]
+[ext_resource type="Script" uid="uid://b0nsnlfeoi7rr" path="res://Systems/UI/Windows/StatusWindow.cs" id="12_k5j0c"]
+[ext_resource type="Script" uid="uid://ceebstuxgjslh" path="res://Systems/UI/Components/WorldComponent.cs" id="13_wrnex"]
+[ext_resource type="Script" uid="uid://kbnqitrocmlf" path="res://Systems/UI/Components/ActorComponent.cs" id="14_akf4r"]
 
-[node name="Game" type="Node"]
+[sub_resource type="Gradient" id="Gradient_wrnex"]
+offsets = PackedFloat32Array(0, 0.3, 0.45, 0.5, 0.6, 1)
+colors = PackedColorArray(0.101960786, 0.13725491, 0.21960784, 1, 1, 0.41960785, 0.41960785, 1, 1, 0.54901963, 0.4117647, 1, 1, 0.8156863, 0.627451, 1, 1, 0.972549, 0.9411765, 1, 1, 1, 1, 1)
+
+[sub_resource type="Environment" id="Environment_j7grf"]
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_vstfe"]
+vertices = PackedVector3Array(-7, 0.49999994, -19.25, -6.5, 0.49999994, -19.5, -6.5, 0.49999994, -24.5, -24.5, 0.49999994, -24.5, -24.5, 0.49999994, -6, -7, 0.49999994, -6, 0.75, 0.49999994, -22, 6.5, 0.49999994, -22, 6.5, 0.49999994, -24.5, 0.75, 0.49999994, -19.25, 7, 0.49999994, -21.75, 7, 0.49999994, -18.5, 9.25, 0.49999994, -18.25, 24.5, 0.49999994, -24.5, 9, 0.49999994, -10.75, 24.5, 0.49999994, -10.75, 1.25, 4, -21.25, 1.25, 5, -19.75, 6.25, 5, -19.75, 6.25, 4, -21.25, 4.25, 0.49999994, -19, 5.5, 0.49999994, -19.25, 5.5, 0.74999994, -20.5, 2, 0.49999994, -20.5, 2, 0.49999994, -18, -5.5, 0.49999994, -12, 4.25, 0.49999994, -12, -5.5, 0.49999994, -18, -6.25, 7.25, -18.75, -6.25, 7.75, -18, -4.75, 7.75, -17.75, 2.25, 7.25, -18.75, -5.75, 7.25, -11, -5.75, 7.25, -9.75, -1.75, 7.25, -9.75, -3.083334, 8, -10.166667, -4.416666, 8, -10.583333, -4.416666, 8, -9.75, -3.083334, 8, -9.75, -1.5, 7.25, -11.25, 2, 7.25, -11.25, 2.25, 8.5, -13.25, -4.75, 9, -15.5, -3.9375, 9, -14.4375, 2.25, 9, -14.625, 2.25, 8.75, -16, 0.4850731, 9, -14.509077, 0.48003578, 8.75, -15.992038, -6.25, 9.25, -15.25, -6.25, 7.25, -11.25, -3.9899883, 8.25, -11.514012, -4.0249996, 8.25, -13.025, 3, 8.75, -13.25, 3, 8.75, -12, 4.5, 8.75, -12, 4.5, 8.75, -13.25, 5.5, 8.5, -13.25, 6.25, 7.25, -18.75, 5.375, 8.75, -16, 5.6875, 9, -14.625, 5.875, 8.75, -16, 5.5, 7.25, -11.25, 6.25, 7.25, -11.25, 6.25, 9.25, -15, 2.625, 8.75, -16, -5.5, 3.75, -12, 5.5, 3.75, -12, 4, 3.75, -12.5, 4, 3.75, -17.5, 4.5, 3.75, -18, -5.5, 3.75, -18, -1, 4, -10.5, -1, 4, -9.75, -0.25, 3.5, -9.75, 6.75, 3.75, -10.5, 8.25, 3.25, -17.75, 7, 3.25, -17.75, 8.25, 3.25, -9.25, 6.950001, 3.75, -16.3, -0.25, 3.25, -9.25, 7.5, 0.49999994, -17.25, 7, 0.49999994, -17.25, 7, 0.49999994, -10.75, 7.5, 0.49999994, -9.75, -0.5, 0.49999994, -5.75, -1.75, 0.49999994, 10.5, 4.75, 0.49999994, 10.5, 4.5, 0.49999994, -8.5, 1, 0.49999994, -8.5, 0.75, 0.49999994, -9.75, -0.5, 0.49999994, -10.5, -1.75, 0.49999994, -5.5, 8.75, 0.49999994, -8.5, 6.75, 0.49999994, 10.5, 7, 0.49999994, 11, 24.5, 0.49999994, 11, -5.5, 0.49999994, -10.75, -5.5, 0.49999994, -7, -2, 0.49999994, -7, -2, 0.49999994, -10.75, -6.25, 4, -9, -6.25, 4, -6.25, -1.25, 4, -6.25, -1.25, 4, -9, -3.75, 5.25, -9, -3.75, 5.25, -6.25, -7, 0.49999994, 11, -6.5, 0.49999994, 10.5, -6.5, 0.49999994, -5.5, -24.5, 0.49999994, 11, -6.5, 0.49999994, 24.5, -6.5, 0.49999994, 19.5, -7, 0.49999994, 19.25, -24.5, 0.49999994, 24.5, 7, 0.49999994, 19.25, 6.5, 0.49999994, 19.5, 6.5, 0.49999994, 24.5, 24.5, 0.49999994, 24.5, -3.25, 5.25, 17.25, -3.25, 5.25, 18, -1.75, 5.25, 18, -1.75, 5.25, 17.25, -1, 4, 11.25, -2.3500004, 6, 14.849998, -1.6000004, 5.25, 16.05, -1.4500008, 6, 14.849998, -6.25, 4, 18.75, -4.25, 4, 18.75, -4.25, 4.75, 17.25, -6.25, 4, 11.25, -6.25, 6, 15, -5.049999, 6, 14.849998, -1, 4.75, 17.25, -1, 6, 14.849998, 6.25, 5.25, 13.5, 5.5, 5.25, 13.5, 5.25, 6, 14.75, 6.25, 4, 18.75, 6.25, 6, 14.8125, 3.75, 4.75, 12.5, 5.25, 4.5, 12.25, 5.25, 4, 11.25, 3.75, 5.75, 14.5, -0.75, 4, 18.75, 2.5625, 6, 15.1875, 6.25, 4, 11.25, -5.25, 0.49999994, 12, -5.25, 0.49999994, 18, 5.25, 0.74999994, 18, 5.25, 0.49999994, 12, -5.25, 3.75, 14.75, -5.25, 3.75, 15.25, 5.25, 3.75, 15.25, 5.25, 3.75, 14.75)
+polygons = [PackedInt32Array(1, 0, 2), PackedInt32Array(2, 0, 3), PackedInt32Array(5, 4, 0), PackedInt32Array(0, 4, 3), PackedInt32Array(7, 6, 8), PackedInt32Array(8, 6, 2), PackedInt32Array(9, 1, 6), PackedInt32Array(6, 1, 2), PackedInt32Array(10, 7, 8), PackedInt32Array(12, 11, 10), PackedInt32Array(10, 8, 12), PackedInt32Array(12, 8, 13), PackedInt32Array(14, 12, 15), PackedInt32Array(15, 12, 13), PackedInt32Array(19, 18, 16), PackedInt32Array(16, 18, 17), PackedInt32Array(22, 21, 20), PackedInt32Array(24, 23, 20), PackedInt32Array(20, 23, 22), PackedInt32Array(27, 24, 25), PackedInt32Array(25, 24, 26), PackedInt32Array(24, 20, 26), PackedInt32Array(29, 28, 30), PackedInt32Array(30, 28, 31), PackedInt32Array(34, 38, 35), PackedInt32Array(35, 38, 37), PackedInt32Array(35, 37, 36), PackedInt32Array(36, 37, 33), PackedInt32Array(36, 33, 32), PackedInt32Array(30, 47, 42), PackedInt32Array(42, 47, 43), PackedInt32Array(43, 46, 39), PackedInt32Array(39, 46, 40), PackedInt32Array(40, 46, 41), PackedInt32Array(41, 46, 44), PackedInt32Array(44, 47, 45), PackedInt32Array(45, 47, 31), PackedInt32Array(31, 47, 30), PackedInt32Array(47, 46, 43), PackedInt32Array(46, 47, 44), PackedInt32Array(48, 51, 49), PackedInt32Array(49, 51, 32), PackedInt32Array(32, 50, 36), PackedInt32Array(36, 50, 35), PackedInt32Array(35, 39, 34), PackedInt32Array(39, 51, 43), PackedInt32Array(43, 48, 42), PackedInt32Array(48, 43, 51), PackedInt32Array(51, 50, 32), PackedInt32Array(50, 39, 35), PackedInt32Array(39, 50, 51), PackedInt32Array(55, 54, 52), PackedInt32Array(52, 54, 53), PackedInt32Array(56, 55, 59), PackedInt32Array(59, 55, 58), PackedInt32Array(59, 58, 60), PackedInt32Array(60, 58, 57), PackedInt32Array(61, 56, 62), PackedInt32Array(62, 56, 59), PackedInt32Array(62, 59, 63), PackedInt32Array(63, 59, 60), PackedInt32Array(63, 60, 57), PackedInt32Array(52, 64, 55), PackedInt32Array(55, 64, 58), PackedInt32Array(58, 64, 31), PackedInt32Array(58, 31, 57), PackedInt32Array(41, 44, 52), PackedInt32Array(52, 44, 64), PackedInt32Array(64, 44, 45), PackedInt32Array(64, 45, 31), PackedInt32Array(67, 66, 65), PackedInt32Array(70, 69, 68), PackedInt32Array(68, 67, 70), PackedInt32Array(70, 67, 65), PackedInt32Array(72, 71, 73), PackedInt32Array(73, 71, 74), PackedInt32Array(76, 75, 78), PackedInt32Array(78, 75, 74), PackedInt32Array(74, 75, 77), PackedInt32Array(73, 74, 79), PackedInt32Array(79, 74, 77), PackedInt32Array(81, 80, 82), PackedInt32Array(82, 80, 83), PackedInt32Array(88, 87, 84), PackedInt32Array(84, 87, 86), PackedInt32Array(84, 86, 85), PackedInt32Array(83, 89, 82), PackedInt32Array(82, 89, 90), PackedInt32Array(85, 91, 84), PackedInt32Array(89, 88, 90), PackedInt32Array(90, 88, 84), PackedInt32Array(14, 15, 92), PackedInt32Array(92, 15, 93), PackedInt32Array(93, 15, 94), PackedInt32Array(94, 15, 95), PackedInt32Array(86, 87, 93), PackedInt32Array(93, 87, 92), PackedInt32Array(99, 98, 96), PackedInt32Array(96, 98, 97), PackedInt32Array(103, 102, 104), PackedInt32Array(104, 102, 105), PackedInt32Array(104, 105, 101), PackedInt32Array(104, 101, 100), PackedInt32Array(107, 106, 108), PackedInt32Array(108, 106, 5), PackedInt32Array(5, 106, 109), PackedInt32Array(5, 109, 4), PackedInt32Array(91, 85, 108), PackedInt32Array(108, 85, 107), PackedInt32Array(111, 110, 112), PackedInt32Array(112, 110, 113), PackedInt32Array(106, 112, 109), PackedInt32Array(109, 112, 113), PackedInt32Array(115, 114, 116), PackedInt32Array(116, 114, 117), PackedInt32Array(94, 95, 114), PackedInt32Array(114, 95, 117), PackedInt32Array(121, 120, 118), PackedInt32Array(118, 120, 119), PackedInt32Array(121, 118, 124), PackedInt32Array(124, 118, 123), PackedInt32Array(124, 123, 125), PackedInt32Array(125, 123, 122), PackedInt32Array(127, 126, 128), PackedInt32Array(128, 126, 131), PackedInt32Array(131, 126, 130), PackedInt32Array(131, 130, 129), PackedInt32Array(121, 124, 132), PackedInt32Array(132, 124, 125), PackedInt32Array(132, 125, 133), PackedInt32Array(133, 125, 122), PackedInt32Array(128, 131, 118), PackedInt32Array(118, 131, 123), PackedInt32Array(123, 131, 129), PackedInt32Array(123, 129, 122), PackedInt32Array(134, 138, 135), PackedInt32Array(135, 138, 136), PackedInt32Array(136, 138, 137), PackedInt32Array(140, 139, 141), PackedInt32Array(141, 139, 122), PackedInt32Array(142, 136, 144), PackedInt32Array(144, 136, 137), PackedInt32Array(144, 137, 132), PackedInt32Array(132, 137, 143), PackedInt32Array(142, 144, 139), PackedInt32Array(139, 144, 122), PackedInt32Array(122, 144, 133), PackedInt32Array(133, 144, 132), PackedInt32Array(141, 145, 140), PackedInt32Array(140, 145, 135), PackedInt32Array(135, 145, 134), PackedInt32Array(149, 148, 146), PackedInt32Array(146, 148, 147), PackedInt32Array(153, 152, 150), PackedInt32Array(150, 152, 151), PackedInt32Array(115, 116, 111), PackedInt32Array(111, 116, 110)]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_s3n2u"]
+size = Vector2(50, 50)
+
+[node name="Game" type="Node" node_paths=PackedStringArray("_environment", "_sunlight")]
 script = ExtResource("1_8wdfg")
+_environment = NodePath("WorldEnvironment")
+_sunlight = NodePath("WorldEnvironment/Sunlight")
+_sunlightColour = SubResource("Gradient_wrnex")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_j7grf")
+
+[node name="Sunlight" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(1, 0, 0, 0, -0.7431448, 0.6691306, 0, -0.6691306, -0.7431448, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Camera Manager" type="Node3D" parent="." node_paths=PackedStringArray("MainCamera")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+script = ExtResource("3_j7grf")
+MainCamera = NodePath("Main Camera")
+
+[node name="Main Camera" type="Camera3D" parent="Camera Manager"]
+transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 0, 0)
+
+[node name="Actor Manager" type="Node3D" parent="."]
+script = ExtResource("4_5p3x2")
+_actorPrefab = ExtResource("5_sa7mi")
+
+[node name="Location Manager" type="Node3D" parent="."]
+script = ExtResource("6_a7rpa")
+
+[node name="Suburb" type="NavigationRegion3D" parent="Location Manager"]
+navigation_mesh = SubResource("NavigationMesh_vstfe")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Location Manager/Suburb"]
+mesh = SubResource("PlaneMesh_s3n2u")
+skeleton = NodePath("")
+
+[node name="PPU_Suburb_Building_House_001" parent="Location Manager/Suburb" instance=ExtResource("8_md4fn")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 15)
+Data = ExtResource("8_kqbmc")
+
+[node name="PPU_Suburb_Building_House_007" parent="Location Manager/Suburb" instance=ExtResource("9_gh1u3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -15)
+Data = ExtResource("10_kupp0")
+
+[node name="Organisation Manager" type="Node" parent="." node_paths=PackedStringArray("PlayerController")]
+script = ExtResource("2_kupp0")
+PlayerController = NodePath("Player Organisation")
+
+[node name="Player Organisation" type="Node" parent="Organisation Manager"]
+script = ExtResource("3_uxds2")
+metadata/_custom_type_script = "uid://b6gtkuav1l43g"
+
+[node name="Input Manager" type="Node" parent="."]
+script = ExtResource("2_fdsh7")
+
+[node name="UI Manager" type="Control" parent="." node_paths=PackedStringArray("_locationSelection", "_actorCardWindow", "_statusWindow")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("8_s3n2u")
+_locationSelection = NodePath("Location Selection")
+_actorCardWindow = NodePath("ActorCard Window")
+_statusWindow = NodePath("Status Window")
+
+[node name="Location Selection" type="PanelContainer" parent="UI Manager" node_paths=PackedStringArray("_nameLabel")]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("9_k5j0c")
+_nameLabel = NodePath("MarginContainer/VBoxContainer/Location Name")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI Manager/Location Selection"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI Manager/Location Selection/MarginContainer"]
+layout_mode = 2
+
+[node name="Location Name" type="RichTextLabel" parent="UI Manager/Location Selection/MarginContainer/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "NAME"
+fit_content = true
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="UI Manager/Location Selection/MarginContainer/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "NAME"
+fit_content = true
+
+[node name="ActorCard Window" type="PanelContainer" parent="UI Manager" node_paths=PackedStringArray("_cardContainer")]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -128.0
+offset_right = -256.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("7_md4fn")
+_cardContainer = NodePath("MarginContainer/ScrollContainer/HBoxContainer")
+_actorCardPrefab = ExtResource("7_8fov1")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI Manager/ActorCard Window"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="ScrollContainer" type="ScrollContainer" parent="UI Manager/ActorCard Window/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI Manager/ActorCard Window/MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Status Window" type="PanelContainer" parent="UI Manager" node_paths=PackedStringArray("_worldComponent", "_actorComponent")]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -256.0
+grow_horizontal = 0
+grow_vertical = 2
+script = ExtResource("12_k5j0c")
+_worldComponent = NodePath("MarginContainer/VBoxContainer/World Component")
+_actorComponent = NodePath("MarginContainer/VBoxContainer/Actor Component")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI Manager/Status Window"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI Manager/Status Window/MarginContainer"]
+layout_mode = 2
+
+[node name="World Component" type="Control" parent="UI Manager/Status Window/MarginContainer/VBoxContainer" node_paths=PackedStringArray("_timeLabel", "_dateLabel")]
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("13_wrnex")
+_timeLabel = NodePath("VBoxContainer/Current Time")
+_dateLabel = NodePath("VBoxContainer/Current Date")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI Manager/Status Window/MarginContainer/VBoxContainer/World Component"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Current Time" type="RichTextLabel" parent="UI Manager/Status Window/MarginContainer/VBoxContainer/World Component/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "00:00"
+fit_content = true
+
+[node name="Current Date" type="RichTextLabel" parent="UI Manager/Status Window/MarginContainer/VBoxContainer/World Component/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "Saturday, 01 January"
+fit_content = true
+
+[node name="Organisation Component" type="Control" parent="UI Manager/Status Window/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Actor Component" type="Control" parent="UI Manager/Status Window/MarginContainer/VBoxContainer" node_paths=PackedStringArray("_codenameLabel")]
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("14_akf4r")
+_codenameLabel = NodePath("VBoxContainer/Codename")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI Manager/Status Window/MarginContainer/VBoxContainer/Actor Component"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Codename" type="RichTextLabel" parent="UI Manager/Status Window/MarginContainer/VBoxContainer/Actor Component/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "SKITTER"
+fit_content = true

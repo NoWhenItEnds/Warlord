@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="ActorData" load_steps=8 format=3 uid="uid://ynxhm3w710i1"]
+
+[ext_resource type="Script" uid="uid://d2q5fn13wijn5" path="res://Systems/Entities/Resources/Stat.cs" id="1_m618y"]
+[ext_resource type="Script" uid="uid://b74ihexp013yr" path="res://Systems/Entities/Resources/ActorData.cs" id="2_73fdb"]
+
+[sub_resource type="Resource" id="Resource_7yxo2"]
+script = ExtResource("1_m618y")
+Name = "attribute_dexterity"
+MaxValue = 10
+BaseValue = 1
+
+[sub_resource type="Resource" id="Resource_d6xix"]
+script = ExtResource("1_m618y")
+Name = "attribute_intellect"
+MaxValue = 10
+BaseValue = 1
+
+[sub_resource type="Resource" id="Resource_rr0rt"]
+script = ExtResource("1_m618y")
+Name = "attribute_presence"
+MaxValue = 10
+BaseValue = 1
+
+[sub_resource type="Resource" id="Resource_4btfq"]
+script = ExtResource("1_m618y")
+Name = "attribute_strength"
+MaxValue = 10
+BaseValue = 1
+
+[sub_resource type="Resource" id="Resource_lylaa"]
+script = ExtResource("1_m618y")
+Name = "attribute_vigor"
+MaxValue = 10
+BaseValue = 1
+
+[resource]
+script = ExtResource("2_73fdb")
+Name = "Tattletale"
+metadata/_custom_type_script = "uid://b74ihexp013yr"
