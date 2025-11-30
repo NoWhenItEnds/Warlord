@@ -26,18 +26,18 @@ namespace Warlord.UI.Windows
         /// <summary> The internal mapping between data and its representative card. </summary>
         private Dictionary<ActorData, ActorCard> _actorMap = new Dictionary<ActorData, ActorCard>();
 
-        /// <summary> A reference to the game world's actor manager. </summary>
-        private ActorManager _actorManager;
+        /// <summary> A reference to the game world's organisation manager. </summary>
+        private OrganisationManager _organisationManager;
 
 
         /// <inheritdoc/>
         public override void _Ready()
         {
-            _actorManager = ActorManager.Instance;
+            _organisationManager = OrganisationManager.Instance;
             _objectPool = new ObjectPool<ActorCard>(_cardContainer, _actorCardPrefab, 10);
 
             // TODO - NOT THIS WAY! Have a subscribe to organisation manager.
-            foreach (ActorData actor in _actorManager.GetActiveActors())
+            foreach (ActorData actor in _organisationManager.PlayerController.GetActors())
             {
                 SpawnNode(actor);
             }

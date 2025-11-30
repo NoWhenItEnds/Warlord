@@ -35,18 +35,11 @@ namespace Warlord.Managers
             _objectPool = new ObjectPool<ActorNode>(this, _actorPrefab);
 
             List<String> actorPaths = new List<String>(FileExtensions.GetResources("res://data/actors", [".tres"]));
-            //actorPaths.AddRange(FileExtensions.GetResources("user://data/actors", [".tres"]));
+            //actorPaths.AddRange(FileExtensions.GetResources("user://data/actors", [".tres"]));    // TODO - Load from user data.
             foreach (String path in actorPaths)
             {
                 _actorData.Add(GD.Load<ActorData>(path));
             }
-
-            // TODO - NOT THIS.
-            ActorData skitterData = _actorData.First(x => x.Name == "Skitter");
-            ActorNode node0 = SpawnNode(skitterData, new Vector3(0, 0, 0));
-            ActorData tattletaleData = _actorData.First(x => x.Name == "Tattletale");
-            ActorNode node1 = SpawnNode(tattletaleData, new Vector3(0, 0, 0));
-            node0.SetDestination(new Vector3(10, 0, 10));
         }
 
 
@@ -95,10 +88,9 @@ namespace Warlord.Managers
         public ActorData? GetDataFromNode(ActorNode node) => _actorMap.FirstOrDefault(x => x.Value == node).Key ?? null;
 
 
-
-        public ActorData[] GetActiveActors()    // TODO - Move this to organisation controller.
-        {
-            return _actorMap.Where(x => x.Value != null).Select(x => x.Key).ToArray();
-        }
+        /// <summary> Get a reference to loaded actor data by searching for its name. </summary>
+        /// <param name="name"> The name of the actor. </param>
+        /// <returns> The associated data, or a null if one wasn't found. </returns>
+        public ActorData? GetDataFromName(String name) => _actorData.FirstOrDefault(x => x.Name.ToLower() == name.ToLower()) ?? null;
     }
 }

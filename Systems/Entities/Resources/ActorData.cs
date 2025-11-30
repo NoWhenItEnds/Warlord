@@ -1,3 +1,4 @@
+using System;
 using Godot;
 using Godot.Collections;
 
@@ -26,5 +27,14 @@ namespace Warlord.Entities.Resources
 
         /// <summary> The data representing a 'person' entity. </summary>
         public ActorData() { }
+
+
+        /// <summary> Reconstruct an actor from json data. </summary>
+        /// <param name="json"> The raw json string. </param>
+        /// <returns> The constructed data object. </returns>
+        public static ActorData FromJson(String json)
+        {
+            return new ActorData(); // TODO - Implement.
+        }
     }
 }
