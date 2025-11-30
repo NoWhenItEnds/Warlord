@@ -42,7 +42,7 @@ namespace Warlord.Managers
         public override void _Process(Double delta)
         {
             CurrentTime = CurrentTime.AddSeconds(delta * _timescale);
-            _sunlight.RotationDegrees = CurrentTime.CalculateSunRotation(_geographicalLocation.Y, _geographicalLocation.X); // TODO - Fix rotation resetting at sunset.
+            _sunlight.Basis = CurrentTime.GetSunDirectionRotation(_geographicalLocation.Y, _geographicalLocation.X);
             UpdateSunlight();
         }
 

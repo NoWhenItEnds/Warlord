@@ -6,90 +6,133 @@ namespace Warlord.Utilities.Extensions
     /// <summary> Extension methods for working with DateTimeOffsets. </summary>
     public static class DateTimeOffsetExtensions
     {
+        // Constants
+        private const double Deg2Rad = Math.PI / 180.0;
+        private const double Rad2Deg = 180.0 / Math.PI;
+
         /// <summary> Calculates the Sun's altitude (elevation) and azimuth for a given time and location. </summary>
         /// <param name="time"> The current time. </param>
         /// <param name="latitude"> The location's latitude in decimal degrees (positive north). </param>
         /// <param name="longitude"> The location's longitude in decimal degrees (positive east). </param>
-        /// <returns> The resulting location of the light. </returns>
-        public static Vector3 CalculateSunRotation(this DateTimeOffset time, Double latitude, Double longitude)
+        /// <returns> Basis rotation to apply to DirectionalLight3D (forward = -Z). </returns>
+        public static Basis GetSunDirectionRotation(this DateTimeOffset dateTimeOffset, double latitude, double longitude)
         {
-            // Number of days since Jan 1, 2000 12:00 UT (J2000.0).
-            Double julianDate = time.ToUniversalTime().DateTime.ToOADate() + 2415018.5; // OADate is days since 1899-12-30.
-            Double daysSinceJ2000 = julianDate - 2451545.0;
+            // Convert to UTC for astronomical calculations
+            DateTime utcTime = dateTimeOffset.UtcDateTime;
 
-            // Mean longitude of the Sun, corrected for aberration.
-            Double meanLongitude = (280.460 + 0.9856474 * daysSinceJ2000) % 360;
-            if (meanLongitude < 0) { meanLongitude += 360; }
+            // Julian Day
+            double julianDay = GetJulianDay(utcTime);
+            double julianCentury = (julianDay - 2451545.0) / 36525.0;
 
-            // Mean anomaly of the Sun.
-            Double meanAnomaly = (357.528 + 0.9856003 * daysSinceJ2000) % 360;
-            if (meanAnomaly < 0) { meanAnomaly += 360; }
-            Double meanAnomalyRad = Mathf.DegToRad(meanAnomaly);
+            // Mean solar noon (fractional hours)
+            double solarNoon = (julianDay - longitude / 360.0) - (int)(julianDay - longitude / 360.0);
 
-            // Ecliptic longitude of the Sun.
-            Double eclipticLongitude = meanLongitude + 1.915 * Math.Sin(meanAnomalyRad) + 0.020 * Math.Sin(2 * meanAnomalyRad);
-            eclipticLongitude %= 360;
-            if (eclipticLongitude < 0) { eclipticLongitude += 360; }
-            Double eclipticLongitudeRad = Mathf.DegToRad(eclipticLongitude);
+            // Solar time (in hours)
+            double solarTime = (utcTime.Hour + utcTime.Minute / 60.0 + utcTime.Second / 3600.0) +
+                               (longitude / 15.0) + // Time zone offset approximation
+                               CalculateEquationOfTime(julianCentury);
 
-            // Obliquity of the ecliptic.
-            Double obliquity = 23.439 - 0.0000004 * daysSinceJ2000;
-            Double obliquityRad = Mathf.DegToRad(obliquity);
+            // Hour angle (degrees)
+            double hourAngle = 15.0 * (solarTime - 12.0);
 
-            // Right ascension.
-            Double sinEL = Math.Sin(eclipticLongitudeRad);
-            Double cosEL = Math.Cos(eclipticLongitudeRad);
-            Double sinObl = Math.Sin(obliquityRad);
-            Double cosObl = Math.Cos(obliquityRad);
+            // Sun's mean anomaly
+            double meanAnomaly = (357.5291 + 0.98560028 * (julianDay - 2451545.0)) % 360.0;
+            if (meanAnomaly < 0) meanAnomaly += 360.0;
 
-            Double y = cosObl * sinEL;
-            Double x = cosEL;
-            Double rightAscension = Mathf.RadToDeg(Math.Atan2(y, x));
-            if (rightAscension < 0) { rightAscension += 360; }
+            // Equation of center
+            double eqCenter = 1.9148 * Math.Sin(meanAnomaly * Deg2Rad) +
+                              0.0200 * Math.Sin(2 * meanAnomaly * Deg2Rad) +
+                              0.0003 * Math.Sin(3 * meanAnomaly * Deg2Rad);
 
-            // Declination.
-            Double declination = Mathf.RadToDeg(Math.Asin(sinObl * sinEL));
+            // Ecliptic longitude
+            double eclipticLongitude = (meanAnomaly + eqCenter + 180.0 + 102.9) % 360.0;
 
-            // Greenwich Mean Sidereal Time (GMST).
-            Double jc = daysSinceJ2000 / 36525.0; // Julian centuries from J2000
-            Double gmst = 280.46061837 + 360.98564736629 * daysSinceJ2000 + 0.000387933 * jc * jc - jc * jc * jc / 38710000;
-            gmst %= 360;
-            if (gmst < 0) { gmst += 360; }
+            // Obliquity of the ecliptic
+            double obliquity = 23.4393 - 0.0000004 * (julianDay - 2451545.0);
 
-            // Local Mean Sidereal Time.
-            Double lmst = gmst + longitude;
-            lmst = (lmst % 360 + 360) % 360; // Ensure positive
+            // Declination
+            double sinDec = Math.Sin(obliquity * Deg2Rad) * Math.Sin(eclipticLongitude * Deg2Rad);
+            double cosDec = Math.Cos(Math.Asin(sinDec));
+            double declination = Math.Asin(sinDec) * Rad2Deg;
 
-            // Hour angle.
-            Double hourAngle = lmst - rightAscension;
-            hourAngle = (hourAngle + 180) % 360 - 180; // Between -180 and 180
+            // Right ascension (approximate)
+            double rightAscension = Math.Atan2(
+                Math.Cos(obliquity * Deg2Rad) * Math.Sin(eclipticLongitude * Deg2Rad),
+                Math.Cos(eclipticLongitude * Deg2Rad)) * Rad2Deg;
+            if (rightAscension < 0) rightAscension += 360.0;
 
-            Double hourAngleRad = Mathf.DegToRad(hourAngle);
-            Double latitudeRad = Mathf.DegToRad(latitude);
-            Double declinationRad = Mathf.DegToRad(declination);
+            // Local hour angle
+            double localHourAngle = hourAngle;
 
-            // Altitude (elevation).
-            Double sinAlt = Math.Sin(latitudeRad) * Math.Sin(declinationRad) +
-                            Math.Cos(latitudeRad) * Math.Cos(declinationRad) * Math.Cos(hourAngleRad);
-            Double altitude = Mathf.RadToDeg(Math.Asin(sinAlt));
+            // Altitude (elevation) of the sun
+            double sinAlt = Math.Sin(latitude * Deg2Rad) * Math.Sin(declination * Deg2Rad) +
+                            Math.Cos(latitude * Deg2Rad) * Math.Cos(declination * Deg2Rad) * Math.Cos(localHourAngle * Deg2Rad);
+            double altitude = Math.Asin(sinAlt) * Rad2Deg;
 
-            // Azimuth.
-            Double cosAz = (Math.Sin(declinationRad) - Math.Sin(latitudeRad) * sinAlt) /
-                           (Math.Cos(latitudeRad) * Math.Cos(Mathf.DegToRad(altitude)));
+            // Azimuth (0 = North, 90 = East, 180 = South, 270 = West)
+            double azimuth = Math.Atan2(
+                Math.Sin(localHourAngle * Deg2Rad),
+                Math.Cos(localHourAngle * Deg2Rad) * Math.Sin(latitude * Deg2Rad) -
+                Math.Tan(declination * Deg2Rad) * Math.Cos(latitude * Deg2Rad)) * Rad2Deg;
 
-            // Handle edge cases near poles or when sun is on horizon.
-            if (Math.Abs(cosAz) > 1.0) { cosAz = cosAz < 0 ? -1.0 : 1.0; }
+            azimuth = (azimuth + 180.0) % 360.0; // Convert to 0=N, positive clockwise
 
-            Double azimuthCalc = Mathf.RadToDeg(Math.Acos(cosAz));
+            // Convert to Godot's coordinate system:
+            // - Azimuth 0° = North = -Z in Godot
+            // - Azimuth 90° = East = +X
+            // - Elevation 0° = horizon, 90° = zenith
+            double azimuthRad = azimuth * Deg2Rad;
+            double elevationRad = altitude * Deg2Rad;
 
-            // Determine correct azimuth quadrant.
-            Double azimuth = azimuthCalc;
-            if (hourAngle > 0) { azimuth = (360 - azimuthCalc) % 360; }
+            // Direction vector pointing TOWARD the sun
+            Vector3 sunDirection = new Vector3(
+                (float)(Math.Sin(azimuthRad) * Math.Cos(elevationRad)),  // X (East component)
+                (float)Math.Sin(elevationRad),                         // Y (Up)
+                (float)(-Math.Cos(azimuthRad) * Math.Cos(elevationRad)) // Z (North component → negative Z = north)
+            );
 
-            // Refine: azimuth from north, clockwise.
-            azimuth = (azimuth + 360) % 360;
+            // DirectionalLight3D points along -Z by default, so we want the light to point FROM sun TO earth
+            Vector3 lightDirection = -sunDirection;
 
-            return new Vector3((Single)altitude + 180f, -(Single)azimuth, 0f);
+            // Create rotation that aligns -Z basis vector with lightDirection
+            return Basis.LookingAt(lightDirection, Vector3.Up);
+        }
+
+        private static double GetJulianDay(DateTime utcTime)
+        {
+            int year = utcTime.Year;
+            int month = utcTime.Month;
+            int day = utcTime.Day;
+
+            if (month <= 2)
+            {
+                year -= 1;
+                month += 12;
+            }
+
+            int A = year / 100;
+            int B = 2 - A + (A / 4);
+
+            return Math.Floor(365.25 * (year + 4716)) +
+                   Math.Floor(30.6001 * (month + 1)) +
+                   day + B - 1524.5 +
+                   (utcTime.Hour + utcTime.Minute / 60.0 + utcTime.Second / 3600.0) / 24.0;
+        }
+
+        private static double CalculateEquationOfTime(double julianCentury)
+        {
+            double m = (357.5291 + 35999.0503 * julianCentury) % 360.0;
+            if (m < 0) m += 360.0;
+
+            double c = 1.9148 * Math.Sin(m * Deg2Rad) +
+                       0.0200 * Math.Sin(2 * m * Deg2Rad) +
+                       0.0003 * Math.Sin(3 * m * Deg2Rad);
+
+            double e = 23.4393 - 0.0000004 * (julianCentury * 10000.0);
+            double l = (280.4665 + 36000.7698 * julianCentury) % 360.0;
+
+            double eqTime = -c + 0.0056 * Math.Sin(2 * l * Deg2Rad);
+            return eqTime * 4.0; // Convert to minutes, then we'll use as hours later if needed
         }
     }
 }
