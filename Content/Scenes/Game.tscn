@@ -37,7 +37,6 @@ size = Vector2(50, 50)
 script = ExtResource("1_8wdfg")
 _environment = NodePath("WorldEnvironment")
 _sunlight = NodePath("WorldEnvironment/Sunlight")
-_timescale = 600.0
 _sunlightColour = SubResource("Gradient_wrnex")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
