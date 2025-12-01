@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Godot;
-using Warlord.Nodes;
+using Warlord.Organisations;
 using Warlord.Utilities.Singletons;
 
 namespace Warlord.Managers

@@ -1,6 +1,7 @@
 using System;
 using Godot;
 using Godot.Collections;
+using Warlord.Organisations.Objectives;
 
 namespace Warlord.Entities.Resources
 {
@@ -27,6 +28,14 @@ namespace Warlord.Entities.Resources
 
         /// <summary> The data representing a 'person' entity. </summary>
         public ActorData() { }
+
+
+        /// <summary> When the objectives of the actor's organisation change. </summary>
+        /// <param name="objectives"> The sorted array of objectives. </param>
+        public void OnObjectiveChange(OrganisationObjective[] objectives)
+        {
+
+        }
 
 
         /// <summary> Reconstruct an actor from json data. </summary>

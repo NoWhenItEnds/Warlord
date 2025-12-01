@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using Warlord.Managers;
 
 namespace Warlord.Entities.Nodes
 {
@@ -10,9 +11,13 @@ namespace Warlord.Entities.Nodes
         [ExportGroup("Nodes")]
         [Export] private NavigationAgent3D _navigationAgent;
 
+        private TimeManager _timeManager;
 
+
+        /// <inheritdoc/>
         public override void _Ready()
         {
+            _timeManager = TimeManager.Instance;
         }
 
 
@@ -22,11 +27,12 @@ namespace Warlord.Entities.Nodes
         }
 
 
+        /// <inheritdoc/>
         public override void _PhysicsProcess(Double delta)
         {
             if(!_navigationAgent.IsNavigationFinished())
             {
-                Single movementDelta = (Single)delta;
+                Single movementDelta = (Single)_timeManager.GameTimeDelta * 0.1f;   // TODO - The deltas don't match. Physics vs normal one? Also, shouldn't need modifier.
                 Vector3 nextPathPosition = _navigationAgent.GetNextPathPosition();
                 Vector3 newVelocity = GlobalPosition.DirectionTo(nextPathPosition) * movementDelta;
                 GlobalPosition = GlobalPosition.MoveToward(GlobalPosition + newVelocity, movementDelta);

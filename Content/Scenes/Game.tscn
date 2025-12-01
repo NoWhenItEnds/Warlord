@@ -1,10 +1,12 @@
-[gd_scene load_steps=24 format=3 uid="uid://cieiquimpnvi"]
+[gd_scene load_steps=25 format=3 uid="uid://cieiquimpnvi"]
 
 [ext_resource type="Script" uid="uid://ct8qbhj8gwq61" path="res://Systems/Managers/GameManager.cs" id="1_8wdfg"]
+[ext_resource type="Gradient" uid="uid://c0em5qijetmyp" path="res://Content/Resources/Gradients/Gradient_Sunlight.tres" id="2_dulfu"]
 [ext_resource type="Script" uid="uid://j8oow3wrl8uq" path="res://Systems/Managers/InputManager.cs" id="2_fdsh7"]
 [ext_resource type="Script" uid="uid://rlbfm3gdmia5" path="res://Systems/Managers/OrganisationManager.cs" id="2_kupp0"]
 [ext_resource type="Script" uid="uid://t383rt58i6um" path="res://Systems/Managers/CameraManager.cs" id="3_j7grf"]
-[ext_resource type="Script" uid="uid://b6gtkuav1l43g" path="res://Systems/Nodes/OrganisationController.cs" id="3_uxds2"]
+[ext_resource type="Script" uid="uid://cghcc8gl15qwt" path="res://Systems/Managers/TimeManager.cs" id="3_oaat0"]
+[ext_resource type="Script" uid="uid://b6gtkuav1l43g" path="res://Systems/Organisations/OrganisationController.cs" id="3_uxds2"]
 [ext_resource type="Script" uid="uid://bltji3s65ra6b" path="res://Systems/Managers/ActorManager.cs" id="4_5p3x2"]
 [ext_resource type="PackedScene" uid="uid://bfv0hx503f0yk" path="res://Systems/Entities/Nodes/ActorNode.tscn" id="5_sa7mi"]
 [ext_resource type="Script" uid="uid://db76oggddenps" path="res://Systems/Managers/LocationManager.cs" id="6_a7rpa"]
@@ -20,10 +22,6 @@
 [ext_resource type="Script" uid="uid://ceebstuxgjslh" path="res://Systems/UI/Components/WorldComponent.cs" id="13_wrnex"]
 [ext_resource type="Script" uid="uid://kbnqitrocmlf" path="res://Systems/UI/Components/ActorComponent.cs" id="14_akf4r"]
 
-[sub_resource type="Gradient" id="Gradient_wrnex"]
-offsets = PackedFloat32Array(0, 0.3, 0.45, 0.5, 0.6, 1)
-colors = PackedColorArray(0.101960786, 0.13725491, 0.21960784, 1, 1, 0.41960785, 0.41960785, 1, 1, 0.54901963, 0.4117647, 1, 1, 0.8156863, 0.627451, 1, 1, 0.972549, 0.9411765, 1, 1, 1, 1, 1)
-
 [sub_resource type="Environment" id="Environment_j7grf"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_vstfe"]
@@ -33,16 +31,19 @@ polygons = [PackedInt32Array(1, 0, 2), PackedInt32Array(2, 0, 3), PackedInt32Arr
 [sub_resource type="PlaneMesh" id="PlaneMesh_s3n2u"]
 size = Vector2(50, 50)
 
-[node name="Game" type="Node" node_paths=PackedStringArray("_environment", "_sunlight")]
+[node name="Game" type="Node"]
 script = ExtResource("1_8wdfg")
+
+[node name="Time Manager" type="Node" parent="." node_paths=PackedStringArray("_environment", "_sunlight")]
+script = ExtResource("3_oaat0")
 _environment = NodePath("WorldEnvironment")
 _sunlight = NodePath("WorldEnvironment/Sunlight")
-_sunlightColour = SubResource("Gradient_wrnex")
+_sunlightColour = ExtResource("2_dulfu")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Time Manager"]
 environment = SubResource("Environment_j7grf")
 
-[node name="Sunlight" type="DirectionalLight3D" parent="WorldEnvironment"]
+[node name="Sunlight" type="DirectionalLight3D" parent="Time Manager/WorldEnvironment"]
 transform = Transform3D(1, 0, 0, 0, -0.7431448, 0.6691306, 0, -0.6691306, -0.7431448, 0, 0, 0)
 shadow_enabled = true
 
@@ -174,10 +175,15 @@ layout_mode = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="UI Manager/Status Window/MarginContainer"]
 layout_mode = 2
 
-[node name="World Component" type="Control" parent="UI Manager/Status Window/MarginContainer/VBoxContainer" node_paths=PackedStringArray("_timeLabel", "_dateLabel")]
+[node name="World Component" type="Control" parent="UI Manager/Status Window/MarginContainer/VBoxContainer" node_paths=PackedStringArray("_pauseButton", "_realTimeButton", "_normalTimeButton", "_fastTimeButton", "_skipTimeButton", "_timeLabel", "_dateLabel")]
 layout_mode = 2
 size_flags_vertical = 3
 script = ExtResource("13_wrnex")
+_pauseButton = NodePath("VBoxContainer/HBoxContainer/Pause")
+_realTimeButton = NodePath("VBoxContainer/HBoxContainer/Real Time")
+_normalTimeButton = NodePath("VBoxContainer/HBoxContainer/Normal Time")
+_fastTimeButton = NodePath("VBoxContainer/HBoxContainer/Fast Time")
+_skipTimeButton = NodePath("VBoxContainer/HBoxContainer/Skip Time")
 _timeLabel = NodePath("VBoxContainer/Current Time")
 _dateLabel = NodePath("VBoxContainer/Current Date")
 
@@ -188,6 +194,34 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI Manager/Status Window/MarginContainer/VBoxContainer/World Component/VBoxContainer"]
+layout_mode = 2
+
+[node name="Pause" type="Button" parent="UI Manager/Status Window/MarginContainer/VBoxContainer/World Component/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "P"
+
+[node name="Real Time" type="Button" parent="UI Manager/Status Window/MarginContainer/VBoxContainer/World Component/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "R"
+
+[node name="Normal Time" type="Button" parent="UI Manager/Status Window/MarginContainer/VBoxContainer/World Component/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "1"
+
+[node name="Fast Time" type="Button" parent="UI Manager/Status Window/MarginContainer/VBoxContainer/World Component/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "5"
+
+[node name="Skip Time" type="Button" parent="UI Manager/Status Window/MarginContainer/VBoxContainer/World Component/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "9"
 
 [node name="Current Time" type="RichTextLabel" parent="UI Manager/Status Window/MarginContainer/VBoxContainer/World Component/VBoxContainer"]
 layout_mode = 2
