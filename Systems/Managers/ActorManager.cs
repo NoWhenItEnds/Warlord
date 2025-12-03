@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
+using Warlord.Entities.GOAP;
 using Warlord.Entities.Nodes;
 using Warlord.Entities.Resources;
 using Warlord.Utilities;
@@ -21,8 +22,11 @@ namespace Warlord.Managers
         /// <summary> The object pool for actor nodes. </summary>
         private ObjectPool<ActorNode> _objectPool;
 
-        /// <summary> The preloaded premade actor data. </summary>
+        /// <summary> The data for ALL the actors that exist or can exist. </summary>
         private HashSet<ActorData> _actorData = new HashSet<ActorData>();
+
+        /// <summary> An array of all the controllers for actors within the game world. </summary>
+        private List<ActorController> _actorControllers = new List<ActorController>();
 
         /// <summary> The internal mapping between data and its representative node. </summary>
         /// <remarks> A null value indicates that the data is present, but there isn't a node in the game world for it. </remarks>
@@ -38,7 +42,19 @@ namespace Warlord.Managers
             //actorPaths.AddRange(FileExtensions.GetResources("user://data/actors", [".tres"]));    // TODO - Load from user data.
             foreach (String path in actorPaths)
             {
-                _actorData.Add(GD.Load<ActorData>(path));
+                ActorData actor = GD.Load<ActorData>(path);
+                _actorData.Add(actor);
+                _actorControllers.Add(new ActorController(actor));
+            }
+        }
+
+
+        /// <inheritdoc/>
+        public override void _Process(Double delta)
+        {
+            foreach (ActorController controller in _actorControllers)
+            {
+                controller.ProcessPlan(delta);  // TODO - Use game delta.
             }
         }
 

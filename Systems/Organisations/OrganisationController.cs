@@ -20,7 +20,7 @@ namespace Warlord.Organisations
         private List<OrganisationObjective> _queuedObjectives = new List<OrganisationObjective>();
 
         /// <summary> When the organisation's objectives are changed or reordered. </summary>
-        private Action<OrganisationObjective[]> _objectivesUpdated;
+        public Action<OrganisationObjective[]> ObjectivesUpdated;
 
 
         /// <summary> A reference to the game's actor manager. </summary>
@@ -48,7 +48,6 @@ namespace Warlord.Organisations
         {
             if(_controlledActors.Add(actor))
             {
-                _objectivesUpdated += actor.OnObjectiveChange;
             }
         }
 
@@ -57,7 +56,6 @@ namespace Warlord.Organisations
         {
             if (_controlledActors.Remove(actor))
             {
-                _objectivesUpdated -= actor.OnObjectiveChange;
             }
         }
 
@@ -68,11 +66,20 @@ namespace Warlord.Organisations
         public ActorData[] GetActors() => _controlledActors.ToArray();
 
 
-        public void AddObjective(OrganisationObjective objective)
+        public void AddObjective(OrganisationObjective objective, Int32 index = -1)
         {
-            _queuedObjectives.Add(objective);
-            _queuedObjectives.Sort();
-            _objectivesUpdated?.Invoke(_queuedObjectives.ToArray());
+            if(index < 0 || index > _queuedObjectives.Count - 1)
+            {
+                _queuedObjectives.Add(objective);
+            }
+            else
+            {
+                _queuedObjectives.Insert(index, objective);
+            }
+
+            _queuedObjectives.Sort();   // TODO - How to sort.
+            ObjectivesUpdated?.Invoke(_queuedObjectives.ToArray());
+            UpdateActorObjectives();
         }
 
 
@@ -80,8 +87,25 @@ namespace Warlord.Organisations
         {
             if(_queuedObjectives.Remove(objective))
             {
-                _queuedObjectives.Sort();
-                _objectivesUpdated?.Invoke(_queuedObjectives.ToArray());
+                _queuedObjectives.Sort();   // TODO - How to sort.
+                ObjectivesUpdated?.Invoke(_queuedObjectives.ToArray());
+                UpdateActorObjectives();
+            }
+        }
+
+        private void UpdateActorObjectives()
+        {
+            if(_queuedObjectives.Count > 0)
+            {
+                OrganisationObjective current = _queuedObjectives.First();
+                foreach (ActorData actor in _controlledActors)
+                {
+                    ActorNode? actorNode = _actorManager.GetNodeFromData(actor);
+                    if (actorNode != null)
+                    {
+                        //actorNode.SetDestination();
+                    }
+                }
             }
         }
 
