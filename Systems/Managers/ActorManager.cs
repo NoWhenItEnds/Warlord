@@ -25,8 +25,8 @@ namespace Warlord.Managers
         /// <summary> The data for ALL the actors that exist or can exist. </summary>
         private HashSet<ActorData> _actorData = new HashSet<ActorData>();
 
-        /// <summary> An array of all the controllers for actors within the game world. </summary>
-        private List<ActorController> _actorControllers = new List<ActorController>();
+        /// <summary> A mapping of all the controllers for actors within the game world. </summary>
+        private Dictionary<ActorData, ActorController> _actorControllers = new Dictionary<ActorData, ActorController>();
 
         /// <summary> The internal mapping between data and its representative node. </summary>
         /// <remarks> A null value indicates that the data is present, but there isn't a node in the game world for it. </remarks>
@@ -44,7 +44,12 @@ namespace Warlord.Managers
             {
                 ActorData actor = GD.Load<ActorData>(path);
                 _actorData.Add(actor);
-                _actorControllers.Add(new ActorController(actor));
+            }
+
+            // Initialise actor controllers.
+            foreach (ActorData actor in _actorData)
+            {
+                _actorControllers.Add(actor, new ActorController(actor));
             }
         }
 
@@ -52,7 +57,7 @@ namespace Warlord.Managers
         /// <inheritdoc/>
         public override void _Process(Double delta)
         {
-            foreach (ActorController controller in _actorControllers)
+            foreach (ActorController controller in _actorControllers.Values)
             {
                 controller.ProcessPlan(delta);  // TODO - Use game delta.
             }
@@ -108,5 +113,27 @@ namespace Warlord.Managers
         /// <param name="name"> The name of the actor. </param>
         /// <returns> The associated data, or a null if one wasn't found. </returns>
         public ActorData? GetDataFromName(String name) => _actorData.FirstOrDefault(x => x.Name.ToLower() == name.ToLower()) ?? null;
+
+
+        /// <summary> Get all the actors that can exist within the game world. </summary>
+        /// <returns> An array containing all the actors within the game world. </returns>
+        public ActorData[] GetActorData() => _actorData.ToArray();
+
+
+        /// <summary> Get a reference to the controller that controls the given actor. </summary>
+        /// <param name="actor"> The actor data to search with. </param>
+        /// <returns> The discovered controller. </returns>
+        /// <exception cref="ArgumentNullException"/>
+        public ActorController GetController(ActorData actor)
+        {
+            if(_actorControllers.TryGetValue(actor, out ActorController? controller))
+            {
+                return controller;
+            }
+            else
+            {
+                throw new ArgumentNullException($"The actor data,{actor.Name}, doesn't have a controller. This shouldn't be possible.");
+            }
+        }
     }
 }

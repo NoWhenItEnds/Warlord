@@ -55,10 +55,6 @@ MainCamera = NodePath("Main Camera")
 [node name="Main Camera" type="Camera3D" parent="Camera Manager"]
 transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 0, 0)
 
-[node name="Actor Manager" type="Node3D" parent="."]
-script = ExtResource("4_5p3x2")
-_actorPrefab = ExtResource("5_sa7mi")
-
 [node name="Location Manager" type="Node3D" parent="."]
 script = ExtResource("6_a7rpa")
 
@@ -76,6 +72,10 @@ Data = ExtResource("8_kqbmc")
 [node name="PPU_Suburb_Building_House_007" parent="Location Manager/Suburb" instance=ExtResource("9_gh1u3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -15)
 Data = ExtResource("10_kupp0")
+
+[node name="Actor Manager" type="Node3D" parent="."]
+script = ExtResource("4_5p3x2")
+_actorPrefab = ExtResource("5_sa7mi")
 
 [node name="Organisation Manager" type="Node" parent="." node_paths=PackedStringArray("PlayerController")]
 script = ExtResource("2_kupp0")

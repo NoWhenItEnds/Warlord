@@ -4,7 +4,7 @@ using Warlord.Entities.Resources;
 namespace Warlord.Entities.GOAP.Strategies
 {
     /// <summary> Stand around. Look pretty. </summary>
-    public class IdleActionStrategy : IActionStrategy
+    public class IdleStrategy : IActionStrategy
     {
         /// <inheritdoc/>
         public Boolean IsValid { get; private set; } = true;    // We can always retardmax.
@@ -27,7 +27,7 @@ namespace Warlord.Entities.GOAP.Strategies
         /// <summary> Stand around. Look pretty. </summary>
         /// <param name="actor"> A reference to the actor being manipulated. </param>
         /// <param name="duration"> How long the action has remaining before it's complete. </param>
-        public IdleActionStrategy(ActorData actor, Single duration)
+        public IdleStrategy(ActorData actor, Single duration)
         {
             ACTOR = actor;   // TODO - This should play an idle animation.
             _duration = duration;

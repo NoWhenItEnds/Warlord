@@ -1,4 +1,5 @@
 using Godot;
+using Godot.Collections;
 using System;
 using Warlord.Managers;
 
@@ -9,7 +10,7 @@ namespace Warlord.Entities.Nodes
     {
         /// <summary> The navigation node used for pathfinding. </summary>
         [ExportGroup("Nodes")]
-        [Export] private NavigationAgent3D _navigationAgent;
+        [Export] public NavigationAgent3D NavigationAgent { get; private set; }
 
         private TimeManager _timeManager;
 
@@ -21,22 +22,10 @@ namespace Warlord.Entities.Nodes
         }
 
 
-        public void SetDestination(Vector3 globalPosition)
+        public void HandleMovement(Vector3 destination, Single movementDelta)
         {
-            _navigationAgent.TargetPosition = globalPosition;
-        }
-
-
-        /// <inheritdoc/>
-        public override void _PhysicsProcess(Double delta)
-        {
-            if(!_navigationAgent.IsNavigationFinished())
-            {
-                Single movementDelta = (Single)_timeManager.GameTimeDelta * 0.1f;   // TODO - The deltas don't match. Physics vs normal one? Also, shouldn't need modifier.
-                Vector3 nextPathPosition = _navigationAgent.GetNextPathPosition();
-                Vector3 newVelocity = GlobalPosition.DirectionTo(nextPathPosition) * movementDelta;
-                GlobalPosition = GlobalPosition.MoveToward(GlobalPosition + newVelocity, movementDelta);
-            }
+            Vector3 newVelocity = GlobalPosition.DirectionTo(destination) * movementDelta;
+            GlobalPosition = GlobalPosition.MoveToward(GlobalPosition + newVelocity, movementDelta);
         }
     }
 }

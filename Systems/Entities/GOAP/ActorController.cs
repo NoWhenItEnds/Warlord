@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Godot;
 using Warlord.Entities.GOAP.Strategies;
 using Warlord.Entities.Resources;
+using Warlord.Managers;
 
 namespace Warlord.Entities.GOAP
 {
@@ -23,13 +25,16 @@ namespace Warlord.Entities.GOAP
         public ActorGoal[] PreviousGoals { get; private set; } = new ActorGoal[10];
 
         /// <summary> The 'truths' the actor knows. The beliefs it has about the world state. </summary>
-        public Dictionary<String, ActorFact> AvailableBeliefs { get; private set; }
+        public Dictionary<String, ActorFact> AvailableFacts { get; private set; }
 
         /// <summary> The goals that the actor will seek to address. </summary>
         public HashSet<ActorGoal> AvailableGoals { get; private set; }
 
         /// <summary> The potential actions this actor has access to. </summary>
         public HashSet<ActorAction> AvailableActions { get; private set; }
+
+        /// <summary> The goals that the organisation has given the actor. </summary>
+        public HashSet<ActorGoal> OrganisationGoals { get; private set; }   // TODO - Implement.
 
 
         /// <summary> The entity this controller is responsible for controlling. </summary>
@@ -46,22 +51,33 @@ namespace Warlord.Entities.GOAP
             ACTOR = actor;
             PLANNER = new ActorPlanner();
 
-            InitialiseBeliefs();
-            InitialiseActions();
-            InitialiseGoals();
+            AvailableActions = new HashSet<ActorAction>();   // Initialise a new set of actions by clearing the current.
+            AvailableFacts = new Dictionary<String, ActorFact>();   // Initialise a new set of beliefs by clearing the current.
+            FactFactory factory = new FactFactory(ACTOR, AvailableFacts);
+
+            InitialiseBasicPackage(factory);
+            InitialiseLocationPackage(factory, LocationManager.Instance.GetLocationData());
+            InitialiseBasicGoals();
         }
 
 
-        /// <summary> Set's the actor's initial beliefs. </summary>
-        private void InitialiseBeliefs()    // TODO - These should be pulled from a JSON or something.
+        /// <summary> Set's the actor's initial facts and actions. </summary>
+        /// <param name="factFactory"> A reference to the factor creating these facts. </param>
+        private void InitialiseBasicPackage(FactFactory factFactory)
         {
-            AvailableBeliefs = new Dictionary<String, ActorFact>();   // Initialise a new set of beliefs by clearing the current.
-            FactFactory factory = new FactFactory(ACTOR, AvailableBeliefs);
+            factFactory.AddFact("Nothing", () => false);  // Always has a belief, even if it never will successfully evaluate.
 
-            factory.AddFact("Nothing", () => false);  // Always has a belief, even if it never will successfully evaluate.
+            factFactory.AddFact("IsEntertained", () => 50f >= 90f); // TODO - LOL. Fix.
 
-            //factory.AddFact("IsIdle", () => ACTOR.NavigationAgent.IsNavigationFinished());
-            //factory.AddFact("IsMoving", () => !ACTOR.NavigationAgent.IsNavigationFinished());
+            AvailableActions.Add(new ActorAction.Builder("Relax", new IdleStrategy(ACTOR, 5f))
+                .WithCost(0f)
+                .AddOutcome(AvailableFacts["Nothing"])
+                .Build());
+
+            AvailableActions.Add(new ActorAction.Builder("WanderAround", new WanderStrategy(ACTOR))
+                // TODO - Add cost.
+                .AddOutcome(AvailableFacts["IsEntertained"])
+                .Build());
 
             //factory.AddFact("IsHealthy", () => ACTOR.CurrentHealth >= 90f);
             //factory.AddFact("IsHurt", () => ACTOR.CurrentHealth < 50);
@@ -71,31 +87,35 @@ namespace Warlord.Entities.GOAP
             //factory.AddFact("IsTired", () => ACTOR.CurrentFatigue < 50f);
             //factory.AddFact("IsEntertained", () => ACTOR.CurrentEntertainment >= 90f);
             //factory.AddFact("IsBored", () => ACTOR.CurrentEntertainment < 50f);
+        }
 
-            // TODO - Add belief packages. Such as food beliefs that contains both the Knows and Sees for the item.
-            //factory.AddEntityFact<ItemNode>("KnowsApple", "item_food_apple");
-            //factory.AddNodeLocationBelief<ItemNode>("AtApple", "item_food_apple", 1f); // TODO - This should be based upon something.
-            //factory.AddInventoryBelief("HasApple", "item_food_apple");
 
-            //factory.AddSensorBelief("AgentKnowsPlayer", _controlledEntity.Sensors, _playerController.PlayerUnit);
-            //factory.AddBelief("AgentSeesPlayer", () => _controlledEntity.Sensors.TryGetEntity(_playerController.PlayerUnit).IsVisible);
+        /// <summary> Initialise all the facts and actions based upon locations within the game world. </summary>
+        /// <param name="factFactory"> A reference to the factor creating these facts. </param>
+        /// <param name="locations"> All the locations within the game world. </param>
+        private void InitialiseLocationPackage(FactFactory factFactory, LocationData[] locations)
+        {
+            foreach (LocationData location in locations)
+            {
+                // Add facts.
+                factFactory.AddLocationFact($"At{location.Name}", 1f, location);
+
+                // Add actions.
+                AvailableActions.Add(new ActorAction.Builder($"GoTo{location.Name}", new GoToLocationStrategy(ACTOR, location))
+                    // TODO - Add cost.
+                    .AddOutcome(AvailableFacts[$"At{location.Name}"])
+                    .Build());
+            }
         }
 
 
         /// <summary> Set's the actor's initial actions. </summary>
         private void InitialiseActions()
         {
-            AvailableActions = new HashSet<ActorAction>();   // Initialise a new set of actions by clearing the current.
 
-            AvailableActions.Add(new ActorAction.Builder("Relax", new IdleActionStrategy(ACTOR, 5f))
-                .AddOutcome(AvailableBeliefs["Nothing"])
-                .Build());
 
             /*
-            AvailableActions.Add(new ActorAction.Builder("WanderAround")
-                .WithStrategy(new WanderActionStrategy(ACTOR, 2f))
-                .AddOutcome(AvailableBeliefs["IsMoving"])
-                .Build());
+
 
             AvailableActions.Add(new ActorAction.Builder("GoToApple")   // TODO - Have harvest apple with a higher cost.
                 .WithStrategy(new GoToItemActionStrategy(ACTOR, "apple"))
@@ -120,27 +140,26 @@ namespace Warlord.Entities.GOAP
         }
 
 
-        /// <summary> Set's the agent's initial goals. </summary>
-        private void InitialiseGoals()
+        /// <summary> Set's the agent's initial goals relating to basic upkeep. </summary>
+        private void InitialiseBasicGoals()
         {
             AvailableGoals = new HashSet<ActorGoal>();
 
-
-            AvailableGoals.Add(new ActorGoal.Builder("ChillOut")
+            AvailableGoals.Add(new ActorGoal.Builder("WatchPaintDry", ActorGoal.GoalSource.BASIC)
                 .WithPriority(0)
-                .WithDesiredOutcome(AvailableBeliefs["Nothing"])
-                .Build());
-/*
-            AvailableGoals.Add(new ActorGoal.Builder("Wander")
-                .WithPriority(0)
-                .WithDesiredOutcome(AvailableBeliefs["IsMoving"])
+                .WithDesiredOutcome(AvailableFacts["Nothing"])
                 .Build());
 
-
-            AvailableGoals.Add(new ActorGoal.Builder("KeepFed")
+            AvailableGoals.Add(new ActorGoal.Builder("KeepEntertained", ActorGoal.GoalSource.BASIC)
                 .WithPriority(10)
-                .WithDesiredOutcome(AvailableBeliefs["IsFed"])
-                .Build());*/
+                .WithDesiredOutcome(AvailableFacts["IsEntertained"])
+                .Build());
+        }
+
+
+        public void TryAddGoal(String name, Int32 priority, String[] preconditions, String[] outcomes)
+        {
+
         }
 
 
@@ -160,16 +179,16 @@ namespace Warlord.Entities.GOAP
             // Update the plan and current action if there is one
             if (CurrentAction == null)
             {
-                //_uiController.SpawnSpeechBubble("Calculating any potential new plan.", ACTOR);
+                GD.Print($"{ACTOR.Name} -> Calculating new plan...");
                 CalculatePlan();
 
                 if (CurrentPlan != null && CurrentPlan.Actions.Count > 0)
                 {
                     CurrentGoal = CurrentPlan.ActorGoal;
-                    //_uiController.SpawnSpeechBubble($"Goal: {CurrentGoal.Name} with {CurrentPlan.Actions.Count} actions in plan", ACTOR);
+                    GD.Print($"{ACTOR.Name} -> Goal: {CurrentGoal.Name} with {CurrentPlan.Actions.Count} actions in plan.");
 
                     CurrentAction = CurrentPlan.Actions.Pop();
-                    //_uiController.SpawnSpeechBubble($"Popped action: {CurrentAction.Name}", ACTOR);
+                    GD.Print($"{ACTOR.Name} -> Popped action: {CurrentAction.Name}.");
 
                     // Verify all precondition effects are true
                     if (CurrentAction.Preconditions.All(b => b.Evaluate()))
@@ -178,7 +197,7 @@ namespace Warlord.Entities.GOAP
                     }
                     else
                     {
-                        //_uiController.SpawnSpeechBubble("Preconditions not met, clearing current action and goal", ACTOR);
+                        GD.Print($"{ACTOR.Name} -> Goal preconditions not met, clearing current action and goal.");
 
                         CurrentAction = null;
                         CurrentGoal = null;
@@ -194,14 +213,14 @@ namespace Warlord.Entities.GOAP
 
                 if (CurrentAction.IsComplete)
                 {
-                    //_uiController.SpawnSpeechBubble($"Action, {CurrentAction.Name}, complete.", ACTOR);
+                    GD.Print($"{ACTOR.Name} -> Action, {CurrentAction.Name}, complete.");
 
                     CurrentAction.Stop();
                     CurrentAction = null;
 
                     if (CurrentPlan.Actions.Count == 0)
                     {
-                        //_uiController.SpawnSpeechBubble("Plan complete!", ACTOR);
+                        GD.Print($"{ACTOR.Name} -> Plan complete!");
 
                         ArchiveCurrentGoal();
                     }

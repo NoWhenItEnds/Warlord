@@ -1,3 +1,4 @@
+using Warlord.Entities.GOAP;
 using Warlord.Entities.Resources;
 
 namespace Warlord.Organisations.Objectives
@@ -15,6 +16,11 @@ namespace Warlord.Organisations.Objectives
         public AssaultObjective(OrganisationController organisation, LocationData target) : base(organisation)
         {
             Target = target;
+        }
+
+        public override void AddGoal(ActorController controller)
+        {
+            controller.TryAddGoal($"Assault{Target.Name}", 0, [], []);
         }
     }
 }

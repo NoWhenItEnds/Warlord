@@ -14,14 +14,19 @@ namespace Warlord.Entities.GOAP
         public Single Priority { get; private set; } = 1f;
 
         /// <summary> The desired state of the world for the goal to be considered complete. All actions should go towards addressing these outcomes. </summary>
-        public HashSet<ActorFact> DesiredOutcomes { get; } = new();
+        public HashSet<ActorFact> DesiredOutcomes { get; } = new HashSet<ActorFact>();
+
+        /// <summary> Where the goal originates from. </summary>
+        public GoalSource Source { get; private set; }
 
 
         /// <summary> A goal that the actor desires and will use a chain of actions to complete. </summary>
         /// <param name="name"> The name or key identifying the goal. </param>
-        private ActorGoal(String name)
+        /// <param name="source"> Where the goal originates from. </param>
+        private ActorGoal(String name, GoalSource source)
         {
             Name = name;
+            Source = source;
         }
 
 
@@ -50,9 +55,10 @@ namespace Warlord.Entities.GOAP
 
             /// <summary> A helpful builder that allows for easy construction of actor goals. </summary>
             /// <param name="name"> The name or key identifying the goal. </param>
-            public Builder(String name)
+            /// <param name="source"> Where the goal originates from. </param>
+            public Builder(String name, GoalSource source)
             {
-                _goal = new ActorGoal(name);
+                _goal = new ActorGoal(name, source);
             }
 
 
@@ -92,6 +98,15 @@ namespace Warlord.Entities.GOAP
             {
                 return _goal;
             }
+        }
+
+
+        /// <summary> Where the goal originates from. </summary>
+        public enum GoalSource
+        {
+            BASIC,  // Basic upkeep such as eating.
+            PERSONAL,   // Personal goals related to the actor's desires.
+            ORGANISATION    // Goals given by the organisation controlling the actor.
         }
     }
 }

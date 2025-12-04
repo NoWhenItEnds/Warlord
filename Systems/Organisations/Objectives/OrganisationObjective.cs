@@ -1,3 +1,5 @@
+using Warlord.Entities.GOAP;
+
 namespace Warlord.Organisations.Objectives
 {
     /// <summary> A goal that the organisation wishes to achieve. </summary>
@@ -15,8 +17,6 @@ namespace Warlord.Organisations.Objectives
         }
 
 
-        //public abstract void Start(OrganisationController controller);
-
-        //public abstract void Stop(OrganisationController controller);
+        public abstract void AddGoal(ActorController controller);
     }
 }

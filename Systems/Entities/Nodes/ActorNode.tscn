@@ -5,9 +5,9 @@
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_dh5n6"]
 
-[node name="ActorNode" type="CharacterBody3D" node_paths=PackedStringArray("_navigationAgent")]
+[node name="ActorNode" type="CharacterBody3D" node_paths=PackedStringArray("NavigationAgent")]
 script = ExtResource("1_an0v0")
-_navigationAgent = NodePath("NavigationAgent3D")
+NavigationAgent = NodePath("NavigationAgent3D")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
 

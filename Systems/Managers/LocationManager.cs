@@ -39,5 +39,10 @@ namespace Warlord.Managers
         /// <param name="node"> The node to search with. </param>
         /// <returns> The associated data, or a null if there isn't any associated with the node. </returns>
         public LocationData? GetDataFromNode(LocationNode node) => _locationMap.FirstOrDefault(x => x.Value == node).Key ?? null;
+
+
+        /// <summary> Get all the locations within the game world. </summary>
+        /// <returns> An array containing all the locations within the game world. </returns>
+        public LocationData[] GetLocationData() => _locationMap.Keys.ToArray();
     }
 }

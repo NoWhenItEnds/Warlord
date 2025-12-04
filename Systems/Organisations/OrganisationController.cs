@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Warlord.Entities.GOAP;
 using Warlord.Entities.Nodes;
 using Warlord.Entities.Resources;
 using Warlord.Managers;
@@ -38,9 +39,8 @@ namespace Warlord.Organisations
             ActorData? tattletale = _actorManager.GetDataFromName("Tattletale");
             if (tattletale != null) { AddActor(tattletale); }
 
-            ActorNode skitterNode = _actorManager.SpawnNode(skitter, Vector3.Zero);
-            ActorNode tattletaleNode = _actorManager.SpawnNode(tattletale, Vector3.Zero);
-            skitterNode.SetDestination(new Vector3(10, 0, 10));
+            ActorNode skitterNode = _actorManager.SpawnNode(skitter, new Vector3(1, 1, 1));
+            ActorNode tattletaleNode = _actorManager.SpawnNode(tattletale, new Vector3(-1, 1, -1));
         }
 
 
@@ -100,11 +100,8 @@ namespace Warlord.Organisations
                 OrganisationObjective current = _queuedObjectives.First();
                 foreach (ActorData actor in _controlledActors)
                 {
-                    ActorNode? actorNode = _actorManager.GetNodeFromData(actor);
-                    if (actorNode != null)
-                    {
-                        //actorNode.SetDestination();
-                    }
+                    ActorController controller = _actorManager.GetController(actor);
+                    current.AddGoal(controller);
                 }
             }
         }

@@ -14,5 +14,10 @@ namespace Warlord.Entities.Nodes.Locations
         /// <summary> The entity data attached to the node. </summary>
         [ExportGroup("Resource")]
         [Export] public LocationData Data { get; private set; }
+
+
+        /// <summary> Gets the location where an actor can interact with the location. </summary>
+        /// <returns> The location's interaction position in 3D space. </returns>
+        public Vector3 GetInteractionPosition() => _interactionArea.GlobalPosition;
     }
 }
