@@ -1,7 +1,10 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using Warlord.Entities.Nodes;
+using Warlord.Entities.Nodes.Locations;
 using Warlord.Entities.Resources;
+using Warlord.Managers;
 
 namespace Warlord.Entities.GOAP
 {
@@ -9,10 +12,16 @@ namespace Warlord.Entities.GOAP
     public class FactFactory
     {
         /// <summary> A reference to the being who the facts are associated with. </summary>
-        private readonly ActorData _actor;
+        private readonly ActorData ACTOR;
 
         /// <summary> The array of current facts. </summary>
-        private readonly Dictionary<String, ActorFact> _facts;
+        private readonly Dictionary<String, ActorFact> FACTS;
+
+        /// <summary> A reference to the actor manager. </summary>
+        private readonly ActorManager ACTOR_MANAGER;
+
+        /// <summary> A reference to the location manager. </summary>
+        private readonly LocationManager LOCATION_MANAGER;
 
 
         /// <summary> Construct facts on an industrial scale. </summary>
@@ -20,8 +29,10 @@ namespace Warlord.Entities.GOAP
         /// <param name="facts"> The array of current facts. </param>
         public FactFactory(ActorData actor, Dictionary<String, ActorFact> facts)
         {
-            _actor = actor;
-            _facts = facts;
+            ACTOR = actor;
+            FACTS = facts;
+            ACTOR_MANAGER = ActorManager.Instance;
+            LOCATION_MANAGER = LocationManager.Instance;
         }
 
 
@@ -30,7 +41,7 @@ namespace Warlord.Entities.GOAP
         /// <param name="condition"> The function the fact uses to evaluate the nature of the condition. </param>
         public void AddFact(String key, Func<Boolean> condition)
         {
-            _facts.Add(key, new ActorFact.Builder(key)
+            FACTS.Add(key, new ActorFact.Builder(key)
                 .WithCondition(condition)
                 .Build());
         }
@@ -42,8 +53,8 @@ namespace Warlord.Entities.GOAP
         /// <param name="otherActor"> The other actor. </param>
         public void AddActorFact(String key, Single distance, ActorData otherActor)
         {
-            _facts.Add(key, new ActorFact.Builder(key)
-                .WithCondition(() => InRangeOf(_actor.GetNode(), otherActor.GetNode(), distance))
+            FACTS.Add(key, new ActorFact.Builder(key)
+                .WithCondition(() => InRangeOf(otherActor, distance))
                 .Build());
         }
 
@@ -54,21 +65,39 @@ namespace Warlord.Entities.GOAP
         /// <param name="location"> The target location. </param>
         public void AddLocationFact(String key, Single distance, LocationData location)
         {
-            _facts.Add(key, new ActorFact.Builder(key)
-                .WithCondition(() => InRangeOf(_actor.GetNode(), location.GetNode(), distance))
+            FACTS.Add(key, new ActorFact.Builder(key)
+                .WithCondition(() => InRangeOf(location, distance))
                 .Build());
         }
 
 
-        /// <summary> Checks whether the given target node is within range of the actor. </summary>
-        /// <param name="actorNode"> The actor node. </param>
-        /// <param name="otherNode"> The other target node. </param>
+        /// <summary> Checks whether the other actor is within range of this actor. </summary>
+        /// <param name="other"> The other target actor. </param>
         /// <param name="range"> The acceptable range. </param>
-        /// <returns> If the actor is within acceptable range of the target location. </returns>
-        private Boolean InRangeOf(Node3D? actorNode, Node3D? otherNode, Single range)
+        /// <returns> If the actor is within acceptable range of the given actor. </returns>
+        private Boolean InRangeOf(ActorData other, Single range)
         {
-            if(actorNode != null && otherNode != null) { return actorNode.GlobalPosition.DistanceTo(otherNode.GlobalPosition) < range; }
-            else { return false; }
+            Boolean isInRange = false;
+            if(ACTOR_MANAGER.TryGetNode(ACTOR, out ActorNode? actorNode) && ACTOR_MANAGER.TryGetNode(other, out ActorNode? otherNode))
+            {
+                isInRange = actorNode.GlobalPosition.DistanceTo(otherNode.GlobalPosition) < range;
+            }
+            return isInRange;
+        }
+
+
+        /// <summary> Checks whether the location is within range of this actor. </summary>
+        /// <param name="location"> The target location. </param>
+        /// <param name="range"> The acceptable range. </param>
+        /// <returns> If the actor is within acceptable range of the given location. </returns>
+        private Boolean InRangeOf(LocationData location, Single range)
+        {
+            Boolean isInRange = false;
+            if (ACTOR_MANAGER.TryGetNode(ACTOR, out ActorNode? actorNode) && LOCATION_MANAGER.TryGetNode(location, out LocationNode? locationNode))
+            {
+                isInRange = actorNode.GlobalPosition.DistanceTo(locationNode.GlobalPosition) < range;
+            }
+            return isInRange;
         }
     }
 

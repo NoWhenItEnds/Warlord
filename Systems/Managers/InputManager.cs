@@ -75,7 +75,7 @@ namespace Warlord.Managers
             {
                 if (collider.Obj is ActorNode actor)
                 {
-                    ActorData? data = _actorManager.GetDataFromNode(actor);
+                    _actorManager.TryGetData(actor, out ActorData? data);
                     _uiManager.ToggleActorSelection(data);
                 }
                 else if (collider.Obj is LocationNode location)

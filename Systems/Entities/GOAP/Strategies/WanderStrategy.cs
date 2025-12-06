@@ -11,7 +11,7 @@ namespace Warlord.Entities.GOAP.Strategies
     public class WanderStrategy : IActionStrategy
     {
         /// <inheritdoc/>
-        public Boolean IsValid => ActorManager.Instance.GetNodeFromData(ACTOR) != null;  // Only allow if the actor has a node in the game world.
+        public Boolean IsValid => ActorManager.Instance.TryGetNode(ACTOR, out ActorNode? _);  // Only allow if the actor has a node in the game world.
 
         /// <inheritdoc/>
         public Boolean IsComplete => _actorNode != null && _actorNode.NavigationAgent.IsNavigationFinished();
@@ -35,8 +35,7 @@ namespace Warlord.Entities.GOAP.Strategies
         /// <inheritdoc/>
         public void Start()
         {
-            _actorNode = ActorManager.Instance.GetNodeFromData(ACTOR);
-            if (_actorNode != null)
+            if (ActorManager.Instance.TryGetNode(ACTOR, out _actorNode))
             {
                 // For some reason, we can't use the map directly, so we use it to get the regions instead, which we can use.
                 // TODO - Might be able to manually set the navigation map with a region manager (https://docs.godotengine.org/en/latest/tutorials/navigation/navigation_using_navigationmaps.html).

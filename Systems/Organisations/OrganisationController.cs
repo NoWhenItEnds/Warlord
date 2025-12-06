@@ -34,10 +34,14 @@ namespace Warlord.Organisations
             _actorManager = ActorManager.Instance;
 
             // TODO - NOT LIKE THIS. HAVE SELECTOR. Have spawnner.
-            ActorData? skitter = _actorManager.GetDataFromName("Skitter");
-            if (skitter != null) { AddActor(skitter); }
-            ActorData? tattletale = _actorManager.GetDataFromName("Tattletale");
-            if (tattletale != null) { AddActor(tattletale); }
+            if(_actorManager.TryGetData("Skitter", out ActorData? skitter))
+            {
+                AddActor(skitter);
+            }
+            if (_actorManager.TryGetData("Tattletale", out ActorData? tattletale))
+            {
+                AddActor(tattletale);
+            }
 
             ActorNode skitterNode = _actorManager.SpawnNode(skitter, new Vector3(1, 1, 1));
             ActorNode tattletaleNode = _actorManager.SpawnNode(tattletale, new Vector3(-1, 1, -1));

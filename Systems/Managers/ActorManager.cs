@@ -70,13 +70,13 @@ namespace Warlord.Managers
         /// <returns> A reference to the spawned node. </returns>
         public ActorNode SpawnNode(ActorData data, Vector3 globalPosition)
         {
-            if(!_actorMap.TryGetValue(data, out ActorNode? actor))
+            if(!TryGetNode(data, out ActorNode? node))
             {
-                actor = _objectPool.GetAvailableObject();
-                _actorMap.Add(data, actor);
+                node = _objectPool.GetAvailableObject();
+                _actorMap.Add(data, node);
             }
-            actor?.GlobalPosition = globalPosition;
-            return actor;
+            node?.GlobalPosition = globalPosition;
+            return node;
         }
 
 
@@ -85,8 +85,7 @@ namespace Warlord.Managers
         public void FreeNode(ActorNode actor)
         {
             _objectPool.FreeObject(actor);
-            ActorData? data = GetDataFromNode(actor);
-            if(data != null)
+            if(TryGetData(actor, out ActorData? data))
             {
                 _actorMap[data] = null;
             }
@@ -95,29 +94,41 @@ namespace Warlord.Managers
 
         /// <summary> Attempt to get the node associated with a piece of data. </summary>
         /// <param name="data"> The data to search with. </param>
-        /// <returns> The associated node, or a null if there isn't any associated with the data. </returns>
-        public ActorNode? GetNodeFromData(ActorData data)
+        /// <param name="node"> The discovered node, or null if there wasn't one. </param>
+        /// <returns> Whether there was a node mapped to the given data. </returns>
+        public Boolean TryGetNode(ActorData data, out ActorNode? node)
         {
-            _actorMap.TryGetValue(data, out ActorNode? node);
-            return node;
+            Boolean result = _actorMap.TryGetValue(data, out ActorNode? value);
+            node = value;
+            return result;
         }
 
 
         /// <summary> Attempt to get the data associated with a node. </summary>
         /// <param name="node"> The node to search with. </param>
-        /// <returns> The associated data, or a null if there isn't any associated with the node. </returns>
-        public ActorData? GetDataFromNode(ActorNode node) => _actorMap.FirstOrDefault(x => x.Value == node).Key ?? null;
+        /// <param name="data"> The associated data, or a null if there isn't any associated with the node. </param>
+        /// <returns> Whether there was data mapped to the given node. </returns>
+        public Boolean TryGetData(ActorNode node, out ActorData? data)
+        {
+            data = _actorMap.FirstOrDefault(x => x.Value == node).Key ?? null;
+            return data != null;
+        }
 
 
         /// <summary> Get a reference to loaded actor data by searching for its name. </summary>
         /// <param name="name"> The name of the actor. </param>
-        /// <returns> The associated data, or a null if one wasn't found. </returns>
-        public ActorData? GetDataFromName(String name) => _actorData.FirstOrDefault(x => x.Name.ToLower() == name.ToLower()) ?? null;
+        /// <param name="data"> The associated data, or a null if one wasn't found. </param>
+        /// <returns> Whether there was data mapped to the given name. </returns>
+        public Boolean TryGetData(String name, out ActorData? data)
+        {
+            data = _actorData.FirstOrDefault(x => x.Name.ToLower() == name.ToLower()) ?? null;
+            return data != null;
+        }
 
 
         /// <summary> Get all the actors that can exist within the game world. </summary>
         /// <returns> An array containing all the actors within the game world. </returns>
-        public ActorData[] GetActorData() => _actorData.ToArray();
+        public ActorData[] GetData() => _actorData.ToArray();
 
 
         /// <summary> Get a reference to the controller that controls the given actor. </summary>
@@ -135,5 +146,11 @@ namespace Warlord.Managers
                 throw new ArgumentNullException($"The actor data,{actor.Name}, doesn't have a controller. This shouldn't be possible.");
             }
         }
+
+        internal bool GetNode(ActorData aCTOR, out object actorNode)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

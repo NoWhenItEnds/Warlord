@@ -1,8 +1,6 @@
 using System;
 using Godot;
 using Godot.Collections;
-using Warlord.Entities.Nodes;
-using Warlord.Managers;
 
 namespace Warlord.Entities.Resources
 {
@@ -29,11 +27,6 @@ namespace Warlord.Entities.Resources
 
         /// <summary> The data representing a 'person' entity. </summary>
         public ActorData() : base() { }
-
-
-        /// <summary> Get the node that represents the actor within the game world. </summary>
-        /// <returns> The node, or a null if there isn't currently one. </returns>
-        public ActorNode? GetNode() => ActorManager.Instance.GetNodeFromData(this);
 
 
         /// <summary> Reconstruct an actor from json data. </summary>

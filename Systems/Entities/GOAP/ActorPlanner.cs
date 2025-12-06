@@ -56,7 +56,7 @@ namespace Warlord.Entities.GOAP
         private Boolean FindPath(GraphNode parent, HashSet<ActorAction> actions)
         {
             // Order actions by cost, ascending
-            IOrderedEnumerable<ActorAction> orderedActions = actions.OrderBy(a => a.Cost);
+            IOrderedEnumerable<ActorAction> orderedActions = actions.OrderBy(a => a.Cost());
 
             foreach (ActorAction action in orderedActions)
             {
@@ -78,7 +78,7 @@ namespace Warlord.Entities.GOAP
                     newRequiredFacts.ExceptWith(action.Outcomes); // Remove any that have already been satisfied.
                     newRequiredFacts.UnionWith(action.Preconditions); // Add any preconditions that haven't been.
 
-                    GraphNode newNode = new GraphNode(parent, action, newRequiredFacts, parent.Cost + action.Cost);
+                    GraphNode newNode = new GraphNode(parent, action, newRequiredFacts, parent.Cost + action.Cost());
 
                     // Explore the new node, recursively.
                     if (FindPath(newNode, actions))

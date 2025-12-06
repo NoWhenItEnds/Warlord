@@ -11,7 +11,7 @@ namespace Warlord.Entities.GOAP.Strategies
     public partial class GoToLocationStrategy : IActionStrategy
     {
         /// <inheritdoc/>
-        public Boolean IsValid => ActorManager.Instance.GetNodeFromData(ACTOR) != null;  // Only allow if the actor has a node in the game world.
+        public Boolean IsValid => ActorManager.Instance.TryGetNode(ACTOR, out ActorNode? _);  // Only allow if the actor has a node in the game world.
 
         /// <inheritdoc/>
         public Boolean IsComplete => _actorNode != null && _actorNode.NavigationAgent.IsNavigationFinished();
@@ -44,9 +44,8 @@ namespace Warlord.Entities.GOAP.Strategies
         /// <inheritdoc/>
         public void Start()
         {
-            _actorNode = ActorManager.Instance.GetNodeFromData(ACTOR);
-            _locationNode = LocationManager.Instance.GetNodeFromData(LOCATION);
-            if (_actorNode != null && _locationNode != null)
+            if (ActorManager.Instance.TryGetNode(ACTOR, out _actorNode) &&
+                LocationManager.Instance.TryGetNode(LOCATION, out _locationNode))
             {
                 _actorNode.NavigationAgent.TargetPosition = _locationNode.GetInteractionPosition();
             }

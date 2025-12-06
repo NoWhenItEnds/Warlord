@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using Warlord.Entities.GOAP.Strategies;
+using Warlord.Entities.Resources;
 
 namespace Warlord.Entities.GOAP
 {
@@ -10,8 +12,8 @@ namespace Warlord.Entities.GOAP
         /// <summary> The name or key identifying the action. </summary>
         public String Name { get; }
 
-        /// <summary> How many 'action points' the action would cost to action. </summary>
-        public Single Cost { get; private set; } = 1f;
+        /// <summary> The function to use for calculating the action's current cost (higher is obviously more costly). </summary>
+        public Func<Single> Cost { get; private set; } = () => 1f;
 
         /// <summary> The facts or conditions that need to be true for the action to be actioned. </summary>
         public HashSet<ActorFact> Preconditions { get; } = new HashSet<ActorFact>();
@@ -97,11 +99,40 @@ namespace Warlord.Entities.GOAP
             }
 
 
-            /// <summary> Sets the action cost. </summary>
+            /// <summary> Sets the action cost using a function calculated at runtime. </summary>
+            /// <param name="cost"> The cost function to calculate how many 'action points' the action would cost to action. </param>
+            public Builder WithCost(Func<Single> cost)
+            {
+                _action.Cost = cost;
+                return this;
+            }
+
+
+            /// <summary> Sets the action cost as a static value. </summary>
             /// <param name="cost"> How many 'action points' the action would cost to action. </param>
             public Builder WithCost(Single cost)
             {
-                _action.Cost = cost;
+                _action.Cost = () => cost;
+                return this;
+            }
+
+
+            /// <summary> Sets the action cost as a result of the WEIGHTED distance between the actor and another position. </summary>
+            /// <param name="cost"></param>
+            /// <returns></returns>
+            public Builder WithDistanceCost(Vector3 position)
+            {
+                //_action.Cost = () => cost;
+                return this;
+            }
+
+
+            /// <summary> Sets the action cost as a result of the distance between the actor and another position. </summary>
+            /// <param name="location"></param>
+            /// <returns></returns>
+            public Builder WithDistanceCost(LocationData location)
+            {
+                //_action.Cost = () => cost;
                 return this;
             }
 

@@ -56,7 +56,7 @@ namespace Warlord.Entities.GOAP
             FactFactory factory = new FactFactory(ACTOR, AvailableFacts);
 
             InitialiseBasicPackage(factory);
-            InitialiseLocationPackage(factory, LocationManager.Instance.GetLocationData());
+            InitialiseLocationPackage(factory, LocationManager.Instance.GetData());
             InitialiseBasicGoals();
         }
 
@@ -70,12 +70,11 @@ namespace Warlord.Entities.GOAP
             factFactory.AddFact("IsEntertained", () => 50f >= 90f); // TODO - LOL. Fix.
 
             AvailableActions.Add(new ActorAction.Builder("Relax", new IdleStrategy(ACTOR, 5f))
-                .WithCost(0f)
                 .AddOutcome(AvailableFacts["Nothing"])
                 .Build());
 
             AvailableActions.Add(new ActorAction.Builder("WanderAround", new WanderStrategy(ACTOR))
-                // TODO - Add cost.
+                .WithCost(() => 5f)
                 .AddOutcome(AvailableFacts["IsEntertained"])
                 .Build());
 

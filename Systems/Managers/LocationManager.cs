@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Warlord.Entities.Nodes.Locations;
@@ -27,22 +28,29 @@ namespace Warlord.Managers
 
         /// <summary> Attempt to get the node associated with a piece of data. </summary>
         /// <param name="data"> The data to search with. </param>
-        /// <returns> The associated node, or a null if there isn't any associated with the data. </returns>
-        public LocationNode? GetNodeFromData(LocationData data)
+        /// <param name="node"> The associated node, or a null if there isn't any associated with the data. </param>
+        /// <returns> Whether there was a node mapped to the given data. </returns>
+        public Boolean TryGetNode(LocationData data, out LocationNode? node)
         {
-            _locationMap.TryGetValue(data, out LocationNode? node);
-            return node;
+            Boolean result = _locationMap.TryGetValue(data, out LocationNode? value);
+            node = value;
+            return result;
         }
 
 
         /// <summary> Attempt to get the data associated with a node. </summary>
         /// <param name="node"> The node to search with. </param>
-        /// <returns> The associated data, or a null if there isn't any associated with the node. </returns>
-        public LocationData? GetDataFromNode(LocationNode node) => _locationMap.FirstOrDefault(x => x.Value == node).Key ?? null;
+        /// <param name="data"> The associated data, or a null if there isn't any associated with the node. </param>
+        /// <returns> Whether there was data mapped to the given node. </returns>
+        public Boolean TryGetData(LocationNode node, out LocationData? data)
+        {
+            data = _locationMap.FirstOrDefault(x => x.Value == node).Key ?? null;
+            return data != null;
+        }
 
 
         /// <summary> Get all the locations within the game world. </summary>
         /// <returns> An array containing all the locations within the game world. </returns>
-        public LocationData[] GetLocationData() => _locationMap.Keys.ToArray();
+        public LocationData[] GetData() => _locationMap.Keys.ToArray();
     }
 }
