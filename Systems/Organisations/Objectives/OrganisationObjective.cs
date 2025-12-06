@@ -1,3 +1,4 @@
+using System;
 using Warlord.Entities.GOAP;
 
 namespace Warlord.Organisations.Objectives
@@ -6,14 +7,14 @@ namespace Warlord.Organisations.Objectives
     public abstract class OrganisationObjective
     {
         /// <summary> The organisation issuing the command. </summary>
-        protected OrganisationController _organisation;
+        protected ActorGoal.Builder _goalBuilder;
 
 
         /// <summary> A goal that the organisation wishes to achieve. </summary>
-        /// <param name="organisation"> The organisation issuing the command. </param>
-        public OrganisationObjective(OrganisationController organisation)
+        /// <param name="goalName"> The name of the goal the objective will generate. </param>
+        public OrganisationObjective(String goalName)
         {
-            _organisation = organisation;
+            _goalBuilder = new ActorGoal.Builder(goalName, ActorGoal.GoalSource.ORGANISATION);
         }
 
 

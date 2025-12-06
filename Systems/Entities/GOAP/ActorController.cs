@@ -11,6 +11,9 @@ namespace Warlord.Entities.GOAP
     /// <summary> Uses a GOAP implementation to control an entity. The AI brain that controls a unit. </summary>
     public class ActorController
     {
+        /// <summary> The entity this controller is responsible for controlling. </summary>
+        public ActorData Actor { get; init; }
+
         /// <summary> The current goal the actor is trying to accomplish. </summary>
         public ActorGoal? CurrentGoal { get; private set; } = null;
 
@@ -37,9 +40,6 @@ namespace Warlord.Entities.GOAP
         public HashSet<ActorGoal> OrganisationGoals { get; private set; }   // TODO - Implement.
 
 
-        /// <summary> The entity this controller is responsible for controlling. </summary>
-        private readonly ActorData ACTOR;
-
         /// <summary> A reference to the planner this controller will use. </summary>
         private readonly ActorPlanner PLANNER;
 
@@ -48,12 +48,12 @@ namespace Warlord.Entities.GOAP
         /// <param name="actor"> The entity this controller is responsible for controlling. </param>
         public ActorController(ActorData actor)
         {
-            ACTOR = actor;
+            Actor = actor;
             PLANNER = new ActorPlanner();
 
             AvailableActions = new HashSet<ActorAction>();   // Initialise a new set of actions by clearing the current.
             AvailableFacts = new Dictionary<String, ActorFact>();   // Initialise a new set of beliefs by clearing the current.
-            FactFactory factory = new FactFactory(ACTOR, AvailableFacts);
+            FactFactory factory = new FactFactory(Actor, AvailableFacts);
 
             InitialiseBasicPackage(factory);
             InitialiseLocationPackage(factory, LocationManager.Instance.GetData());
@@ -65,20 +65,20 @@ namespace Warlord.Entities.GOAP
         /// <param name="factFactory"> A reference to the factor creating these facts. </param>
         private void InitialiseBasicPackage(FactFactory factFactory)
         {
-            factFactory.AddFact("Nothing", () => false);  // Always has a belief, even if it never will successfully evaluate.
+            factFactory.AddFact("nothing", () => false);  // Always has a belief, even if it never will successfully evaluate.
 
-            factFactory.AddFact("IsHealthy", () => ACTOR.HealthStat.Progress >= 0.9f);
-            factFactory.AddFact("IsHurt", () => ACTOR.HealthStat.Progress < 0.5f);
-            factFactory.AddFact("IsEntertained", () => ACTOR.EntertainmentStat.Progress >= 0.9f);
-            factFactory.AddFact("IsBored", () => ACTOR.EntertainmentStat.Progress < 0.5f);
+            factFactory.AddFact("is_healthy", () => Actor.HealthStat.Progress >= 0.9f);
+            factFactory.AddFact("is_hurt", () => Actor.HealthStat.Progress < 0.5f);
+            factFactory.AddFact("is_entertained", () => Actor.EntertainmentStat.Progress >= 0.9f);
+            factFactory.AddFact("is_bored", () => Actor.EntertainmentStat.Progress < 0.5f);
 
-            AvailableActions.Add(new ActorAction.Builder("Relax", new IdleStrategy(ACTOR, 5f))
-                .AddOutcome(AvailableFacts["Nothing"])
+            AvailableActions.Add(new ActorAction.Builder("Relax", new IdleStrategy(Actor, 5f))
+                .AddOutcome(AvailableFacts["nothing"])
                 .Build());
 
-            AvailableActions.Add(new ActorAction.Builder("WanderAround", new WanderStrategy(ACTOR))
+            AvailableActions.Add(new ActorAction.Builder("Wander", new WanderStrategy(Actor))
                 .WithCost(() => 10f)    // TODO - Have calculated from actor personality.
-                .AddOutcome(AvailableFacts["IsEntertained"])
+                .AddOutcome(AvailableFacts["is_entertained"])
                 .Build());
         }
 
@@ -91,12 +91,12 @@ namespace Warlord.Entities.GOAP
             foreach (LocationData location in locations)
             {
                 // Add facts.
-                factFactory.AddLocationFact($"At{location.FormattedName}", 1f, location);
+                factFactory.AddLocationFact($"at_{location.FormattedName}", 1f, location);
 
                 // Add actions.
-                AvailableActions.Add(new ActorAction.Builder($"GoTo{location.FormattedName}", new GoToLocationStrategy(ACTOR, location))
+                AvailableActions.Add(new ActorAction.Builder($"GoTo_{location.FormattedName}", new GoToLocationStrategy(Actor, location))
                     // TODO - Add cost.
-                    .AddOutcome(AvailableFacts[$"At{location.FormattedName}"])
+                    .AddOutcome(AvailableFacts[$"at_{location.FormattedName}"])
                     .Build());
             }
         }
@@ -140,19 +140,13 @@ namespace Warlord.Entities.GOAP
 
             AvailableGoals.Add(new ActorGoal.Builder("WatchPaintDry", ActorGoal.GoalSource.BASIC)
                 .WithPriority(0)
-                .WithDesiredOutcome(AvailableFacts["Nothing"])
+                .WithDesiredOutcome(AvailableFacts["nothing"])
                 .Build());
 
             AvailableGoals.Add(new ActorGoal.Builder("KeepEntertained", ActorGoal.GoalSource.BASIC)
                 .WithPriority(10)
-                .WithDesiredOutcome(AvailableFacts["IsEntertained"])
+                .WithDesiredOutcome(AvailableFacts["is_entertained"])
                 .Build());
-        }
-
-
-        public void TryAddGoal(String name, Int32 priority, String[] preconditions, String[] outcomes)
-        {
-
         }
 
 
@@ -172,16 +166,16 @@ namespace Warlord.Entities.GOAP
             // Update the plan and current action if there is one
             if (CurrentAction == null)
             {
-                GD.Print($"{ACTOR.Name} -> Calculating new plan...");
+                GD.Print($"{Actor.Name} -> Calculating new plan...");
                 CalculatePlan();
 
                 if (CurrentPlan != null && CurrentPlan.Actions.Count > 0)
                 {
                     CurrentGoal = CurrentPlan.ActorGoal;
-                    GD.Print($"{ACTOR.Name} -> Goal: {CurrentGoal.Name} with {CurrentPlan.Actions.Count} actions in plan.");
+                    GD.Print($"{Actor.Name} -> Goal: {CurrentGoal.Name} with {CurrentPlan.Actions.Count} actions in plan.");
 
                     CurrentAction = CurrentPlan.Actions.Pop();
-                    GD.Print($"{ACTOR.Name} -> Popped action: {CurrentAction.Name}.");
+                    GD.Print($"{Actor.Name} -> Popped action: {CurrentAction.Name}.");
 
                     // Verify all precondition effects are true
                     if (CurrentAction.Preconditions.All(b => b.Evaluate()))
@@ -190,7 +184,7 @@ namespace Warlord.Entities.GOAP
                     }
                     else
                     {
-                        GD.Print($"{ACTOR.Name} -> Goal preconditions not met, clearing current action and goal.");
+                        GD.Print($"{Actor.Name} -> Goal preconditions not met, clearing current action and goal.");
 
                         CurrentAction = null;
                         CurrentGoal = null;
@@ -206,14 +200,14 @@ namespace Warlord.Entities.GOAP
 
                 if (CurrentAction.IsComplete)
                 {
-                    GD.Print($"{ACTOR.Name} -> Action, {CurrentAction.Name}, complete.");
+                    GD.Print($"{Actor.Name} -> Action, {CurrentAction.Name}, complete.");
 
                     CurrentAction.Stop();
                     CurrentAction = null;
 
                     if (CurrentPlan.Actions.Count == 0)
                     {
-                        GD.Print($"{ACTOR.Name} -> Plan complete!");
+                        GD.Print($"{Actor.Name} -> Plan complete!");
 
                         ArchiveCurrentGoal();
                     }

@@ -27,7 +27,7 @@ namespace Warlord.Managers
 
         /// <summary> Toggle the UI's location selector's target. </summary>
         /// <param name="location"> The location to follow. A null indicates to turn the selector off. </param>
-        public void ToggleLocationSelection(LocationNode? location) => _locationSelection.Toggle(location);
+        public void ToggleLocationSelection(LocationData? location) => _locationSelection.Toggle(location);
 
 
         /// <summary> Get the dimensions of the screen that is interactable / usable. This is the area of the screen not currently blocked by long standing UI. </summary>

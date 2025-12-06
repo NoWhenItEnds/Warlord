@@ -1,5 +1,7 @@
+using System;
 using Warlord.Entities.GOAP;
 using Warlord.Entities.Resources;
+using Warlord.Utilities.Exceptions;
 
 namespace Warlord.Organisations.Objectives
 {
@@ -10,17 +12,28 @@ namespace Warlord.Organisations.Objectives
         public LocationData Target { get; private set; }
 
 
-        /// <summary> Attack the target location. </summary>
-        /// <param name="organisation"> The organisation issuing the command. </param>
+        /// <summary> Defend the target location. </summary>
         /// <param name="target"> The objective's target. </param>
-        public GarrisonObjective(OrganisationController organisation, LocationData target) : base(organisation)
+        public GarrisonObjective(LocationData target) : base($"garrison_{target.FormattedName}")
         {
             Target = target;
         }
 
         public override void AddGoal(ActorController controller)
         {
-            throw new System.NotImplementedException();
+            String factName = $"at_{Target.FormattedName}";
+            if (controller.AvailableFacts.TryGetValue(factName, out ActorFact? atFact))
+            {
+                ActorGoal goal = _goalBuilder
+                    .WithPriority(0f)   // TODO - Set somehow.
+                    .WithDesiredOutcome(atFact)
+                    .Build();
+                controller.AvailableGoals.Add(goal);
+            }
+            else
+            {
+                throw new GOAPException($"The fact, '{factName}', does not exist within {controller.Actor.FormattedName}'s ActionController's available facts.");
+            }
         }
     }
 }

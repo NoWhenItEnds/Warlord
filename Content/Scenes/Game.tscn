@@ -101,13 +101,15 @@ _locationSelection = NodePath("Location Selection")
 _actorCardWindow = NodePath("ActorCard Window")
 _statusWindow = NodePath("Status Window")
 
-[node name="Location Selection" type="PanelContainer" parent="UI Manager" node_paths=PackedStringArray("_nameLabel")]
+[node name="Location Selection" type="PanelContainer" parent="UI Manager" node_paths=PackedStringArray("_nameLabel", "_garrisonButton", "_assaultButton")]
 custom_minimum_size = Vector2(256, 0)
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("9_k5j0c")
 _nameLabel = NodePath("MarginContainer/VBoxContainer/Location Name")
+_garrisonButton = NodePath("MarginContainer/VBoxContainer/Command Buttons/Garrison Button")
+_assaultButton = NodePath("MarginContainer/VBoxContainer/Command Buttons/Assault Button")
 
 [node name="MarginContainer" type="MarginContainer" parent="UI Manager/Location Selection"]
 layout_mode = 2
@@ -118,14 +120,27 @@ layout_mode = 2
 [node name="Location Name" type="RichTextLabel" parent="UI Manager/Location Selection/MarginContainer/VBoxContainer"]
 layout_mode = 2
 bbcode_enabled = true
-text = "NAME"
+text = "LOCATION NAME"
 fit_content = true
 
-[node name="RichTextLabel2" type="RichTextLabel" parent="UI Manager/Location Selection/MarginContainer/VBoxContainer"]
+[node name="Region Name" type="RichTextLabel" parent="UI Manager/Location Selection/MarginContainer/VBoxContainer"]
 layout_mode = 2
 bbcode_enabled = true
-text = "NAME"
+text = "REGION NAME"
 fit_content = true
+
+[node name="Command Buttons" type="GridContainer" parent="UI Manager/Location Selection/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 2
+
+[node name="Garrison Button" type="Button" parent="UI Manager/Location Selection/MarginContainer/VBoxContainer/Command Buttons"]
+layout_mode = 2
+text = "D"
+
+[node name="Assault Button" type="Button" parent="UI Manager/Location Selection/MarginContainer/VBoxContainer/Command Buttons"]
+layout_mode = 2
+text = "A"
 
 [node name="ActorCard Window" type="PanelContainer" parent="UI Manager" node_paths=PackedStringArray("_cardContainer")]
 layout_mode = 1

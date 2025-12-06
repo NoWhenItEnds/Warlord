@@ -80,7 +80,8 @@ namespace Warlord.Managers
                 }
                 else if (collider.Obj is LocationNode location)
                 {
-                    _uiManager.ToggleLocationSelection(location);
+                    _locationManager.TryGetData(location, out LocationData? data);
+                    _uiManager.ToggleLocationSelection(data);
                 }
             }
             else
