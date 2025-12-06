@@ -67,25 +67,19 @@ namespace Warlord.Entities.GOAP
         {
             factFactory.AddFact("Nothing", () => false);  // Always has a belief, even if it never will successfully evaluate.
 
-            factFactory.AddFact("IsEntertained", () => 50f >= 90f); // TODO - LOL. Fix.
+            factFactory.AddFact("IsHealthy", () => ACTOR.HealthStat.Progress >= 0.9f);
+            factFactory.AddFact("IsHurt", () => ACTOR.HealthStat.Progress < 0.5f);
+            factFactory.AddFact("IsEntertained", () => ACTOR.EntertainmentStat.Progress >= 0.9f);
+            factFactory.AddFact("IsBored", () => ACTOR.EntertainmentStat.Progress < 0.5f);
 
             AvailableActions.Add(new ActorAction.Builder("Relax", new IdleStrategy(ACTOR, 5f))
                 .AddOutcome(AvailableFacts["Nothing"])
                 .Build());
 
             AvailableActions.Add(new ActorAction.Builder("WanderAround", new WanderStrategy(ACTOR))
-                .WithCost(() => 5f)
+                .WithCost(() => 10f)    // TODO - Have calculated from actor personality.
                 .AddOutcome(AvailableFacts["IsEntertained"])
                 .Build());
-
-            //factory.AddFact("IsHealthy", () => ACTOR.CurrentHealth >= 90f);
-            //factory.AddFact("IsHurt", () => ACTOR.CurrentHealth < 50);
-            //factory.AddFact("IsFed", () => ACTOR.CurrentHunger >= 90f);
-            //factory.AddFact("IsHungry", () => ACTOR.CurrentHunger < 50f);
-            //factory.AddFact("IsRested", () => ACTOR.CurrentFatigue >= 90f);
-            //factory.AddFact("IsTired", () => ACTOR.CurrentFatigue < 50f);
-            //factory.AddFact("IsEntertained", () => ACTOR.CurrentEntertainment >= 90f);
-            //factory.AddFact("IsBored", () => ACTOR.CurrentEntertainment < 50f);
         }
 
 
@@ -97,12 +91,12 @@ namespace Warlord.Entities.GOAP
             foreach (LocationData location in locations)
             {
                 // Add facts.
-                factFactory.AddLocationFact($"At{location.Name}", 1f, location);
+                factFactory.AddLocationFact($"At{location.FormattedName}", 1f, location);
 
                 // Add actions.
-                AvailableActions.Add(new ActorAction.Builder($"GoTo{location.Name}", new GoToLocationStrategy(ACTOR, location))
+                AvailableActions.Add(new ActorAction.Builder($"GoTo{location.FormattedName}", new GoToLocationStrategy(ACTOR, location))
                     // TODO - Add cost.
-                    .AddOutcome(AvailableFacts[$"At{location.Name}"])
+                    .AddOutcome(AvailableFacts[$"At{location.FormattedName}"])
                     .Build());
             }
         }

@@ -20,7 +20,7 @@ namespace Warlord.Organisations.Objectives
 
         public override void AddGoal(ActorController controller)
         {
-            controller.TryAddGoal($"Assault{Target.Name}", 0, [], []);
+            controller.TryAddGoal($"Assault{Target.FormattedName}", 0, [], []);
         }
     }
 }

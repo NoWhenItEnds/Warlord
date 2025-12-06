@@ -11,11 +11,15 @@ namespace Warlord.Entities.Resources
         [Export] public String Name { get; protected set; } = String.Empty;
 
 
-        /// <inheritdoc/>
-        public override Int32 GetHashCode() => HashCode.Combine(Name);
+        /// <summary> The name of the entity formatted for storage / lookup. </summary>
+        public abstract String FormattedName { get; }
 
 
         /// <inheritdoc/>
-        public bool Equals(EntityData? other) => Name.ToLower() == other?.Name.ToLower();
+        public override Int32 GetHashCode() => HashCode.Combine(FormattedName);
+
+
+        /// <inheritdoc/>
+        public bool Equals(EntityData? other) => FormattedName == other?.FormattedName;
     }
 }

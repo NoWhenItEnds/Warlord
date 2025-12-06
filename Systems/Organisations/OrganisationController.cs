@@ -34,11 +34,11 @@ namespace Warlord.Organisations
             _actorManager = ActorManager.Instance;
 
             // TODO - NOT LIKE THIS. HAVE SELECTOR. Have spawnner.
-            if(_actorManager.TryGetData("Skitter", out ActorData? skitter))
+            if(_actorManager.TryGetData("actor_skitter", out ActorData? skitter))
             {
                 AddActor(skitter);
             }
-            if (_actorManager.TryGetData("Tattletale", out ActorData? tattletale))
+            if (_actorManager.TryGetData("actor_tattletale", out ActorData? tattletale))
             {
                 AddActor(tattletale);
             }

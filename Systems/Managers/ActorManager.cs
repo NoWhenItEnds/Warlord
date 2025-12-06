@@ -116,12 +116,12 @@ namespace Warlord.Managers
 
 
         /// <summary> Get a reference to loaded actor data by searching for its name. </summary>
-        /// <param name="name"> The name of the actor. </param>
+        /// <param name="name"> The formatted name of the actor. </param>
         /// <param name="data"> The associated data, or a null if one wasn't found. </param>
         /// <returns> Whether there was data mapped to the given name. </returns>
         public Boolean TryGetData(String name, out ActorData? data)
         {
-            data = _actorData.FirstOrDefault(x => x.Name.ToLower() == name.ToLower()) ?? null;
+            data = _actorData.FirstOrDefault(x => x.FormattedName == name.ToLower()) ?? null;
             return data != null;
         }
 
@@ -143,7 +143,7 @@ namespace Warlord.Managers
             }
             else
             {
-                throw new ArgumentNullException($"The actor data,{actor.Name}, doesn't have a controller. This shouldn't be possible.");
+                throw new ArgumentNullException($"{actor.FormattedName} doesn't have a controller. This shouldn't be possible.");
             }
         }
 
