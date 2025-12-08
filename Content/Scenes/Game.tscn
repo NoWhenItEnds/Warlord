@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://cieiquimpnvi"]
+[gd_scene load_steps=27 format=3 uid="uid://cieiquimpnvi"]
 
 [ext_resource type="Script" uid="uid://ct8qbhj8gwq61" path="res://Systems/Managers/GameManager.cs" id="1_8wdfg"]
 [ext_resource type="Gradient" uid="uid://c0em5qijetmyp" path="res://Content/Resources/Gradients/Gradient_Sunlight.tres" id="2_dulfu"]
@@ -21,6 +21,8 @@
 [ext_resource type="Script" uid="uid://b0nsnlfeoi7rr" path="res://Systems/UI/Windows/StatusWindow.cs" id="12_k5j0c"]
 [ext_resource type="Script" uid="uid://ceebstuxgjslh" path="res://Systems/UI/Components/WorldComponent.cs" id="13_wrnex"]
 [ext_resource type="Script" uid="uid://kbnqitrocmlf" path="res://Systems/UI/Components/ActorComponent.cs" id="14_akf4r"]
+[ext_resource type="Script" uid="uid://b8kuw6oosno2g" path="res://Systems/UI/Components/OrganisationComponent.cs" id="21_0itj2"]
+[ext_resource type="PackedScene" uid="uid://y6v1e1mgg3e7" path="res://Systems/UI/Components/ObjectiveCard.tscn" id="21_oaat0"]
 
 [sub_resource type="Environment" id="Environment_j7grf"]
 
@@ -113,6 +115,10 @@ _assaultButton = NodePath("MarginContainer/VBoxContainer/Command Buttons/Assault
 
 [node name="MarginContainer" type="MarginContainer" parent="UI Manager/Location Selection"]
 layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI Manager/Location Selection/MarginContainer"]
 layout_mode = 2
@@ -186,6 +192,10 @@ _actorComponent = NodePath("MarginContainer/VBoxContainer/Actor Component")
 
 [node name="MarginContainer" type="MarginContainer" parent="UI Manager/Status Window"]
 layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI Manager/Status Window/MarginContainer"]
 layout_mode = 2
@@ -250,8 +260,44 @@ bbcode_enabled = true
 text = "Saturday, 01 January"
 fit_content = true
 
-[node name="Organisation Component" type="Control" parent="UI Manager/Status Window/MarginContainer/VBoxContainer"]
+[node name="Organisation Component" type="Control" parent="UI Manager/Status Window/MarginContainer/VBoxContainer" node_paths=PackedStringArray("_cardContainer")]
 layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("21_0itj2")
+_cardContainer = NodePath("VBoxContainer/ScrollContainer/VBoxContainer")
+_objectiveCardPrefab = ExtResource("21_oaat0")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI Manager/Status Window/MarginContainer/VBoxContainer/Organisation Component"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Organisation Name" type="RichTextLabel" parent="UI Manager/Status Window/MarginContainer/VBoxContainer/Organisation Component/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "ORGANISATION NAME"
+fit_content = true
+
+[node name="HSeparator" type="HSeparator" parent="UI Manager/Status Window/MarginContainer/VBoxContainer/Organisation Component/VBoxContainer"]
+layout_mode = 2
+
+[node name="Objectives Title" type="RichTextLabel" parent="UI Manager/Status Window/MarginContainer/VBoxContainer/Organisation Component/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "Objectives"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="UI Manager/Status Window/MarginContainer/VBoxContainer/Organisation Component/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI Manager/Status Window/MarginContainer/VBoxContainer/Organisation Component/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Actor Component" type="Control" parent="UI Manager/Status Window/MarginContainer/VBoxContainer" node_paths=PackedStringArray("_codenameLabel")]

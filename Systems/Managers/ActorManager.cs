@@ -96,12 +96,7 @@ namespace Warlord.Managers
         /// <param name="data"> The data to search with. </param>
         /// <param name="node"> The discovered node, or null if there wasn't one. </param>
         /// <returns> Whether there was a node mapped to the given data. </returns>
-        public Boolean TryGetNode(ActorData data, out ActorNode? node)
-        {
-            Boolean result = _actorMap.TryGetValue(data, out ActorNode? value);
-            node = value;
-            return result;
-        }
+        public Boolean TryGetNode(ActorData data, out ActorNode? node) => _actorMap.TryGetValue(data, out node);
 
 
         /// <summary> Attempt to get the data associated with a node. </summary>

@@ -11,7 +11,7 @@ namespace Warlord.Entities.GOAP
         public String Name { get; }
 
         /// <summary> The importance of the goal the actor. More important goals will be tackled before less. </summary>
-        public Single Priority { get; private set; } = 1f;
+        public GoalPriority Priority { get; private set; } = GoalPriority.NONE;
 
         /// <summary> The desired state of the world for the goal to be considered complete. All actions should go towards addressing these outcomes. </summary>
         public HashSet<ActorFact> DesiredOutcomes { get; } = new HashSet<ActorFact>();
@@ -64,7 +64,7 @@ namespace Warlord.Entities.GOAP
 
             /// <summary> Sets the goal's priority. </summary>
             /// <param name="priority"> The importance of the goal the actor. More important goals will be tackled before less. </param>
-            public Builder WithPriority(Single priority)
+            public Builder WithPriority(GoalPriority priority)
             {
                 _goal.Priority = priority;
                 return this;
@@ -99,14 +99,26 @@ namespace Warlord.Entities.GOAP
                 return _goal;
             }
         }
+    }
 
 
-        /// <summary> Where the goal originates from. </summary>
-        public enum GoalSource
-        {
-            BASIC,  // Basic upkeep such as eating.
-            PERSONAL,   // Personal goals related to the actor's desires.
-            ORGANISATION    // Goals given by the organisation controlling the actor.
-        }
+    /// <summary> Where the goal originates from. </summary>
+    public enum GoalSource
+    {
+        BASIC,  // Basic upkeep such as eating.
+        PERSONAL,   // Personal goals related to the actor's desires.
+        ORGANISATION    // Goals given by the organisation controlling the actor.
+    }
+
+
+    /// <summary> How important the goal is to the actor. </summary>
+    public enum GoalPriority
+    {
+        NONE = 0,
+        LOW = 1,
+        MEDIUM = 2,
+        HIGH = 3,
+        CRITICAL = 4,   // Needs that relate to staying alive.
+        OVERRIDE = 5
     }
 }

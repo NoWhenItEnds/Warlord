@@ -18,7 +18,7 @@ namespace Warlord.Entities.GOAP
             // Order goals by priority, descending
             List<ActorGoal> orderedGoals = goals
                 //.Where(g => g.DesiredOutcomes.Any(b => !b.Evaluate()))  // Don't include goals who's outcomes are already complete.
-                .OrderByDescending(g => g == mostRecentGoal ? g.Priority - 0.01 : g.Priority)   // Don't keep trying to get the same goal (the most recent one) all the time. Give it a sightly lower priority.
+                .OrderByDescending(g => g == mostRecentGoal ? (Single)g.Priority - 0.1f : (Single)g.Priority)   // Don't keep trying to get the same goal (the most recent one) all the time. Give it a sightly lower priority.
                 .ToList();
 
             // Try to solve each goal in order

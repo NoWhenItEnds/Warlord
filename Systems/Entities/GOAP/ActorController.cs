@@ -94,7 +94,7 @@ namespace Warlord.Entities.GOAP
                 factFactory.AddLocationFact($"at_{location.FormattedName}", 1f, location);
 
                 // Add actions.
-                AvailableActions.Add(new ActorAction.Builder($"GoTo_{location.FormattedName}", new GoToLocationStrategy(Actor, location))
+                AvailableActions.Add(new ActorAction.Builder($"goto_{location.FormattedName}", new GoToLocationStrategy(Actor, location))
                     // TODO - Add cost.
                     .AddOutcome(AvailableFacts[$"at_{location.FormattedName}"])
                     .Build());
@@ -138,13 +138,13 @@ namespace Warlord.Entities.GOAP
         {
             AvailableGoals = new HashSet<ActorGoal>();
 
-            AvailableGoals.Add(new ActorGoal.Builder("WatchPaintDry", ActorGoal.GoalSource.BASIC)
-                .WithPriority(0)
+            AvailableGoals.Add(new ActorGoal.Builder("WatchPaintDry", GoalSource.BASIC)
+                .WithPriority(GoalPriority.NONE)
                 .WithDesiredOutcome(AvailableFacts["nothing"])
                 .Build());
 
-            AvailableGoals.Add(new ActorGoal.Builder("KeepEntertained", ActorGoal.GoalSource.BASIC)
-                .WithPriority(10)
+            AvailableGoals.Add(new ActorGoal.Builder("KeepEntertained", GoalSource.BASIC)
+                .WithPriority(GoalPriority.CRITICAL)
                 .WithDesiredOutcome(AvailableFacts["is_entertained"])
                 .Build());
         }
@@ -219,7 +219,7 @@ namespace Warlord.Entities.GOAP
         /// <summary> Attempt to calculate a new plan. </summary>
         private void CalculatePlan()
         {
-            Single priorityLevel = CurrentGoal?.Priority ?? 0;
+            GoalPriority priorityLevel = CurrentGoal?.Priority ?? GoalPriority.NONE;
 
             HashSet<ActorGoal> goalsToCheck = AvailableGoals;
 

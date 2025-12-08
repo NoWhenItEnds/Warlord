@@ -17,8 +17,8 @@ namespace Warlord.Organisations
         /// <summary> All the actors that is organisation has control of. </summary>
         private HashSet<ActorData> _controlledActors = new HashSet<ActorData>();
 
-        /// <summary> An array of the queued objectives sorted priorities. </summary>
-        private List<OrganisationObjective> _queuedObjectives = new List<OrganisationObjective>();
+        /// <summary> An array of the organisation's objectives. </summary>
+        private HashSet<OrganisationObjective> _objectives = new HashSet<OrganisationObjective>();
 
         /// <summary> When the organisation's objectives are changed or reordered. </summary>
         public Action<OrganisationObjective[]> ObjectivesUpdated;
@@ -52,6 +52,11 @@ namespace Warlord.Organisations
         {
             if(_controlledActors.Add(actor))
             {
+                ActorController controller = _actorManager.GetController(actor);
+                foreach (OrganisationObjective objective in _objectives)
+                {
+                    objective.AddGoal(controller);
+                }
             }
         }
 
@@ -60,6 +65,11 @@ namespace Warlord.Organisations
         {
             if (_controlledActors.Remove(actor))
             {
+                ActorController controller = _actorManager.GetController(actor);
+                foreach (OrganisationObjective objective in _objectives)
+                {
+                    objective.TryRemoveGoal(controller);
+                }
             }
         }
 
@@ -70,47 +80,36 @@ namespace Warlord.Organisations
         public ActorData[] GetActors() => _controlledActors.ToArray();
 
 
-        public void AddObjective(OrganisationObjective objective, Int32 index = -1)
+        public void AddObjective(OrganisationObjective objective)
         {
-            if(index < 0 || index > _queuedObjectives.Count - 1)
+            if(_objectives.Add(objective))
             {
-                _queuedObjectives.Add(objective);
-            }
-            else
-            {
-                _queuedObjectives.Insert(index, objective);
-            }
+                foreach (ActorData actor in _controlledActors)
+                {
+                    ActorController controller = _actorManager.GetController(actor);
+                    objective.AddGoal(controller);
+                }
 
-            _queuedObjectives.Sort();   // TODO - How to sort.
-            ObjectivesUpdated?.Invoke(_queuedObjectives.ToArray());
-            UpdateActorObjectives();
+                ObjectivesUpdated?.Invoke(_objectives.ToArray());
+            }
         }
 
 
         public void RemoveObjective(OrganisationObjective objective)
         {
-            if(_queuedObjectives.Remove(objective))
+            if(_objectives.Remove(objective))
             {
-                _queuedObjectives.Sort();   // TODO - How to sort.
-                ObjectivesUpdated?.Invoke(_queuedObjectives.ToArray());
-                UpdateActorObjectives();
-            }
-        }
-
-        private void UpdateActorObjectives()
-        {
-            if(_queuedObjectives.Count > 0)
-            {
-                OrganisationObjective current = _queuedObjectives.First();
                 foreach (ActorData actor in _controlledActors)
                 {
                     ActorController controller = _actorManager.GetController(actor);
-                    current.AddGoal(controller);
+                    objective.TryRemoveGoal(controller);
                 }
+
+                ObjectivesUpdated?.Invoke(_objectives.ToArray());
             }
         }
 
 
-        public OrganisationObjective[] GetObjectives() => _queuedObjectives.ToArray();
+        public OrganisationObjective[] GetObjectives() => _objectives.ToArray();
     }
 }
