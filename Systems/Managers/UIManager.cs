@@ -19,6 +19,9 @@ namespace Warlord.Managers
         /// <summary> The window for displaying the state of the game world. </summary>
         [Export] private StatusWindow _statusWindow;
 
+        /// <summary> A popup window showing information about a selected actor. </summary>
+        [Export] private ActorInformationWindow _actorInformationWindow;
+
 
         /// <summary> Set the currently selected actor. </summary>
         /// <param name="actor"> The selected actor. A null indicates that there isn't one. </param>
@@ -28,6 +31,11 @@ namespace Warlord.Managers
         /// <summary> Toggle the UI's location selector's target. </summary>
         /// <param name="location"> The location to follow. A null indicates to turn the selector off. </param>
         public void ToggleLocationSelection(LocationData? location) => _locationSelection.Toggle(location);
+
+
+        /// <summary> Open or close the actor information window by changing the currently selected actor. </summary>
+        /// <param name="actor"> The selected actor. A null indicates that there isn't one. </param>
+        public void ToggleActorInformationWindow(ActorData? actor) => _actorInformationWindow.Toggle(actor);
 
 
         /// <summary> Get the dimensions of the screen that is interactable / usable. This is the area of the screen not currently blocked by long standing UI. </summary>

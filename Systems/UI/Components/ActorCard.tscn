@@ -6,6 +6,7 @@
 [node name="ActorCard" type="Button" node_paths=PackedStringArray("_texture", "_nameLabel")]
 clip_contents = true
 custom_minimum_size = Vector2(128, 0)
+button_mask = 3
 script = ExtResource("1_nbukm")
 _texture = NodePath("ActorTexture")
 _nameLabel = NodePath("NameLabel")

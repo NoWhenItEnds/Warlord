@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://cieiquimpnvi"]
+[gd_scene load_steps=28 format=3 uid="uid://cieiquimpnvi"]
 
 [ext_resource type="Script" uid="uid://ct8qbhj8gwq61" path="res://Systems/Managers/GameManager.cs" id="1_8wdfg"]
 [ext_resource type="Gradient" uid="uid://c0em5qijetmyp" path="res://Content/Resources/Gradients/Gradient_Sunlight.tres" id="2_dulfu"]
@@ -23,6 +23,7 @@
 [ext_resource type="Script" uid="uid://kbnqitrocmlf" path="res://Systems/UI/Components/ActorComponent.cs" id="14_akf4r"]
 [ext_resource type="Script" uid="uid://b8kuw6oosno2g" path="res://Systems/UI/Components/OrganisationComponent.cs" id="21_0itj2"]
 [ext_resource type="PackedScene" uid="uid://y6v1e1mgg3e7" path="res://Systems/UI/Components/ObjectiveCard.tscn" id="21_oaat0"]
+[ext_resource type="Script" uid="uid://dx0t6e1faj81j" path="res://Systems/UI/Windows/ActorInformationWindow.cs" id="24_ejcwx"]
 
 [sub_resource type="Environment" id="Environment_j7grf"]
 
@@ -90,7 +91,7 @@ metadata/_custom_type_script = "uid://b6gtkuav1l43g"
 [node name="Input Manager" type="Node" parent="."]
 script = ExtResource("2_fdsh7")
 
-[node name="UI Manager" type="Control" parent="." node_paths=PackedStringArray("_locationSelection", "_actorCardWindow", "_statusWindow")]
+[node name="UI Manager" type="Control" parent="." node_paths=PackedStringArray("_locationSelection", "_actorCardWindow", "_statusWindow", "_actorInformationWindow")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -102,6 +103,7 @@ script = ExtResource("8_s3n2u")
 _locationSelection = NodePath("Location Selection")
 _actorCardWindow = NodePath("ActorCard Window")
 _statusWindow = NodePath("Status Window")
+_actorInformationWindow = NodePath("Actor Information Window")
 
 [node name="Location Selection" type="PanelContainer" parent="UI Manager" node_paths=PackedStringArray("_nameLabel", "_garrisonButton", "_assaultButton")]
 custom_minimum_size = Vector2(256, 0)
@@ -319,3 +321,58 @@ layout_mode = 2
 bbcode_enabled = true
 text = "SKITTER"
 fit_content = true
+
+[node name="Actor Information Window" type="PanelContainer" parent="UI Manager" node_paths=PackedStringArray("_actorNameLabel", "_closeButton", "_debugLabel")]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -256.0
+offset_bottom = -128.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("24_ejcwx")
+_actorNameLabel = NodePath("MarginContainer/Header Container/HBoxContainer/Actor Name Label")
+_closeButton = NodePath("MarginContainer/Header Container/HBoxContainer/Close Button")
+_debugLabel = NodePath("MarginContainer/Header Container/Main Container/Right Column/Debug Label")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI Manager/Actor Information Window"]
+layout_mode = 2
+
+[node name="Header Container" type="VBoxContainer" parent="UI Manager/Actor Information Window/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI Manager/Actor Information Window/MarginContainer/Header Container"]
+layout_mode = 2
+
+[node name="Actor Name Label" type="RichTextLabel" parent="UI Manager/Actor Information Window/MarginContainer/Header Container/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+text = "ACTOR NAME"
+vertical_alignment = 1
+
+[node name="Close Button" type="Button" parent="UI Manager/Actor Information Window/MarginContainer/Header Container/HBoxContainer"]
+layout_mode = 2
+text = "X"
+
+[node name="HSeparator" type="HSeparator" parent="UI Manager/Actor Information Window/MarginContainer/Header Container"]
+layout_mode = 2
+
+[node name="Main Container" type="HBoxContainer" parent="UI Manager/Actor Information Window/MarginContainer/Header Container"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Left Column" type="ScrollContainer" parent="UI Manager/Actor Information Window/MarginContainer/Header Container/Main Container"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Right Column" type="ScrollContainer" parent="UI Manager/Actor Information Window/MarginContainer/Header Container/Main Container"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Debug Label" type="RichTextLabel" parent="UI Manager/Actor Information Window/MarginContainer/Header Container/Main Container/Right Column"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+bbcode_enabled = true

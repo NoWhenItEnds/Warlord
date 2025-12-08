@@ -29,16 +29,24 @@ namespace Warlord.UI.Components
         {
             Toggle(null);
             _uiManager = UIManager.Instance;
-            ButtonDown += OnButtonPressed;
+            GuiInput += OnButtonPressed;
         }
 
 
         /// <summary> When the card is pressed. </summary>
-        private void OnButtonPressed()
+        /// <param name="event"> The event that triggered the button. </param>
+        private void OnButtonPressed(InputEvent @event)
         {
-            if(_trackedActor != null)
+            if(_trackedActor != null && @event is InputEventMouseButton mouseInput && mouseInput.IsPressed())
             {
-                _uiManager.ToggleActorSelection(_trackedActor);
+                if(mouseInput.ButtonIndex == MouseButton.Left)
+                {
+                    _uiManager.ToggleActorSelection(_trackedActor);
+                }
+                else if(mouseInput.ButtonIndex == MouseButton.Right)
+                {
+                    _uiManager.ToggleActorInformationWindow(_trackedActor);
+                }
             }
         }
 
@@ -72,7 +80,7 @@ namespace Warlord.UI.Components
         /// <inheritdoc/>
         public override void _ExitTree()
         {
-            ButtonDown -= OnButtonPressed;
+            GuiInput -= OnButtonPressed;
         }
     }
 }
