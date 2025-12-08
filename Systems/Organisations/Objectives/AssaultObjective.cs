@@ -18,7 +18,7 @@ namespace Warlord.Organisations.Objectives
             Target = target;
         }
 
-        public override void AddGoal(ActorController controller)
+        public override void AddGoal(ActorController controller, GoalPriority priority = GoalPriority.LOW)
         {
             throw new NotImplementedException();
         }

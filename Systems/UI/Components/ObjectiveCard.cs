@@ -1,4 +1,6 @@
+using System;
 using Godot;
+using Warlord.Entities.GOAP;
 using Warlord.Managers;
 using Warlord.Organisations.Objectives;
 
@@ -29,9 +31,19 @@ namespace Warlord.UI.Components
         public override void _Ready()
         {
             _organisationManager = OrganisationManager.Instance;
+            _prioritySelector.ValueChanged += OnPriorityChanged;
             _deleteButton.ButtonDown += OnDeleteButton;
         }
 
+
+        private void OnPriorityChanged(Double value)
+        {
+            if(_objective != null)
+            {
+                GoalPriority priority = (GoalPriority)(Int32)value;
+                _organisationManager.PlayerController.UpdateObjectivePriority(_objective, priority);
+            }
+        }
 
         private void OnDeleteButton()
         {
@@ -52,6 +64,12 @@ namespace Warlord.UI.Components
             if(objective != null)
             {
                 _nameLabel.Text = objective.GoalName;
+                // TODO - Have priority set.
+            }
+            else    // Reset the card.
+            {
+                _nameLabel.Text = "OBJECTIVE NAME";
+                _prioritySelector.SetValueNoSignal(1);
             }
         }
 

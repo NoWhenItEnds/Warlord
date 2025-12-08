@@ -95,6 +95,16 @@ namespace Warlord.Organisations
         }
 
 
+        public void UpdateObjectivePriority(OrganisationObjective objective, GoalPriority priority)
+        {
+            foreach (ActorData actor in _controlledActors)
+            {
+                ActorController controller = _actorManager.GetController(actor);
+                objective.SetPriority(controller, priority);
+            }
+        }
+
+
         public void RemoveObjective(OrganisationObjective objective)
         {
             if(_objectives.Remove(objective))

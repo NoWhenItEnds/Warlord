@@ -30,6 +30,14 @@ namespace Warlord.Entities.GOAP
         }
 
 
+        /// <summary> Update the priority of the goal. </summary>
+        /// <param name="priority"> The goal's new priority. </param>
+        public void UpdatePriority(GoalPriority priority)
+        {
+            Priority = priority;
+        }
+
+
         /// <inheritdoc/>
         public override Int32 GetHashCode() => HashCode.Combine(Name);
 

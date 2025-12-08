@@ -21,13 +21,13 @@ namespace Warlord.Organisations.Objectives
 
 
         /// <inheritdoc/>
-        public override void AddGoal(ActorController controller)
+        public override void AddGoal(ActorController controller, GoalPriority priority = GoalPriority.LOW)
         {
             String factName = $"at_{Target.FormattedName}";
             if (controller.AvailableFacts.TryGetValue(factName, out ActorFact? atFact))
             {
                 ActorGoal goal = GOAL_BUILDER
-                    .WithPriority(GoalPriority.OVERRIDE)   // TODO - Set somehow.
+                    .WithPriority(priority)
                     .WithDesiredOutcome(atFact) // TODO - Callback or auto removal?
                     .Build();
 

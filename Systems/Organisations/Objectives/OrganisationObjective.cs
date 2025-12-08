@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using Warlord.Entities.GOAP;
+using Warlord.Utilities.Exceptions;
 
 namespace Warlord.Organisations.Objectives
 {
@@ -24,8 +26,25 @@ namespace Warlord.Organisations.Objectives
 
         /// <summary> Adds the generated goal to an actor. </summary>
         /// <param name="controller"> A reference to the controller to modify. </param>
+        /// <param name="priority"> How important the goal current is. </param>
         /// <exception cref="GOAPException"/>
-        public abstract void AddGoal(ActorController controller);
+        public abstract void AddGoal(ActorController controller, GoalPriority priority = GoalPriority.LOW);
+
+
+        public void SetPriority(ActorController controller, GoalPriority priority)
+        {
+            ActorGoal? goal = controller.AvailableGoals.FirstOrDefault(x => x.Name == GoalName) ?? null;
+            if(goal == null)
+            {
+                throw new GOAPException($"The goal, '{GoalName}', does not exist within {controller.Actor.FormattedName}'s ActionController's goals when attempting to update its priority from an organisation objective. This shouldn't be possible.");
+            }
+
+            if(goal.Priority != priority)
+            {
+                goal.UpdatePriority(priority);
+                controller.ReevaluatePlan();
+            }
+        }
 
 
         /// <summary> Try to remove the organisation's goal from the given actor. </summary>
