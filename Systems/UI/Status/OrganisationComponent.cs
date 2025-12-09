@@ -5,7 +5,7 @@ using Warlord.Managers;
 using Warlord.Organisations.Objectives;
 using Warlord.Utilities;
 
-namespace Warlord.UI.Components
+namespace Warlord.UI.Status
 {
     /// <summary> A window for displaying information about the organisation. </summary>
     public partial class OrganisationComponent : Control

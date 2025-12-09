@@ -2,7 +2,7 @@ using Godot;
 using System;
 using Warlord.Managers;
 
-namespace Warlord.UI.Components
+namespace Warlord.UI.Status
 {
     /// <summary> Displays information about the game world. </summary>
     public partial class WorldComponent : Control

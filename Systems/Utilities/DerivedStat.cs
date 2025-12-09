@@ -51,7 +51,7 @@ namespace Warlord.Utilities
         public event Action<Int32> ValueChanged;
 
         /// <summary> An amount, from 0.0 - 1.0 the statistic is between its min and max value. </summary>
-        public Single Progress => (CurrentValue - MinValue) / (MaxValue - MinValue);
+        public Single Percent => (CurrentValue - MinValue) / (MaxValue - MinValue);
 
 
         /// <summary> A statistic whose values are based upon those of another. </summary>

@@ -7,7 +7,7 @@ using Warlord.Entities.GOAP;
 using Warlord.Entities.Resources;
 using Warlord.Managers;
 
-namespace Warlord.UI.Windows
+namespace Warlord.UI.ActorInformation
 {
     /// <summary> A popup window showing information about a selected actor. </summary>
     public partial class ActorInformationWindow : Control
@@ -19,6 +19,10 @@ namespace Warlord.UI.Windows
 
         /// <summary> The button to close the information window. </summary>
         [Export] private Button _closeButton;
+
+        /// <summary> The radar chart used to represent an actor's attribute values. </summary>
+        [ExportSubgroup("Left Column")]
+        [Export] private ActorAttributeChart _attributeChart;
 
         /// <summary> A label to use for showing debug information. </summary>
         [ExportSubgroup("Right Column")]
@@ -76,6 +80,9 @@ namespace Warlord.UI.Windows
             if (_selectedActor != null && _selectedActorController != null)
             {
                 _actorNameLabel.Text = _selectedActor.Name;
+
+                // Left column.
+                _attributeChart.SetAttributes(_selectedActor.Strength.Percent, _selectedActor.Dexterity.Percent, _selectedActor.Vigor.Percent, _selectedActor.Intellect.Percent, _selectedActor.Presence.Percent);
 
                 // Populate the debug window with GOAP information.
                 StringBuilder debugText = new StringBuilder();

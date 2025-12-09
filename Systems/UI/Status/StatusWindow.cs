@@ -2,7 +2,7 @@ using Godot;
 using Warlord.Entities.Resources;
 using Warlord.UI.Components;
 
-namespace Warlord.UI.Windows
+namespace Warlord.UI.Status
 {
     /// <summary> A status bar showing information about the state of the game world. </summary>
     public partial class StatusWindow : Control

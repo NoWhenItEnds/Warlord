@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://y6v1e1mgg3e7"]
 
-[ext_resource type="Script" uid="uid://k3tb203wx4ej" path="res://Systems/UI/Components/ObjectiveCard.cs" id="1_w1rwc"]
+[ext_resource type="Script" uid="uid://k3tb203wx4ej" path="res://Systems/UI/Status/ObjectiveCard.cs" id="1_w1rwc"]
 
 [node name="Objective Card" type="Control" node_paths=PackedStringArray("_nameLabel", "_prioritySelector", "_deleteButton")]
 custom_minimum_size = Vector2(0, 32)

@@ -67,10 +67,10 @@ namespace Warlord.Entities.GOAP
         {
             factFactory.AddFact("nothing", () => false);  // Always has a belief, even if it never will successfully evaluate.
 
-            factFactory.AddFact("is_healthy", () => Actor.HealthStat.Progress >= 0.9f);
-            factFactory.AddFact("is_hurt", () => Actor.HealthStat.Progress < 0.5f);
-            factFactory.AddFact("is_entertained", () => Actor.EntertainmentStat.Progress >= 0.9f);
-            factFactory.AddFact("is_bored", () => Actor.EntertainmentStat.Progress < 0.5f);
+            factFactory.AddFact("is_healthy", () => Actor.HealthStat.Percent >= 0.9f);
+            factFactory.AddFact("is_hurt", () => Actor.HealthStat.Percent < 0.5f);
+            factFactory.AddFact("is_entertained", () => Actor.EntertainmentStat.Percent >= 0.9f);
+            factFactory.AddFact("is_bored", () => Actor.EntertainmentStat.Percent < 0.5f);
 
             AvailableActions.Add(new ActorAction.Builder("Relax", new IdleStrategy(Actor, 5f))
                 .AddOutcome(AvailableFacts["nothing"])

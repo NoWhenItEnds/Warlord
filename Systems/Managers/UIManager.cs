@@ -1,6 +1,7 @@
 using Godot;
-using Warlord.Entities.Nodes.Locations;
 using Warlord.Entities.Resources;
+using Warlord.UI.ActorInformation;
+using Warlord.UI.Status;
 using Warlord.UI.Windows;
 using Warlord.Utilities.Singletons;
 

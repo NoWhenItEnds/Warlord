@@ -80,7 +80,7 @@ namespace Warlord.Entities.Resources
         public event Action<Int32> ValueChanged;
 
         /// <summary> An amount, from 0.0 - 1.0 the statistic is between its min and max value. </summary>
-        public Single Progress => (CurrentValue - MinValue) / (MaxValue - MinValue);
+        public Single Percent => (CurrentValue - MinValue) / (MaxValue - MinValue);
 
 
         /// <summary> The modifiers currently being applied to the stat. </summary>

@@ -3,7 +3,7 @@ using Godot;
 using Warlord.Entities.Resources;
 using Warlord.Managers;
 
-namespace Warlord.UI.Components
+namespace Warlord.UI.Status
 {
     /// <summary> Displays information about the currently selected actor. </summary>
     public partial class ActorComponent : Control

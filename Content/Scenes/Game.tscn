@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://cieiquimpnvi"]
+[gd_scene load_steps=31 format=3 uid="uid://cieiquimpnvi"]
 
 [ext_resource type="Script" uid="uid://ct8qbhj8gwq61" path="res://Systems/Managers/GameManager.cs" id="1_8wdfg"]
 [ext_resource type="Gradient" uid="uid://c0em5qijetmyp" path="res://Content/Resources/Gradients/Gradient_Sunlight.tres" id="2_dulfu"]
@@ -18,12 +18,15 @@
 [ext_resource type="PackedScene" uid="uid://dqbstrhw17hcy" path="res://Content/Prefabs/Suburb/Buildings/PPU_Suburb_Building_House_007.tscn" id="9_gh1u3"]
 [ext_resource type="Script" uid="uid://hp5xrtud1gdc" path="res://Systems/UI/Windows/LocationSelection.cs" id="9_k5j0c"]
 [ext_resource type="Resource" uid="uid://ddj3nnvl3pgbp" path="res://Data/Locations/Suburb/Buildings/Location_Suburb_Building_BigHouse.tres" id="10_kupp0"]
-[ext_resource type="Script" uid="uid://b0nsnlfeoi7rr" path="res://Systems/UI/Windows/StatusWindow.cs" id="12_k5j0c"]
-[ext_resource type="Script" uid="uid://ceebstuxgjslh" path="res://Systems/UI/Components/WorldComponent.cs" id="13_wrnex"]
-[ext_resource type="Script" uid="uid://kbnqitrocmlf" path="res://Systems/UI/Components/ActorComponent.cs" id="14_akf4r"]
-[ext_resource type="Script" uid="uid://b8kuw6oosno2g" path="res://Systems/UI/Components/OrganisationComponent.cs" id="21_0itj2"]
-[ext_resource type="PackedScene" uid="uid://y6v1e1mgg3e7" path="res://Systems/UI/Components/ObjectiveCard.tscn" id="21_oaat0"]
-[ext_resource type="Script" uid="uid://dx0t6e1faj81j" path="res://Systems/UI/Windows/ActorInformationWindow.cs" id="24_ejcwx"]
+[ext_resource type="Script" uid="uid://b0nsnlfeoi7rr" path="res://Systems/UI/Status/StatusWindow.cs" id="12_k5j0c"]
+[ext_resource type="Script" uid="uid://ceebstuxgjslh" path="res://Systems/UI/Status/WorldComponent.cs" id="13_wrnex"]
+[ext_resource type="Script" uid="uid://kbnqitrocmlf" path="res://Systems/UI/Status/ActorComponent.cs" id="14_akf4r"]
+[ext_resource type="Script" uid="uid://b8kuw6oosno2g" path="res://Systems/UI/Status/OrganisationComponent.cs" id="21_0itj2"]
+[ext_resource type="PackedScene" uid="uid://y6v1e1mgg3e7" path="res://Systems/UI/Status/ObjectiveCard.tscn" id="21_oaat0"]
+[ext_resource type="Script" uid="uid://dx0t6e1faj81j" path="res://Systems/UI/ActorInformation/ActorInformationWindow.cs" id="24_ejcwx"]
+[ext_resource type="Script" uid="uid://dc0tmgnj3u3cd" path="res://Systems/Nodes/RadarChart.cs" id="25_1mywo"]
+[ext_resource type="Script" uid="uid://rca4e521udf7" path="res://Systems/UI/ActorInformation/ActorAttributeChart.cs" id="25_q32et"]
+[ext_resource type="Script" uid="uid://bi8ewmkau32ep" path="res://Systems/Nodes/PolylineRadarChart.cs" id="26_q32et"]
 
 [sub_resource type="Environment" id="Environment_j7grf"]
 
@@ -322,7 +325,7 @@ bbcode_enabled = true
 text = "SKITTER"
 fit_content = true
 
-[node name="Actor Information Window" type="PanelContainer" parent="UI Manager" node_paths=PackedStringArray("_actorNameLabel", "_closeButton", "_debugLabel")]
+[node name="Actor Information Window" type="PanelContainer" parent="UI Manager" node_paths=PackedStringArray("_actorNameLabel", "_closeButton", "_attributeChart", "_debugLabel")]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -334,6 +337,7 @@ grow_vertical = 2
 script = ExtResource("24_ejcwx")
 _actorNameLabel = NodePath("MarginContainer/Header Container/HBoxContainer/Actor Name Label")
 _closeButton = NodePath("MarginContainer/Header Container/HBoxContainer/Close Button")
+_attributeChart = NodePath("MarginContainer/Header Container/Main Container/Left Column/VBoxContainer/Actor Attribute Chart")
 _debugLabel = NodePath("MarginContainer/Header Container/Main Container/Right Column/Debug Label")
 
 [node name="MarginContainer" type="MarginContainer" parent="UI Manager/Actor Information Window"]
@@ -366,6 +370,123 @@ size_flags_vertical = 3
 [node name="Left Column" type="ScrollContainer" parent="UI Manager/Actor Information Window/MarginContainer/Header Container/Main Container"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI Manager/Actor Information Window/MarginContainer/Header Container/Main Container/Left Column"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Control" type="Control" parent="UI Manager/Actor Information Window/MarginContainer/Header Container/Main Container/Left Column/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Actor Attribute Chart" type="Control" parent="UI Manager/Actor Information Window/MarginContainer/Header Container/Main Container/Left Column/VBoxContainer" node_paths=PackedStringArray("_fillChart", "_outlineChart")]
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("25_q32et")
+_fillChart = NodePath("Value Fill")
+_outlineChart = NodePath("Value Outline")
+
+[node name="Background" type="Control" parent="UI Manager/Actor Information Window/MarginContainer/Header Container/Main Container/Left Column/VBoxContainer/Actor Attribute Chart"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("25_1mywo")
+Data = Array[float]([1.0, 1.0, 1.0, 1.0, 1.0])
+metadata/_custom_type_script = "uid://dc0tmgnj3u3cd"
+
+[node name="Outline" type="Control" parent="UI Manager/Actor Information Window/MarginContainer/Header Container/Main Container/Left Column/VBoxContainer/Actor Attribute Chart"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("26_q32et")
+LineWidth = 4
+Data = Array[float]([1.0, 1.0, 1.0, 1.0, 1.0])
+Colour = Color(0, 0, 0, 1)
+metadata/_custom_type_script = "uid://bi8ewmkau32ep"
+
+[node name="Grid 20" type="Control" parent="UI Manager/Actor Information Window/MarginContainer/Header Container/Main Container/Left Column/VBoxContainer/Actor Attribute Chart"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("26_q32et")
+LineWidth = 1
+Data = Array[float]([0.2, 0.2, 0.2, 0.2, 0.2])
+Colour = Color(0, 0, 0, 1)
+metadata/_custom_type_script = "uid://bi8ewmkau32ep"
+
+[node name="Grid 40" type="Control" parent="UI Manager/Actor Information Window/MarginContainer/Header Container/Main Container/Left Column/VBoxContainer/Actor Attribute Chart"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("26_q32et")
+LineWidth = 1
+Data = Array[float]([0.4, 0.4, 0.4, 0.4, 0.4])
+Colour = Color(0, 0, 0, 1)
+metadata/_custom_type_script = "uid://bi8ewmkau32ep"
+
+[node name="Grid 60" type="Control" parent="UI Manager/Actor Information Window/MarginContainer/Header Container/Main Container/Left Column/VBoxContainer/Actor Attribute Chart"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("26_q32et")
+LineWidth = 1
+Data = Array[float]([0.6, 0.6, 0.6, 0.6, 0.6])
+Colour = Color(0, 0, 0, 1)
+metadata/_custom_type_script = "uid://bi8ewmkau32ep"
+
+[node name="Grid 80" type="Control" parent="UI Manager/Actor Information Window/MarginContainer/Header Container/Main Container/Left Column/VBoxContainer/Actor Attribute Chart"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("26_q32et")
+LineWidth = 1
+Data = Array[float]([0.8, 0.8, 0.8, 0.8, 0.8])
+Colour = Color(0, 0, 0, 1)
+metadata/_custom_type_script = "uid://bi8ewmkau32ep"
+
+[node name="Value Fill" type="Control" parent="UI Manager/Actor Information Window/MarginContainer/Header Container/Main Container/Left Column/VBoxContainer/Actor Attribute Chart"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("25_1mywo")
+Data = Array[float]([0.8, 0.6, 0.5, 0.4, 0.1])
+Colour = Color(0.4117647, 0, 0, 0.7254902)
+metadata/_custom_type_script = "uid://dc0tmgnj3u3cd"
+
+[node name="Value Outline" type="Control" parent="UI Manager/Actor Information Window/MarginContainer/Header Container/Main Container/Left Column/VBoxContainer/Actor Attribute Chart"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("26_q32et")
+LineWidth = 2
+Data = Array[float]([0.8, 0.6, 0.5, 0.4, 0.1])
+Colour = Color(0.64705884, 0, 0, 1)
+metadata/_custom_type_script = "uid://bi8ewmkau32ep"
 
 [node name="Right Column" type="ScrollContainer" parent="UI Manager/Actor Information Window/MarginContainer/Header Container/Main Container"]
 layout_mode = 2

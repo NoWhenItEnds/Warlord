@@ -4,7 +4,7 @@ using Warlord.Entities.GOAP;
 using Warlord.Managers;
 using Warlord.Organisations.Objectives;
 
-namespace Warlord.UI.Components
+namespace Warlord.UI.Status
 {
     /// <summary> A UI element that represents an organisational objective. </summary>
     public partial class ObjectiveCard : Control
