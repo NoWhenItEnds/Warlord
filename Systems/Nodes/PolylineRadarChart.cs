@@ -20,6 +20,12 @@ namespace Warlord.Nodes
         /// <summary> Whether the drawn line should be antialiased or not. </summary>
         [Export] public Boolean IsAntialiased { get { return _isAntialiased; } set { _isAntialiased = value; QueueRedraw(); } }
 
+        /// <summary> Whether the drawn line should have points drawn at the corners. </summary>
+        protected Boolean _drawPoints = false;
+
+        /// <summary> Whether the drawn line should have points drawn at the corners. </summary>
+        [Export] public Boolean DrawPoints { get { return _drawPoints; } set { _drawPoints = value; QueueRedraw(); } }
+
 
         /// <inheritdoc/>
         public override void _Draw()
@@ -28,6 +34,13 @@ namespace Warlord.Nodes
             if (points.Length > 0)
             {
                 DrawPolyline(points, _colour, _lineWidth, _isAntialiased);
+                if (_drawPoints)
+                {
+                    foreach (Vector2 point in points)
+                    {
+                        DrawCircle(point, _lineWidth, _colour, antialiased: _isAntialiased);
+                    }
+                }
             }
         }
     }
