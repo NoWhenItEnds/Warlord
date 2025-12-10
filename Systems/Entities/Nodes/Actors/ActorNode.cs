@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 using Warlord.Managers;
 
 namespace Warlord.Entities.Nodes.Actors
@@ -14,8 +15,9 @@ namespace Warlord.Entities.Nodes.Actors
         [Export] private ActorSensors _sensors;
 
 
-        /// <summary> If the node is currently active with an attached data object. </summary>
-        public Boolean IsActive => Visible;
+        /// <inheritdoc/>
+        public event Action<IEntityNode> EntityUpdated;
+
 
         private TimeManager _timeManager;
 
@@ -31,20 +33,14 @@ namespace Warlord.Entities.Nodes.Actors
         {
             Vector3 newVelocity = GlobalPosition.DirectionTo(destination) * movementDelta;
             GlobalPosition = GlobalPosition.MoveToward(GlobalPosition + newVelocity, movementDelta);
+            EntityUpdated?.Invoke(this);
         }
 
 
-        /// <inheritdoc/>
-        public override void _PhysicsProcess(Double delta)
-        {
-            // TODO - ???
-
-            if(IsActive)
-            {
-                _sensors.ProcessSensor(delta);
-            }
-        }
-
+        /// <summary> Checks if the given entity is currently visible by the actor. </summary>
+        /// <param name="entity"> The entity to check for. </param>
+        /// <returns> Is the given entity visible? </returns>
+        public Boolean IsEntityVisible(IEntityNode entity) => _sensors.GetVisibleEntities().FirstOrDefault(x => x == entity) != null;
 
 
         /// <inheritdoc/>

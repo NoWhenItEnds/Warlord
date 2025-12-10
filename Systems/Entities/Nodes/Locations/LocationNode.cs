@@ -1,3 +1,4 @@
+using System;
 using Godot;
 using Warlord.Entities.Resources;
 
@@ -14,6 +15,10 @@ namespace Warlord.Entities.Nodes.Locations
         /// <summary> The entity data attached to the node. </summary>
         [ExportGroup("Resource")]
         [Export] public LocationData Data { get; private set; }
+
+
+        /// <inheritdoc/>
+        public event Action<IEntityNode> EntityUpdated;
 
 
         /// <summary> Gets the location where an actor can interact with the location. </summary>
