@@ -1,7 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-using Warlord.Entities.Nodes;
+using Warlord.Entities.Nodes.Actors;
 using Warlord.Entities.Nodes.Locations;
 using Warlord.Entities.Resources;
 using Warlord.Managers;

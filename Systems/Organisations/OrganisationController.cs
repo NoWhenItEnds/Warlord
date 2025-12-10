@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Warlord.Entities.GOAP;
-using Warlord.Entities.Nodes;
+using Warlord.Entities.Nodes.Actors;
 using Warlord.Entities.Resources;
 using Warlord.Managers;
 using Warlord.Organisations.Objectives;

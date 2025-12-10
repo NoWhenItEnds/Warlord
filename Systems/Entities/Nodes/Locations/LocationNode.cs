@@ -4,7 +4,7 @@ using Warlord.Entities.Resources;
 namespace Warlord.Entities.Nodes.Locations
 {
     /// <summary> A location node within the game world that can be interacted with. </summary>
-    public abstract partial class LocationNode : Node3D
+    public abstract partial class LocationNode : Node3D, IEntityNode
     {
         /// <summary> The area an entity needs to be within to be interacted with. </summary>
         [ExportGroup("Nodes")]
@@ -19,5 +19,9 @@ namespace Warlord.Entities.Nodes.Locations
         /// <summary> Gets the location where an actor can interact with the location. </summary>
         /// <returns> The location's interaction position in 3D space. </returns>
         public Vector3 GetInteractionPosition() => _interactionArea.GlobalPosition;
+
+
+        /// <inheritdoc/>
+        public Vector3 GetWorldPosition() => GlobalPosition;
     }
 }

@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://cghcc8gl15qwt" path="res://Systems/Managers/TimeManager.cs" id="3_oaat0"]
 [ext_resource type="Script" uid="uid://b6gtkuav1l43g" path="res://Systems/Organisations/OrganisationController.cs" id="3_uxds2"]
 [ext_resource type="Script" uid="uid://bltji3s65ra6b" path="res://Systems/Managers/ActorManager.cs" id="4_5p3x2"]
-[ext_resource type="PackedScene" uid="uid://bfv0hx503f0yk" path="res://Systems/Entities/Nodes/ActorNode.tscn" id="5_sa7mi"]
+[ext_resource type="PackedScene" uid="uid://bfv0hx503f0yk" path="res://Systems/Entities/Nodes/Actors/ActorNode.tscn" id="5_sa7mi"]
 [ext_resource type="Script" uid="uid://db76oggddenps" path="res://Systems/Managers/LocationManager.cs" id="6_a7rpa"]
 [ext_resource type="PackedScene" uid="uid://lpcdniq6lnhn" path="res://Systems/UI/Components/ActorCard.tscn" id="7_8fov1"]
 [ext_resource type="Script" uid="uid://k1qk4ig48umn" path="res://Systems/UI/Windows/ActorCardWindow.cs" id="7_md4fn"]

@@ -43,5 +43,22 @@ namespace Warlord.Utilities.Extensions
 
             return childNodes;
         }
+
+
+        /// <summary> Look at with constraints to not throw errors when angles are too close </summary>
+        /// <param name="nodeToRotate"></param>
+        /// <param name="targetGlobalPosition"></param>
+        public static void SafeLookAt(this Node3D nodeToRotate, Vector3 targetGlobalPosition)
+        {
+            // ERR_FAIL_COND_MSG(p_pos.is_equal_approx(p_target), "Node origin and target are in the same position, look_at() failed.");
+            Boolean isAligned = Vector3.Up.Cross(targetGlobalPosition - nodeToRotate.GlobalPosition).IsZeroApprox();
+            Boolean isEqual = nodeToRotate.GlobalTransform.Origin == targetGlobalPosition;
+            Single angleBetween = MathExtensions.AngleBetween(nodeToRotate.GlobalPosition, targetGlobalPosition);
+
+            if (isAligned == false && isEqual == false && angleBetween > MathExtensions.SAFE_FLOAT_EPSILON)
+            {
+                nodeToRotate.LookAt(targetGlobalPosition, Vector3.Up);
+            }
+        }
     }
 }
