@@ -1,6 +1,6 @@
+using Godot;
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 using Warlord.Entities.GOAP.Strategies;
 using Warlord.Entities.Resources;
 
@@ -117,22 +117,12 @@ namespace Warlord.Entities.GOAP
             }
 
 
-            /// <summary> Sets the action cost as a result of the WEIGHTED distance between the actor and another position. </summary>
-            /// <param name="cost"></param>
-            /// <returns></returns>
-            public Builder WithDistanceCost(Vector3 position)
+            /// <summary> Sets the action cost as a result of the distance between the actor and another entity. </summary>
+            /// <param name="actor"> The actor performing the action. </param>
+            /// <param name="data"> The entity to check. </param>
+            public Builder WithDistanceCost(ActorData actor, EntityData data)
             {
-                //_action.Cost = () => cost;
-                return this;
-            }
-
-
-            /// <summary> Sets the action cost as a result of the distance between the actor and another position. </summary>
-            /// <param name="location"></param>
-            /// <returns></returns>
-            public Builder WithDistanceCost(LocationData location)
-            {
-                //_action.Cost = () => cost;
+                _action.Cost = () => actor.TryGetWorldPosition(out Vector3 actorPosition) && data.TryGetWorldPosition(out Vector3 otherPosition) ? actorPosition.DistanceTo(otherPosition) : Single.MaxValue;
                 return this;
             }
 

@@ -1,14 +1,13 @@
 using System;
 using Godot;
 using Warlord.Entities.Nodes.Actors;
-using Warlord.Entities.Nodes.Locations;
 using Warlord.Entities.Resources;
 using Warlord.Managers;
 
 namespace Warlord.Entities.GOAP.Strategies
 {
-    /// <summary> An actor moves itself to the given location. </summary>
-    public class GoToLocationStrategy : IActionStrategy
+    /// <summary> An actor moves itself to the given entity's position. </summary>
+    public class GoToEntityStrategy : IActionStrategy
     {
         /// <inheritdoc/>
         public Boolean IsValid => ActorManager.Instance.TryGetNode(ACTOR, out ActorNode? _);  // Only allow if the actor has a node in the game world.
@@ -19,21 +18,21 @@ namespace Warlord.Entities.GOAP.Strategies
         /// <summary> A reference to the actor being manipulated. </summary>
         private readonly ActorData ACTOR;
 
-        /// <summary> The strategy's target location. </summary>
-        private readonly LocationData LOCATION;
+        /// <summary> The strategy's target entity. </summary>
+        private readonly EntityData TARGET_ENTITY;
 
         /// <summary> A reference to the node currently representing the actor in the game world. </summary>
         /// <remarks> A null indicates that there currently isn't one. </remarks>
         private ActorNode? _actorNode = null;
 
 
-        /// <summary> An actor moves itself to the given location. </summary>
+        /// <summary> An actor moves itself to the given entity's position. </summary>
         /// <param name="actor"> A reference to the actor being manipulated. </param>
-        /// <param name="location"> The strategy's target location. </param>
-        public GoToLocationStrategy(ActorData actor, LocationData location)
+        /// <param name="targetEntity"> The strategy's target entity. </param>
+        public GoToEntityStrategy(ActorData actor, EntityData targetEntity)
         {
             ACTOR = actor;
-            LOCATION = location;
+            TARGET_ENTITY = targetEntity;
         }
 
 
@@ -41,7 +40,7 @@ namespace Warlord.Entities.GOAP.Strategies
         public void Start()
         {
             if (ActorManager.Instance.TryGetNode(ACTOR, out _actorNode) &&
-                LOCATION.TryGetWorldPosition(out Vector3 targetPosition))
+                TARGET_ENTITY.TryGetWorldPosition(out Vector3 targetPosition))
             {
                 _actorNode.NavigationAgent.TargetPosition = targetPosition;
             }
@@ -62,7 +61,7 @@ namespace Warlord.Entities.GOAP.Strategies
         /// <inheritdoc/>
         public void Stop()
         {
-            if(_actorNode != null)
+            if (_actorNode != null)
             {
                 _actorNode.NavigationAgent.TargetPosition = _actorNode.GlobalPosition;
                 _actorNode = null;

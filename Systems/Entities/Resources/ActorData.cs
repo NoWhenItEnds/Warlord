@@ -33,8 +33,8 @@ namespace Warlord.Entities.Resources
         [Export] public Array<Stat> Skills { get; private set; } = new Array<Stat>();
 
 
-        /// <summary> The actor's physical health. </summary>
-        public DerivedStat HealthStat { get; private set; }
+        /// <summary> The actor's physical stamina. </summary>
+        public DerivedStat StaminaStat { get; private set; }
 
         /// <summary> How entertained / satisfied the actor is. </summary>
         public DerivedStat EntertainmentStat { get; private set; }
@@ -46,7 +46,7 @@ namespace Warlord.Entities.Resources
         /// <summary> The data representing a 'person' entity. </summary>
         public ActorData() : base()
         {
-            HealthStat = new DerivedStat(() => 0, () => Vigor.CurrentValue + 3);
+            StaminaStat = new DerivedStat(() => 0, () => Vigor.CurrentValue + 3);
             EntertainmentStat = new DerivedStat(() => 0, () => 10, 5);  // TODO - Start at max.
         }
 

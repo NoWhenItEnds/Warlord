@@ -68,8 +68,8 @@ namespace Warlord.Entities.GOAP
         {
             factFactory.AddFact("nothing", () => false);  // Always has a belief, even if it never will successfully evaluate.
 
-            factFactory.AddFact("is_healthy", () => Actor.HealthStat.Percent >= 0.9f);
-            factFactory.AddFact("is_hurt", () => Actor.HealthStat.Percent < 0.5f);
+            factFactory.AddFact("is_fresh", () => Actor.StaminaStat.Percent >= 0.9f);
+            factFactory.AddFact("is_tired", () => Actor.StaminaStat.Percent < 0.5f);
             factFactory.AddFact("is_entertained", () => Actor.EntertainmentStat.Percent >= 0.9f);
             factFactory.AddFact("is_bored", () => Actor.EntertainmentStat.Percent < 0.5f);
 
@@ -95,8 +95,8 @@ namespace Warlord.Entities.GOAP
                 factFactory.AddPositionFact($"at_{location.FormattedName}", 1f, location);
 
                 // Add actions.
-                AvailableActions.Add(new ActorAction.Builder($"goto_{location.FormattedName}", new GoToLocationStrategy(Actor, location))
-                    // TODO - Add cost.
+                AvailableActions.Add(new ActorAction.Builder($"goto_{location.FormattedName}", new GoToEntityStrategy(Actor, location))
+                    .WithDistanceCost(Actor, location)
                     .AddOutcome(AvailableFacts[$"at_{location.FormattedName}"])
                     .Build());
             }
@@ -117,13 +117,13 @@ namespace Warlord.Entities.GOAP
                     factFactory.AddPositionFact($"at_{actor.FormattedName}", 1f, actor);
 
                     // Add actions.
-                    AvailableActions.Add(new ActorAction.Builder($"find_{actor.FormattedName}", new FindActorStrategy(Actor, actor))
+                    AvailableActions.Add(new ActorAction.Builder($"find_{actor.FormattedName}", new FindEntityStrategy(Actor, actor))
                         // TODO - Add cost.
                         .AddOutcome(AvailableFacts[$"sees_{actor.FormattedName}"])
                         .Build());
 
-                    AvailableActions.Add(new ActorAction.Builder($"goto_{actor.FormattedName}", new GoToActorStrategy(Actor, actor))
-                        // TODO - Add cost.
+                    AvailableActions.Add(new ActorAction.Builder($"goto_{actor.FormattedName}", new GoToEntityStrategy(Actor, actor))
+                        .WithDistanceCost(Actor, actor)
                         .AddPrecondition(AvailableFacts[$"sees_{actor.FormattedName}"])
                         .AddOutcome(AvailableFacts[$"at_{actor.FormattedName}"])
                         .Build());

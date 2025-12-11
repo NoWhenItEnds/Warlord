@@ -6,7 +6,7 @@ using Warlord.Entities.Resources;
 namespace Warlord.Entities.GOAP.Strategies
 {
     /// <summary> An actor attempts to find the target. </summary>
-    public class FindActorStrategy : IActionStrategy
+    public class FindEntityStrategy : IActionStrategy
     {
         /// <inheritdoc/>
         public Boolean IsValid => throw new NotImplementedException();
@@ -18,25 +18,21 @@ namespace Warlord.Entities.GOAP.Strategies
         /// <summary> A reference to the actor being manipulated. </summary>
         private readonly ActorData ACTOR;
 
-        /// <summary> The strategy's target actor. </summary>
-        private readonly ActorData TARGET_ACTOR;
+        /// <summary> The strategy's target entity. </summary>
+        private readonly EntityData TARGET_ENTITY;
 
         /// <summary> A reference to the node currently representing the actor in the game world. </summary>
         /// <remarks> A null indicates that there currently isn't one. </remarks>
         private ActorNode? _actorNode = null;
 
-        /// <summary> A reference to the node currently representing the other actor in the game world. </summary>
-        /// <remarks> A null indicates that there currently isn't one. </remarks>
-        private ActorNode? _targetActorNode = null;
-
 
         /// <summary> An actor attempts to find the target. </summary>
         /// <param name="actor"> A reference to the actor being manipulated. </param>
-        /// <param name="targetActor"> The strategy's target actor. </param>
-        public FindActorStrategy(ActorData actor, ActorData targetActor)
+        /// <param name="targetEntity"> The strategy's target entity. </param>
+        public FindEntityStrategy(ActorData actor, EntityData targetEntity)
         {
             ACTOR = actor;
-            TARGET_ACTOR = targetActor;
+            TARGET_ENTITY = targetEntity;
         }
 
 
