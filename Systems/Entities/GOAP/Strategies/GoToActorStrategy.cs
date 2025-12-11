@@ -25,10 +25,6 @@ namespace Warlord.Entities.GOAP.Strategies
         /// <remarks> A null indicates that there currently isn't one. </remarks>
         private ActorNode? _actorNode = null;
 
-        /// <summary> A reference to the node currently representing the other actor in the game world. </summary>
-        /// <remarks> A null indicates that there currently isn't one. </remarks>
-        private ActorNode? _targetActorNode = null;
-
 
         /// <summary> An actor moves itself to the given actor's position. </summary>
         /// <param name="actor"> A reference to the actor being manipulated. </param>
@@ -44,9 +40,9 @@ namespace Warlord.Entities.GOAP.Strategies
         public void Start()
         {
             if (ActorManager.Instance.TryGetNode(ACTOR, out _actorNode) &&
-                ActorManager.Instance.TryGetNode(TARGET_ACTOR, out _targetActorNode))
+                TARGET_ACTOR.TryGetWorldPosition(out Vector3 targetPosition))
             {
-                _actorNode.NavigationAgent.TargetPosition = _targetActorNode.GetWorldPosition();
+                _actorNode.NavigationAgent.TargetPosition = targetPosition;
             }
         }
 
@@ -70,8 +66,6 @@ namespace Warlord.Entities.GOAP.Strategies
                 _actorNode.NavigationAgent.TargetPosition = _actorNode.GlobalPosition;
                 _actorNode = null;
             }
-
-            _targetActorNode = null;
         }
     }
 }

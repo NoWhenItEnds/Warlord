@@ -15,6 +15,12 @@ namespace Warlord.Entities.Resources
         public abstract String FormattedName { get; }
 
 
+        /// <summary> Get the entity's position within the game world. Either its own, or the location it occupies. </summary>
+        /// <param name="position"> The entity's position within the game world. </param>
+        /// <returns> Whether the entity has a position that is accessible. </returns>
+        public abstract Boolean TryGetWorldPosition(out Vector3 position);
+
+
         /// <inheritdoc/>
         public override Int32 GetHashCode() => HashCode.Combine(FormattedName);
 

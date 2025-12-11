@@ -90,9 +90,9 @@ namespace Warlord.Entities.GOAP
         private Boolean InRangeOf(ActorData other, Single range)
         {
             Boolean isInRange = false;
-            if(ACTOR_MANAGER.TryGetNode(ACTOR, out ActorNode? actorNode) && ACTOR_MANAGER.TryGetNode(other, out ActorNode? otherNode))
+            if(ACTOR.TryGetWorldPosition(out Vector3 position) && other.TryGetWorldPosition(out Vector3 otherPosition))
             {
-                isInRange = actorNode.GlobalPosition.DistanceTo(otherNode.GlobalPosition) < range;
+                isInRange = position.DistanceTo(otherPosition) < range;
             }
             return isInRange;
         }
@@ -105,9 +105,9 @@ namespace Warlord.Entities.GOAP
         private Boolean InRangeOf(LocationData location, Single range)
         {
             Boolean isInRange = false;
-            if (ACTOR_MANAGER.TryGetNode(ACTOR, out ActorNode? actorNode) && LOCATION_MANAGER.TryGetNode(location, out LocationNode? locationNode))
+            if (ACTOR.TryGetWorldPosition(out Vector3 position) && location.TryGetWorldPosition(out Vector3 locationPosition))
             {
-                isInRange = actorNode.GlobalPosition.DistanceTo(locationNode.GlobalPosition) < range;
+                isInRange = position.DistanceTo(locationPosition) < range;
             }
             return isInRange;
         }

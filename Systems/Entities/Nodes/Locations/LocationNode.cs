@@ -21,12 +21,7 @@ namespace Warlord.Entities.Nodes.Locations
         public event Action<IEntityNode> EntityUpdated;
 
 
-        /// <summary> Gets the location where an actor can interact with the location. </summary>
-        /// <returns> The location's interaction position in 3D space. </returns>
-        public Vector3 GetInteractionPosition() => _interactionArea.GlobalPosition;
-
-
         /// <inheritdoc/>
-        public Vector3 GetWorldPosition() => GlobalPosition;
+        public Vector3 GetWorldPosition() => _interactionArea.GlobalPosition;
     }
 }
