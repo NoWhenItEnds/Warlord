@@ -57,6 +57,7 @@ namespace Warlord.Entities.GOAP
 
             InitialiseBasicPackage(factory);
             InitialiseLocationPackage(factory, LocationManager.Instance.GetData());
+            InitialiseActorPackage(factory, ActorManager.Instance.GetData());
             InitialiseBasicGoals();
         }
 
@@ -91,7 +92,7 @@ namespace Warlord.Entities.GOAP
             foreach (LocationData location in locations)
             {
                 // Add facts.
-                factFactory.AddLocationFact($"at_{location.FormattedName}", 1f, location);
+                factFactory.AddPositionFact($"at_{location.FormattedName}", 1f, location);
 
                 // Add actions.
                 AvailableActions.Add(new ActorAction.Builder($"goto_{location.FormattedName}", new GoToLocationStrategy(Actor, location))
@@ -102,34 +103,32 @@ namespace Warlord.Entities.GOAP
         }
 
 
-        /// <summary> Set's the actor's initial actions. </summary>
-        private void InitialiseActions()
+        /// <summary> Initialise all the facts and actions based upon actors within the game world. </summary>
+        /// <param name="factFactory"> A reference to the factor creating these facts. </param>
+        /// <param name="actors"> All the actors within the game world. </param>
+        private void InitialiseActorPackage(FactFactory factFactory, ActorData[] actors)
         {
+            foreach (ActorData actor in actors)
+            {
+                if(actor != Actor)  // Don't add facts about yourself!
+                {
+                    // Add facts.
+                    factFactory.AddAwarenessFact($"sees_{actor.FormattedName}", actor);
+                    factFactory.AddPositionFact($"at_{actor.FormattedName}", 1f, actor);
 
+                    // Add actions.
+                    AvailableActions.Add(new ActorAction.Builder($"find_{actor.FormattedName}", new FindActorStrategy(Actor, actor))
+                        // TODO - Add cost.
+                        .AddOutcome(AvailableFacts[$"sees_{actor.FormattedName}"])
+                        .Build());
 
-            /*
-
-
-            AvailableActions.Add(new ActorAction.Builder("GoToApple")   // TODO - Have harvest apple with a higher cost.
-                .WithStrategy(new GoToItemActionStrategy(ACTOR, "apple"))
-                .WithCost(10)
-                .AddPrecondition(AvailableBeliefs["KnowsApple"])
-                .AddOutcome(AvailableBeliefs["AtApple"])
-                .Build());
-
-            AvailableActions.Add(new ActorAction.Builder("PickupApple")
-                .WithStrategy(new PickupActionStrategy(ACTOR, "apple"))
-                .WithCost(0)
-                .AddPrecondition(AvailableBeliefs["AtApple"])
-                .AddOutcome(AvailableBeliefs["HasApple"])
-                .Build());
-
-            AvailableActions.Add(new ActorAction.Builder("EatApple")
-                .WithStrategy(new UseInventoryItemActionStrategy(ACTOR, "apple"))
-                .WithCost(5)    // This is how which items the agent prefers is encoded. Favorite items have a lower cost.
-                .AddPrecondition(AvailableBeliefs["HasApple"])
-                .AddOutcome(AvailableBeliefs["IsFed"])
-                .Build());*/
+                    AvailableActions.Add(new ActorAction.Builder($"goto_{actor.FormattedName}", new GoToActorStrategy(Actor, actor))
+                        // TODO - Add cost.
+                        .AddPrecondition(AvailableFacts[$"sees_{actor.FormattedName}"])
+                        .AddOutcome(AvailableFacts[$"at_{actor.FormattedName}"])
+                        .Build());
+                }
+            }
         }
 
 

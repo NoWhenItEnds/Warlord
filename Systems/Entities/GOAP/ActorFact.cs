@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using Warlord.Entities.Nodes;
 using Warlord.Entities.Nodes.Actors;
 using Warlord.Entities.Nodes.Locations;
 using Warlord.Entities.Resources;
@@ -51,7 +52,7 @@ namespace Warlord.Entities.GOAP
         /// <param name="key"> The name of fact. </param>
         /// <param name="distance"> The acceptable distance or range from the location. </param>
         /// <param name="otherActor"> The other actor. </param>
-        public void AddActorFact(String key, Single distance, ActorData otherActor)
+        public void AddPositionFact(String key, Single distance, ActorData otherActor)
         {
             FACTS.Add(key, new ActorFact.Builder(key)
                 .WithCondition(() => InRangeOf(otherActor, distance))
@@ -63,10 +64,21 @@ namespace Warlord.Entities.GOAP
         /// <param name="key"> The name of fact. </param>
         /// <param name="distance"> The acceptable distance or range from the location. </param>
         /// <param name="location"> The target location. </param>
-        public void AddLocationFact(String key, Single distance, LocationData location)
+        public void AddPositionFact(String key, Single distance, LocationData location)
         {
             FACTS.Add(key, new ActorFact.Builder(key)
                 .WithCondition(() => InRangeOf(location, distance))
+                .Build());
+        }
+
+
+        /// <summary> Add a new fact that requires the actor to be aware of another actor. </summary>
+        /// <param name="key"> The name of fact. </param>
+        /// <param name="actor"> The other actor to be aware of. </param>
+        public void AddAwarenessFact(String key, ActorData actor)
+        {
+            FACTS.Add(key, new ActorFact.Builder(key)
+                .WithCondition(() => DoesSee(actor))
                 .Build());
         }
 
@@ -98,6 +110,20 @@ namespace Warlord.Entities.GOAP
                 isInRange = actorNode.GlobalPosition.DistanceTo(locationNode.GlobalPosition) < range;
             }
             return isInRange;
+        }
+
+
+        /// <summary> Checks whether the other actor is visible to this actor. </summary>
+        /// <param name="other"> The other target actor. </param>
+        /// <returns> If the actor is visible to the given actor. </returns>
+        private Boolean DoesSee(ActorData other)
+        {
+            Boolean doesSee = false;
+            if (ACTOR_MANAGER.TryGetNode(ACTOR, out ActorNode? actorNode) && ACTOR_MANAGER.TryGetNode(other, out ActorNode? otherNode))
+            {
+                doesSee = actorNode.IsEntityVisible(otherNode);
+            }
+            return doesSee;
         }
     }
 
