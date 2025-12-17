@@ -47,16 +47,15 @@ namespace Warlord.Entities.Resources
         public ActorData() : base()
         {
             StaminaStat = new DerivedStat(() => 0, () => Vigor.CurrentValue + 3);
-            EntertainmentStat = new DerivedStat(() => 0, () => 10, 5);  // TODO - Start at max.
+            EntertainmentStat = new DerivedStat(() => 0, () => 10);  // TODO - Start at max.
         }
 
 
-        /// <summary> Reconstruct an actor from json data. </summary>
-        /// <param name="json"> The raw json string. </param>
-        /// <returns> The constructed data object. </returns>
-        public static ActorData FromJson(String json)
+        /// <summary> Set the data's occupying location. </summary>
+        /// <param name="location"> The location to have the actor enter. A null means that they are not in a location. </param>
+        public void SetOccupyingLocation(LocationData? location)
         {
-            return new ActorData(); // TODO - Implement.
+            OccupyingLocation = location;
         }
 
 
@@ -84,6 +83,15 @@ namespace Warlord.Entities.Resources
             }
 
             return isSuccessful;
+        }
+
+
+        /// <summary> Reconstruct an actor from json data. </summary>
+        /// <param name="json"> The raw json string. </param>
+        /// <returns> The constructed data object. </returns>
+        public static ActorData FromJson(String json)
+        {
+            return new ActorData(); // TODO - Implement.
         }
     }
 }

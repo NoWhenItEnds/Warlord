@@ -32,9 +32,8 @@ namespace Warlord.Managers
         /// <returns> Whether there was a node mapped to the given data. </returns>
         public Boolean TryGetNode(LocationData data, out LocationNode? node)
         {
-            Boolean result = _locationMap.TryGetValue(data, out LocationNode? value);
-            node = value;
-            return result;
+            _locationMap.TryGetValue(data, out node);
+            return node != null;
         }
 
 

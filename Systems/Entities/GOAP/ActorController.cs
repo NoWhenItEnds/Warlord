@@ -93,12 +93,26 @@ namespace Warlord.Entities.GOAP
             {
                 // Add facts.
                 factFactory.AddPositionFact($"at_{location.FormattedName}", 1f, location);
+                factFactory.AddFact($"in_{location.FormattedName}", () => Actor.OccupyingLocation == location);
 
                 // Add actions.
                 AvailableActions.Add(new ActorAction.Builder($"goto_{location.FormattedName}", new GoToEntityStrategy(Actor, location))
                     .WithDistanceCost(Actor, location)
                     .AddOutcome(AvailableFacts[$"at_{location.FormattedName}"])
                     .Build());
+
+                AvailableActions.Add(new ActorAction.Builder($"enter_{location.FormattedName}", new EnterLocationStrategy(Actor, location))
+                    .WithCost(1f)
+                    .AddPrecondition(AvailableFacts[$"at_{location.FormattedName}"])
+                    .AddOutcome(AvailableFacts[$"in_{location.FormattedName}"])
+                    .Build());
+
+                /*AvailableActions.Add(new ActorAction.Builder($"exit_{location.FormattedName}", new ExitLocationStrategy(Actor, location))
+                    .WithCost(1f)
+                    .AddPrecondition(AvailableFacts[$"in_{location.FormattedName}"])
+                    .AddOutcome(AvailableFacts[$"at_{location.FormattedName}"]) // TODO - Change to "HAS NODE"?
+                    .Build());  // TODO - Add enter location to garrison.
+                    */
             }
         }
 
