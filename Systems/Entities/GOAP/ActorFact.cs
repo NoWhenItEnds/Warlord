@@ -68,6 +68,7 @@ namespace Warlord.Entities.GOAP
         {
             FACTS.Add(key, new ActorFact.Builder(key)
                 .WithCondition(() => InRangeOf(location, distance))
+                .WithCondition(() => ActorManager.Instance.TryGetNode(ACTOR, out _))    // And the actor has a node, meaning they are not inside.
                 .Build());
         }
 

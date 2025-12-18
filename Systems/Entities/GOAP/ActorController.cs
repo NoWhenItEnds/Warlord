@@ -107,12 +107,12 @@ namespace Warlord.Entities.GOAP
                     .AddOutcome(AvailableFacts[$"in_{location.FormattedName}"])
                     .Build());
 
-                /*AvailableActions.Add(new ActorAction.Builder($"exit_{location.FormattedName}", new ExitLocationStrategy(Actor, location))
+                AvailableActions.Add(new ActorAction.Builder($"exit_{location.FormattedName}", new ExitLocationStrategy(Actor, location))
                     .WithCost(1f)
-                    .AddPrecondition(AvailableFacts[$"in_{location.FormattedName}"])
-                    .AddOutcome(AvailableFacts[$"at_{location.FormattedName}"]) // TODO - Change to "HAS NODE"?
-                    .Build());  // TODO - Add enter location to garrison.
-                    */
+                    //.AddPrecondition(AvailableFacts[$"in_{location.FormattedName}"])
+                    //.AddOutcome(AvailableFacts[$"at_{location.FormattedName}"])
+                    .Build());  // TODO - Circular means that the planner can't build a complete path to evaluate, it cycles infinitely.
+
             }
         }
 
