@@ -176,7 +176,7 @@ namespace Warlord.Entities.GOAP
 
 
         /// <inheritdoc/>
-        public bool Equals(ActorFact? other) => Name.Equals(other?.Name);
+        public bool Equals(ActorFact? other) => other != null ? Name.Equals(other.Name) : false;
 
 
         /// <summary> A builder for creating and modifying facts. </summary>

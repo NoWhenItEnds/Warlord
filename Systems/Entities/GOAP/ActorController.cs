@@ -67,6 +67,7 @@ namespace Warlord.Entities.GOAP
         private void InitialiseBasicPackage(FactFactory factFactory)
         {
             factFactory.AddFact("nothing", () => false);  // Always has a belief, even if it never will successfully evaluate.
+            factFactory.AddFact("is_outside", () => ActorManager.Instance.TryGetNode(Actor, out _));
 
             factFactory.AddFact("is_fresh", () => Actor.StaminaStat.Percent >= 0.9f);
             factFactory.AddFact("is_tired", () => Actor.StaminaStat.Percent < 0.5f);
@@ -98,6 +99,7 @@ namespace Warlord.Entities.GOAP
                 // Add actions.
                 AvailableActions.Add(new ActorAction.Builder($"goto_{location.FormattedName}", new GoToEntityStrategy(Actor, location))
                     .WithDistanceCost(Actor, location)
+                    .AddPrecondition(AvailableFacts[$"is_outside"])
                     .AddOutcome(AvailableFacts[$"at_{location.FormattedName}"])
                     .Build());
 
@@ -109,8 +111,8 @@ namespace Warlord.Entities.GOAP
 
                 AvailableActions.Add(new ActorAction.Builder($"exit_{location.FormattedName}", new ExitLocationStrategy(Actor, location))
                     .WithCost(1f)
-                    //.AddPrecondition(AvailableFacts[$"in_{location.FormattedName}"])
-                    //.AddOutcome(AvailableFacts[$"at_{location.FormattedName}"])
+                    .AddPrecondition(AvailableFacts[$"in_{location.FormattedName}"])
+                    .AddOutcome(AvailableFacts[$"is_outside"])
                     .Build());  // TODO - Circular means that the planner can't build a complete path to evaluate, it cycles infinitely.
 
             }
@@ -232,7 +234,7 @@ namespace Warlord.Entities.GOAP
         /// <summary> Attempt to calculate a new plan. </summary>
         private void CalculatePlan()
         {
-            GoalPriority priorityLevel = CurrentGoal?.Priority ?? GoalPriority.NONE;
+            GoalPriority priorityLevel = CurrentGoal != null ? CurrentGoal.Priority : GoalPriority.NONE;
 
             HashSet<ActorGoal> goalsToCheck = AvailableGoals;
 

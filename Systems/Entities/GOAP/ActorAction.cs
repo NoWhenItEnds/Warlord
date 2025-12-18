@@ -80,7 +80,7 @@ namespace Warlord.Entities.GOAP
 
 
         /// <inheritdoc/>
-        public bool Equals(ActorAction? other) => Name.Equals(other?.Name);
+        public Boolean Equals(ActorAction? other) => other != null ? Name.Equals(other.Name) : false;
 
 
         /// <summary> A helpful builder that allows for easy construction of actor actions. </summary>

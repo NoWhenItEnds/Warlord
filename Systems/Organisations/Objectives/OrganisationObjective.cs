@@ -71,6 +71,6 @@ namespace Warlord.Organisations.Objectives
 
 
         /// <inheritdoc/>
-        public Boolean Equals(OrganisationObjective? other) => GoalName.Equals(other?.GoalName);
+        public Boolean Equals(OrganisationObjective? other) => other != null ? GoalName.Equals(other.GoalName) : false;
     }
 }

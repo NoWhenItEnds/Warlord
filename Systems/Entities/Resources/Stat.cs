@@ -208,7 +208,7 @@ namespace Warlord.Entities.Resources
 
 
         /// <inheritdoc/>
-        public Boolean Equals(Stat? other) => Name == other?.Name;
+        public Boolean Equals(Stat? other) => other != null && Name == other.Name;
     }
 
 

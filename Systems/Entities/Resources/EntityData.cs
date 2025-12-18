@@ -26,6 +26,6 @@ namespace Warlord.Entities.Resources
 
 
         /// <inheritdoc/>
-        public bool Equals(EntityData? other) => FormattedName == other?.FormattedName;
+        public bool Equals(EntityData? other) => other != null && FormattedName == other.FormattedName;
     }
 }

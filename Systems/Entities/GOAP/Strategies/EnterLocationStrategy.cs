@@ -10,7 +10,7 @@ namespace Warlord.Entities.GOAP.Strategies
     public class EnterLocationStrategy : IActionStrategy
     {
         /// <inheritdoc/>
-        public Boolean IsValid => ActorManager.Instance.TryGetNode(ACTOR, out ActorNode? _);  // Only allow if the actor has a node in the game world.
+        public Boolean IsValid => ACTOR.OccupyingLocation != LOCATION;
 
         /// <inheritdoc/>
         public Boolean IsComplete => _isEvaluated;

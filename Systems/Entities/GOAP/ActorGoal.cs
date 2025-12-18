@@ -51,7 +51,7 @@ namespace Warlord.Entities.GOAP
 
 
         /// <inheritdoc/>
-        public bool Equals(ActorGoal? other) => Name.Equals(other?.Name);
+        public bool Equals(ActorGoal? other) => other != null ? Name.Equals(other.Name) : false;
 
 
         /// <summary> A helpful builder that allows for easy construction of actor goals. </summary>
