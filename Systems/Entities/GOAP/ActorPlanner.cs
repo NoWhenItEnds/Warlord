@@ -13,13 +13,12 @@ namespace Warlord.Entities.GOAP
         /// <param name="goals"> The goals to plan for. </param>
         /// <param name="mostRecentGoal"> A reference to the most recent goal the actor attempted to address. </param>
         /// <returns> The constructed plan. A null value means that we couldn't find one. </returns>
-        public ActionPlan? BuildPlan(ActorController actor, HashSet<ActorGoal> goals, ActorGoal mostRecentGoal = null)
+        public ActionPlan? BuildPlan(ActorController actor, HashSet<ActorGoal> goals, ActorGoal? mostRecentGoal = null)
         {
             // Order goals by priority, descending
-            List<ActorGoal> orderedGoals = goals
-                //.Where(g => g.DesiredOutcomes.Any(b => !b.Evaluate()))  // Don't include goals who's outcomes are already complete.
-                .OrderByDescending(g => g == mostRecentGoal ? (Single)g.Priority - 0.1f : (Single)g.Priority)   // Don't keep trying to get the same goal (the most recent one) all the time. Give it a sightly lower priority.
-                .ToList();
+            IOrderedEnumerable<ActorGoal> orderedGoals = goals
+                .Where(g => g.DesiredOutcomes.Any(f => !f.Evaluate()))  // Don't include goals who's outcomes are already complete.
+                .OrderByDescending(g => (Single)g.Priority);
 
             // Try to solve each goal in order
             foreach (ActorGoal goal in orderedGoals)
@@ -37,7 +36,10 @@ namespace Warlord.Entities.GOAP
                         {
                             GraphNode cheapestLeaf = goalNode.Leaves.OrderBy(leaf => leaf.Cost).First();
                             goalNode = cheapestLeaf;
-                            actionStack.Push(cheapestLeaf.Action);
+                            if (cheapestLeaf.Action != null)
+                            {
+                                actionStack.Push(cheapestLeaf.Action);
+                            }
                         }
 
                         return new ActionPlan(goal, actionStack, goalNode.Cost);
@@ -63,7 +65,7 @@ namespace Warlord.Entities.GOAP
                 HashSet<ActorFact> requiredFacts = parent.RequiredFacts;
 
                 // Remove any facts that evaluate to true, there is no action to take. They're already done.
-                requiredFacts.RemoveWhere(b => b.Evaluate());
+                requiredFacts.RemoveWhere(f => f.Evaluate());
 
                 // If there are no required facts to fulfill, we have a plan. No need to search further.
                 if (requiredFacts.Count == 0)
@@ -84,7 +86,11 @@ namespace Warlord.Entities.GOAP
                     if (FindPath(newNode, actions))
                     {
                         parent.Leaves.Add(newNode);
-                        newRequiredFacts.ExceptWith(newNode.Action.Preconditions);
+                        if (newNode.Action != null)
+                        {
+                            newRequiredFacts.ExceptWith(newNode.Action.Preconditions);
+                        }
+
                     }
 
                     // If all effects at this depth have been satisfied, return true
@@ -130,10 +136,10 @@ namespace Warlord.Entities.GOAP
     public class GraphNode
     {
         /// <summary> A reference to this node's parent. </summary>
-        public GraphNode Parent { get; }
+        public GraphNode? Parent { get; }
 
         /// <summary> The action this node represents. </summary>
-        public ActorAction Action { get; }
+        public ActorAction? Action { get; }
 
         /// <summary> All the facts at THIS position in the graph. </summary>
         public HashSet<ActorFact> RequiredFacts { get; }
@@ -153,7 +159,7 @@ namespace Warlord.Entities.GOAP
         /// <param name="action"> The action this node represents. </param>
         /// <param name="facts"> All the facts at THIS position in the graph. </param>
         /// <param name="cost"> A running cost of how expensive the graph is at this point. </param>
-        public GraphNode(GraphNode parent, ActorAction action, HashSet<ActorFact> facts, Single cost)
+        public GraphNode(GraphNode? parent, ActorAction? action, HashSet<ActorFact> facts, Single cost)
         {
             Parent = parent;
             Action = action;

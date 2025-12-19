@@ -29,8 +29,8 @@ namespace Warlord.Managers
         private Dictionary<ActorData, ActorController> _actorControllers = new Dictionary<ActorData, ActorController>();
 
         /// <summary> The internal mapping between data and its representative node. </summary>
-        /// <remarks> A null value indicates that the data is present, but there isn't a node in the game world for it. </remarks>
-        private Dictionary<ActorData, ActorNode?> _actorMap = new Dictionary<ActorData, ActorNode?>();
+        /// <remarks> If a data key doesn't exist here, there isn't a node within the game world for it. </remarks>
+        private Dictionary<ActorData, ActorNode> _actorMap = new Dictionary<ActorData, ActorNode>();
 
 
         /// <inheritdoc/>
@@ -55,7 +55,7 @@ namespace Warlord.Managers
 
 
         /// <inheritdoc/>
-        public override void _Process(Double delta)
+        public override void _PhysicsProcess(Double delta)  // TODO - Normal process or physics process?
         {
             foreach (ActorController controller in _actorControllers.Values)
             {
@@ -87,7 +87,7 @@ namespace Warlord.Managers
             _objectPool.FreeObject(actor);
             if(TryGetData(actor, out ActorData? data))
             {
-                _actorMap[data] = null;
+                _actorMap.Remove(data);
             }
         }
 
@@ -145,11 +145,5 @@ namespace Warlord.Managers
                 throw new ArgumentNullException($"{actor.FormattedName} doesn't have a controller. This shouldn't be possible.");
             }
         }
-
-        internal bool GetNode(ActorData aCTOR, out object actorNode)
-        {
-            throw new NotImplementedException();
-        }
-
     }
 }

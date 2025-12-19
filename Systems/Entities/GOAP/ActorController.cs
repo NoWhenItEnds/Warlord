@@ -68,6 +68,7 @@ namespace Warlord.Entities.GOAP
         {
             factFactory.AddFact("nothing", () => false);  // Always has a belief, even if it never will successfully evaluate.
             factFactory.AddFact("is_outside", () => ActorManager.Instance.TryGetNode(Actor, out _));
+            factFactory.AddFact("is_inside", () => !ActorManager.Instance.TryGetNode(Actor, out _));
 
             factFactory.AddFact("is_fresh", () => Actor.StaminaStat.Percent >= 0.9f);
             factFactory.AddFact("is_tired", () => Actor.StaminaStat.Percent < 0.5f);
@@ -108,14 +109,13 @@ namespace Warlord.Entities.GOAP
                     .AddPrecondition(AvailableFacts[$"at_{location.FormattedName}"])
                     .AddOutcome(AvailableFacts[$"in_{location.FormattedName}"])
                     .Build());
-
-                AvailableActions.Add(new ActorAction.Builder($"exit_{location.FormattedName}", new ExitLocationStrategy(Actor, location))
-                    .WithCost(1f)
-                    .AddPrecondition(AvailableFacts[$"in_{location.FormattedName}"])
-                    .AddOutcome(AvailableFacts[$"is_outside"])
-                    .Build());  // TODO - Circular means that the planner can't build a complete path to evaluate, it cycles infinitely.
-
             }
+
+            AvailableActions.Add(new ActorAction.Builder($"exit_location", new ExitLocationStrategy(Actor))
+                    .WithCost(1f)
+                    .AddPrecondition(AvailableFacts[$"is_inside"])
+                    .AddOutcome(AvailableFacts[$"is_outside"])
+                    .Build());
         }
 
 
