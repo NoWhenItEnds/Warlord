@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/PPU_Suburb_Building_House_007.glb-9ccc746044a
 
 nodes/root_type="StaticBody3D"
 nodes/root_name=""
-nodes/root_script=Resource("uid://cntkjrmtg1dx4", "res://Systems/Entities/Nodes/Buildings/HouseNode.cs")
+nodes/root_script=Resource("uid://cntkjrmtg1dx4", "res://Systems/Entities/Nodes/Locations/HouseNode.cs")
 nodes/apply_root_scale=true
 nodes/root_scale=1.0
 nodes/import_as_skeleton_bones=false

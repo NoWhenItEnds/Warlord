@@ -18,7 +18,7 @@ namespace Warlord.Entities.Nodes.Actors
         /// <inheritdoc/>
         public event Action<IEntityNode> EntityUpdated;
 
-
+        /// <summary> A reference to the game's time manager singleton. </summary>
         private TimeManager _timeManager;
 
 
